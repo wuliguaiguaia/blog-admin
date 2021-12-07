@@ -10,6 +10,7 @@ html {
 }
 
 body {
+  /* font-family: "Microsoft Yahei"; */
   margin: 0;
   background: #f6f6f6;
   line-height: 1.5;
@@ -37,9 +38,6 @@ ol {
 
 a {
   text-decoration: none;
-}
-
-a:hover {
 }
 
 dl,
@@ -71,7 +69,6 @@ button {
 
   &::-moz-focus-inner {
     border: 0;
-
     /* firefox outline */
   }
 }
@@ -267,7 +264,19 @@ input[type="radio"] {
 }
 
 .text-ellipsis {
+  display: -webkit-box;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+/* 多行省略 */
+@mixin multi-ellipsis($lines) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $lines;
+
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
 }
