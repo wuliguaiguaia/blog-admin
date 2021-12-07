@@ -69,6 +69,7 @@ button {
 
   &::-moz-focus-inner {
     border: 0;
+
     /* firefox outline */
   }
 }
@@ -264,7 +265,7 @@ input[type="radio"] {
 }
 
 .text-ellipsis {
-  display: -webkit-box;
+  display: box;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -272,7 +273,7 @@ input[type="radio"] {
 
 /* 多行省略 */
 @mixin multi-ellipsis($lines) {
-  display: -webkit-box;
+  display: box;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: $lines;
