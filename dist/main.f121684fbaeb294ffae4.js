@@ -1,1 +1,0 @@
-(self.webpackChunkdefault=self.webpackChunkdefault||[]).push([[179],{332:function(e,t,n){var u=n(935),l=n(294),r=function(){return l.createElement("div",null,"fsdfsd")};u.render(l.createElement(l.StrictMode,null,l.createElement(r,null)),document.getElementById("root"))}},function(e){e.O(0,[216],(function(){return 332,e(e.s=332)})),e.O()}]);

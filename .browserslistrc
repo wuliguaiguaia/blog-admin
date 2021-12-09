@@ -1,10 +1,5 @@
-[production]
-> 1%
-ie 9
+# Browsers that we support
 
-[modern]
-last 1 chrome version
-last 1 firefox version
-
-[ssr]
-node 12
+last 1 version
+> 2%
+IE 10

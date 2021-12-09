@@ -1,0 +1,19 @@
+{
+  "presets": ["react-app"],
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "runtime": "automatic"
+      }
+    ],
+    [
+      "import",
+      {
+        "libraryName": "antd", // antd按需加载
+        "libraryDirectory": "es",
+        "style": "css"
+      }
+    ]
+  ]
+}

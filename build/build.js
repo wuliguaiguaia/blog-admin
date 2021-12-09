@@ -2,11 +2,12 @@ const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
-const config = require('./webpack.config')
+const config = require('./webpack.prod.config')
 const ora = require('ora') // 版本问题
 const spinner = ora('building for production...')
 
-config.mode = 'production'
+process.env.NODE_ENV = 'production'
+
 spinner.start()
 rm(path.resolve(__dirname, './../dist'), err => {
   if (err) throw err
