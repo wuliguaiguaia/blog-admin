@@ -3,7 +3,7 @@ module.exports = {
   plugins: [
     "stylelint-scss"
   ],
-  // customSyntax: "postcss-scss",
+  customSyntax: "postcss-scss",
   rules: {
     "block-no-empty": null,
     "at-rule-no-unknown": null,
