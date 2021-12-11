@@ -1,12 +1,13 @@
+import './assets/styles/globals.scss'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import App from './App'
-import './assets/styles/globals.scss'
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <App />,
+  // </React.StrictMode>,
   document.getElementById('root'),
 )
 

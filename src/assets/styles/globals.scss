@@ -1,283 +1,285 @@
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 14px;
-
-  /* 增加锚点跳转过度效果 */
-  scroll-behavior: smooth;
-}
-
-body {
-  /* font-family: "Microsoft Yahei"; */
-  margin: 0;
-  background: #f6f6f6;
-  line-height: 1.5;
-  color: #222;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5 {
-  margin: 0;
-  font-weight: normal;
-}
-
-ul,
-/* ul上下margin16(1em),左padding40 */
-li,
-/* li 默认display:inline-item,设置ul/li的list-style */
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-}
-
-dl,
-dt,
-dd,
-p {
-  margin: 0;
-  padding: 0;
-}
-
-img {
-  vertical-align: middle;
-}
-
-hr {
-  border-color: rgb(251 251 251);
-}
-
-label,
-button {
-  cursor: pointer;
-}
-
-button {
-  outline: none;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-
-  &::-moz-focus-inner {
-    border: 0;
-
-    /* firefox outline */
+:global {
+  * {
+    box-sizing: border-box;
   }
-}
 
-a:focus,
-button:focus,
-input[type="range"]:focus,
-input:focus {
-  outline: 0;
+  html {
+    font-size: 14px;
 
-  &::-moz-focus-inner {
-    border: 0; /* firefox */
+    /* 增加锚点跳转过度效果 */
+    scroll-behavior: smooth;
   }
-}
 
-input {
-  padding-left: 15px;
-}
+  body {
+    /* font-family: "Microsoft Yahei"; */
+    margin: 0;
+    background: #fff;
+    line-height: 1.5;
+    color: #222;
+  }
 
-/* range */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin: 0;
+    font-weight: normal;
+  }
 
-input[type="range"] {
-  margin: 0;
-  width: 100%;
-  appearance: none;
+  ul,
 
-  /* 清除系统默认样式 */
-  background: linear-gradient(#ff7600, #ff7600) no-repeat #ccc;
-  padding-left: 0;
-  height: 1px;
+  li,
 
-  &:focus {
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  dl,
+  dt,
+  dd,
+  p {
+    padding: 0;
+    margin: 0;
+  }
+
+  img {
+    vertical-align: middle;
+  }
+
+  hr {
+    border-color: rgb(251 251 251);
+  }
+
+  label,
+  button {
+    cursor: pointer;
+  }
+
+  button {
     outline: none;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+
+    &::-moz-focus-inner {
+      border: 0;
+
+      /* firefox outline */
+    }
   }
-}
 
-input[type="range"]::-webkit-slider-runnable-track {
-  /* width: 100%; */
-  height: 0.125rem;
-  cursor: pointer;
-  border-radius: 1px;
-}
+  a:focus,
+  button:focus,
+  input[type="range"]:focus,
+  input:focus {
+    outline: 0;
 
-/* 拖动块的样式 */
+    &::-moz-focus-inner {
+      border: 0; /* firefox */
+    }
+  }
 
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
+  input {
+    padding-left: 15px;
+  }
 
-  /* border: 1px solid #ff7600; */
-  height: 0.8rem;
-  width: 0.8rem;
-  border-radius: 50%;
-  background: #fd9500;
-  cursor: pointer;
-  margin-top: -0.3375rem;
-}
+  /* range */
 
-/* placeholder */
+  input[type="range"] {
+    margin: 0;
+    width: 100%;
+    appearance: none;
 
-input::placeholder {
-  color: rgb(193 195 208 / 100%);
-  font-size: 11px;
-}
+    /* 清除系统默认样式 */
+    background: linear-gradient(#ff7600, #ff7600) no-repeat #ccc;
+    padding-left: 0;
+    height: 1px;
 
-input[type="checkbox"] {
-  margin: 0;
-}
+    &:focus {
+      outline: none;
+    }
+  }
 
-input[type="checkbox"],
-input[type="radio"] {
-  vertical-align: sub;
-}
+  input[type="range"]::-webkit-slider-runnable-track {
+    /* width: 100%; */
+    height: 0.125rem;
+    cursor: pointer;
+    border-radius: 1px;
+  }
 
-/* layout */
+  /* 拖动块的样式 */
 
-.fr {
-  float: right;
-}
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
 
-.fl {
-  float: left;
-}
+    /* border: 1px solid #ff7600; */
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 50%;
+    background: #fd9500;
+    cursor: pointer;
+    margin-top: -0.3375rem;
+  }
 
-.hide {
-  display: none;
-}
+  /* placeholder */
 
-.show {
-  display: block;
-}
+  input::placeholder {
+    color: rgb(193 195 208 / 100%);
+    font-size: 11px;
+  }
 
-.text-center {
-  text-align: center;
-}
+  input[type="checkbox"] {
+    margin: 0;
+  }
 
-.text-left {
-  text-align: left;
-}
+  input[type="checkbox"],
+  input[type="radio"] {
+    vertical-align: sub;
+  }
 
-.text-right {
-  text-align: right;
-}
+  /* layout */
 
-.clearfix::after {
-  content: "";
-  display: block;
-  clear: both;
-}
+  .fr {
+    float: right;
+  }
 
-/* flex */
+  .fl {
+    float: left;
+  }
 
-.flex {
-  display: flex;
-}
+  .hide {
+    display: none;
+  }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
+  .show {
+    display: block;
+  }
 
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
+  .text-center {
+    text-align: center;
+  }
 
-.jus-between {
-  display: flex;
-  justify-content: space-between;
-}
+  .text-left {
+    text-align: left;
+  }
 
-.flex-around {
-  display: flex;
-  justify-content: space-around;
-}
+  .text-right {
+    text-align: right;
+  }
 
-.jusBetween-alignCenter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 
-.jusCenter-alignCenter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* flex */
 
-.jusAround-alignCenter {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
+  .flex {
+    display: flex;
+  }
 
-.jus-around {
-  display: flex;
-  justify-content: space-around;
-}
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
 
-.jus-center {
-  display: flex;
-  justify-content: center;
-}
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
 
-.align-center {
-  display: flex;
-  align-items: center;
-}
+  .jus-between {
+    display: flex;
+    justify-content: space-between;
+  }
 
-/* icon */
+  .flex-around {
+    display: flex;
+    justify-content: space-around;
+  }
 
-.icon {
-  width: 14px;
-  height: 14px;
-  display: inline-block;
-  cursor: pointer;
-  vertical-align: bottom;
-}
+  .jusBetween-alignCenter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-/* font */
+  .jusCenter-alignCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.small-font {
-  font-size: 12px;
-  -webkit-transform-origin-x: 0;
-  transform: scale(0.75);
+  .jusAround-alignCenter {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 
-  /* translateX(-19px); */
-}
+  .jus-around {
+    display: flex;
+    justify-content: space-around;
+  }
 
-/* position */
+  .jus-center {
+    display: flex;
+    justify-content: center;
+  }
 
-.position-sticky {
-  position: sticky;
-}
+  .align-center {
+    display: flex;
+    align-items: center;
+  }
 
-.text-ellipsis {
-  display: box;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
+  /* icon */
 
-/* 多行省略 */
-@mixin multi-ellipsis($lines) {
-  display: box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: $lines;
+  .icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: bottom;
+  }
 
-  /* autoprefixer: ignore next */
-  -webkit-box-orient: vertical;
+  /* font */
+
+  .small-font {
+    font-size: 12px;
+    -webkit-transform-origin-x: 0;
+    transform: scale(0.75);
+
+    /* translateX(-19px); */
+  }
+
+  /* position */
+
+  .position-sticky {
+    position: sticky;
+  }
+
+  .text-ellipsis {
+    display: box;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* 多行省略 */
+  @mixin multi-ellipsis($lines) {
+    display: box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: $lines;
+
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+  }
 }

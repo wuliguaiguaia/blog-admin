@@ -1,5 +1,4 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const utils = require('./utils')
 
 const resolve = (_path) => path.resolve(__dirname, '..', _path)
@@ -113,12 +112,5 @@ module.exports = {
       '@': resolve('./src/')
     }
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: resolve('public/index.html'),
-      filename: 'index.html',
-      chunks: ['vendors', 'main']
-    }),
-
-  ].filter(Boolean),
+  plugins: [].filter(Boolean),
 }

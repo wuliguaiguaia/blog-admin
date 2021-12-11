@@ -7,6 +7,7 @@ const utils = require('./utils')
 // const CompressionPlugin = require('compression-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const reportMemory = process.argv[2] === '--report'
 
@@ -18,7 +19,7 @@ module.exports = merge(baseWebpackConfig, {
     publicPath: prod.publicPath, /* 静态资源域名及路径 */
   },
   module: {
-    
+
   },
   devtool: prod.devtool,
   optimization: {
@@ -55,5 +56,11 @@ module.exports = merge(baseWebpackConfig, {
     }),
     reportMemory && new BundleAnalyzerPlugin({ analyzerPort: 8887 }),
     // prod.gzip && new CompressionPlugin({ })
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: 'index.html',
+      inject: true,
+      chunks: ['vendors', 'common', 'main']
+    }),
   ].filter(Boolean)
 })

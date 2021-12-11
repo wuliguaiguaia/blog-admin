@@ -1,9 +1,11 @@
 const { merge } = require('webpack-merge')
 const ESLintPlugin = require('eslint-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.config')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { dev } = require('./config')
 // const utils = require('./utils')
 const path = require('path')
+// const resolve = (_path) => path.resolve(__dirname, '..', _path)
 
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
@@ -23,13 +25,12 @@ module.exports = merge(baseWebpackConfig, {
     //     }
     //   ]
     // },
-    contentBase: path.resolve(__dirname, 'dist'),
+    // contentBase: path.resolve(__dirname, '../dist'),
     historyApiFallback: true,
     progress: true,
     hot: true,
-    // contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 8080,
     open: true,
     // proxy: {
@@ -53,7 +54,7 @@ module.exports = merge(baseWebpackConfig, {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
+          name: 'vendors',
           chunks: 'all'
         }
       }
@@ -62,6 +63,12 @@ module.exports = merge(baseWebpackConfig, {
   plugins: [
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx']
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: 'index.html',
+      inject: true,
+      chunks: ['vendors', 'main']
     }),
   ].filter(Boolean)
 })
