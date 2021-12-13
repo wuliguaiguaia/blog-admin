@@ -24,6 +24,7 @@ module.exports = {
       indent: ['error', 2],
       quotes: ['error', 'single'],
       semi: ['error', 'never'],
+      'no-plusplus': 'off',
       'linebreak-style': ['error', 'unix'],
       'no-multiple-empty-lines': ['error', { max: 2 }],
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

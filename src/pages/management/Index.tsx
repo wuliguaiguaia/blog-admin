@@ -5,17 +5,22 @@ import LeftMenu from '@/common/components/LeftMenu/Index'
 import Footer from '@/common/components/Footer/Index'
 import workbench from './workBench/Index'
 import userList from './userList'
+import styles from './Index.scss'
 
 const management = () => (
-  <div>
-    {/* <Header /> */}
-    <LeftMenu />
-    <Router>
-      <Route path="/" exact component={workbench} />
-      <Route path="/userList/" component={userList} />
-    </Router>
+  <>
+    <div className="flex">
+      {/* <Header /> */}
+      <LeftMenu />
+      <div className={styles.container}>
+        <Router>
+          <Route path="/" exact component={workbench} />
+          <Route path="/userList/" component={userList} />
+        </Router>
+      </div>
+    </div>
     <Footer />
-  </div>
+  </>
 )
 
 export default management

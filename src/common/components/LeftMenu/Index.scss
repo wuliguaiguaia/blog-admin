@@ -10,7 +10,6 @@
   bottom: 0;
   right: 0;
   background-color: rgb(249 249 249);
-  // border: 1px solid #ccc;
   border-left: none;
   border-radius: 3px;
   transform: translateX(100%);
@@ -20,9 +19,7 @@
 
 .leftMenu {
   user-select: none;
-  position: fixed;
-  left: 0;
-  top: 0;
+  position: relative;
   height: 100vh;
   background-color: rgb(249 249 249);
 }
@@ -34,9 +31,8 @@
 .antMenu {
   border: 0;
   background: rgb(249 249 249);
-  // overflow-y: scroll;
   height: calc(100vh - 50px);
-  width: 200px !important;
+  width: $leftMenuWidth !important;
 }
 
 :global {
@@ -49,7 +45,7 @@
   }
 
   .ant-menu.ant-menu-inline-collapsed {
-    width: 80px !important;
+    width: $leftMenuMinWidth !important;
   }
 
   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
