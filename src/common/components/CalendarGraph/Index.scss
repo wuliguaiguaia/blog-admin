@@ -1,4 +1,4 @@
-$gap: 2px;
+$gap: 3px;
 
 .graphOverview {
   font-size: 10px;
@@ -16,11 +16,11 @@ $gap: 2px;
 }
 
 .week {
-  height: 89px;
+  height: 95px;
 
   i {
-    height: 11px;
-    line-height: 11px;
+    height: 14px;
+    line-height: 14px;
     transform: scale(0.7);
   }
 }
@@ -43,24 +43,26 @@ $gap: 2px;
   &:last-of-type {
     margin-bottom: 0;
   }
+
+  &[data-level="0"] {
+    background-color: #f5f5f5;
+  }
+
+  &[data-level="1"] {
+    background-color: #e1f2e2;
+  }
+
+  &[data-level="2"] {
+    background-color: #bee8c8;
+  }
+
+  &[data-level="3"] {
+    background-color: #6bb579;
+  }
+
+  &[data-level="4"] {
+    background-color: #397549;
+  }
 }
 
-.square[data-level="0"] {
-  background-color: #f5f5f5;
-}
 
-.square[data-level="1"] {
-  background-color: #e1f2e2;
-}
-
-.square[data-level="2"] {
-  background-color: #bee8c8;
-}
-
-.square[data-level="3"] {
-  background-color: #6bb579;
-}
-
-.square[data-level="4"] {
-  background-color: #397549;
-}

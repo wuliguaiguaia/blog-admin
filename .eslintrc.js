@@ -16,6 +16,7 @@ module.exports = {
     },
     extends: ['airbnb-typescript'],
     rules: {
+      'react/no-array-index-key': 'off',
       '@typescript-eslint/object-curly-spacing': 'off',
       '@typescript-eslint/semi': 'off',
       'import/prefer-default-export': 'off',

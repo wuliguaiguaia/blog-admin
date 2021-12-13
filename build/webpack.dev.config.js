@@ -15,7 +15,6 @@ module.exports = merge(baseWebpackConfig, {
   },
   devtool: dev.devtool,
   devServer: {
-    // inline: true,
     // clientLogLevel: 'warning',
     // historyApiFallback: {
     //   rewrites: [
@@ -27,7 +26,7 @@ module.exports = merge(baseWebpackConfig, {
     // },
     // contentBase: path.resolve(__dirname, '../dist'),
     historyApiFallback: true,
-    progress: true,
+    // progress: true,
     hot: true,
     compress: true,
     host: 'localhost',
@@ -42,12 +41,12 @@ module.exports = merge(baseWebpackConfig, {
     // publicPath: '/',
     // // proxy: config.dev.proxyTable,
     // // disableHostCheck: true,
-    quiet: true, // necessary for FriendlyErrorsPlugin
-    watchOptions: {
-      aggregateTimeout: 200,
-      poll: false,
-      ignored: /node_modules/,
-    },
+    // quiet: true, // necessary for FriendlyErrorsPlugin
+    // watchOptions: {
+    //   aggregateTimeout: 200,
+    //   // poll: false,
+    //   // ignored: /node_modules/,
+    // },
   },
   optimization: {
     splitChunks: {
@@ -62,7 +61,9 @@ module.exports = merge(baseWebpackConfig, {
   },
   plugins: [
     new ESLintPlugin({
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      failOnError: false,
+      fix: true
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
