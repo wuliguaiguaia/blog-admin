@@ -1,0 +1,29 @@
+.articlelist {
+  margin-top: 10px;
+}
+
+.table {
+  height: 80vh;
+}
+
+.operateContent {
+  display: flex;
+}
+
+.operate {
+  margin-right: 10px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.title {
+
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}

@@ -5,6 +5,7 @@ export const get = {
   getarticlelist: 'http://127.0.0.1:3009/article/list',
   getarticle: 'http://127.0.0.1:3009/article',
   getcommit: 'http://localhost:3009/commit',
+  search: 'http://localhost:3009/article/search',
 }
 
 export const post = {

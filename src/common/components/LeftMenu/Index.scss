@@ -52,4 +52,12 @@
     color: #fff;
     background-color: #4ca9ff;
   }
+
+  .ant-menu-item-selected a {
+    color: #fff;
+
+    &:hover {
+      color: #fff;
+    }
+  }
 }

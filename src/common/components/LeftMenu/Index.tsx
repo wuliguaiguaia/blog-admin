@@ -15,6 +15,7 @@ import {
   LeftOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
+import { Link } from 'react-router-dom'
 import styles from './Index.scss'
 
 const { SubMenu } = Menu
@@ -27,11 +28,13 @@ const data = [
     id: 1,
     name: '工作台',
     children: [],
+    href: '/',
     icon: <AppstoreOutlined />,
   },
   {
     id: 2,
     name: '文档管理', /* 增加、分类、未发布、日期 */
+    href: '/articlelist',
     icon: <ReadOutlined />,
   },
   {
@@ -42,21 +45,25 @@ const data = [
       {
         id: 3.1,
         name: '访问统计', /* 浏览数、评论数 */
+        href: '/analysis/pv',
         icon: <EyeOutlined />,
       },
       {
         id: 3.2,
         name: '性能统计', /* 访问速度 性能打点 */
+        href: '/analysis/performance',
         icon: <RiseOutlined />,
       },
       {
         id: 3.3,
         name: '错误统计', /* sentry 数据爬取列表，跳转到 sentry */
+        href: '/analysis/error',
         icon: <WarningOutlined />,
       },
       {
         id: 3.4,
         name: '接口统计', /* 接口访问时长 */
+        href: '/analysis/interface',
         icon: <LineChartOutlined />,
       },
     ],
@@ -64,6 +71,7 @@ const data = [
   {
     id: 4,
     name: '用户管理',
+    href: '/userlist',
     icon: <UserOutlined />,
   },
 ]
@@ -95,7 +103,7 @@ const LeftMenu = () => {
       >
         {
           data.map(({
-            id, name, icon, children = [],
+            id, name, icon, children = [], href = '',
           }) => {
             if (children.length) {
               return (
@@ -103,14 +111,19 @@ const LeftMenu = () => {
                   {
                     children.map((item) => (
                       <Menu.Item key={item.id} icon={item.icon}>
-                        {item.name}
+
+                        <Link to={item.href}>{item.name}</Link>
                       </Menu.Item>
                     ))
                   }
                 </SubMenu>
               )
             }
-            return <Menu.Item icon={icon} key={id}>{name}</Menu.Item>
+            return (
+              <Menu.Item icon={icon} key={id}>
+                <Link to={href}>{name}</Link>
+              </Menu.Item>
+            )
           })
         }
       </Menu>

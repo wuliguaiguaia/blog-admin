@@ -32,6 +32,10 @@ module.exports = merge(baseWebpackConfig, {
     host: 'localhost',
     port: 8080,
     open: true,
+    client: {
+      logging: 'info',
+      overlay: false,
+    },
     // proxy: {
     //   '/api': {
     //     target: 'http://localhost:3000',
@@ -48,7 +52,7 @@ module.exports = merge(baseWebpackConfig, {
     //   // ignored: /node_modules/,
     // },
   },
-  optimization: {
+ /*  optimization: {
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -58,7 +62,7 @@ module.exports = merge(baseWebpackConfig, {
         }
       }
     }
-  },
+  }, */
   plugins: [
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],

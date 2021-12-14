@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import cns from 'classnames'
 import { getDateCount } from '@/common/utils/index'
 import styles from './Index.scss'
 import { monthAlias } from '@/common/constants'
 import $http from '@/common/api'
 
-const response = $http.getcommit()
+interface IProps {
+  year: number
+}
 
-const CalendarGraph = () => {
+const CalendarGraph: FunctionComponent<IProps> = ({year = 2021}) => {
   const [datas, setDatas] = useState([])
   useEffect(() => {
-    response.then((_res: any) => {
-      const { data } = _res
+    const fetchData = async () => {
+      const response = await $http.getcommit({year})
+      const { data } = response
       setDatas(data.reduce((res: { [x: string]: any }, item: { date: string; count: number }) => {
         const changedDate = new Date(item.date).toLocaleDateString()
         res[changedDate] = item.count
         return res
       }, {}))
-    })
-  }, [])
-  const year = 2021
+    }
+    fetchData()
+  }, [year])
   const datesMap = []
   const firstWeekday = new Date(year, 0, 1).getDay() // 5
   const tempFullDates: string[] = []

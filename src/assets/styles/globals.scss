@@ -266,8 +266,10 @@
   .text-ellipsis {
     display: box;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    word-wrap: break-word;
     overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   /* 多行省略 */
