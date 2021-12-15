@@ -4,11 +4,11 @@ import cns from 'classnames'
 import Header from '@/common/components/Header/Index'
 import LeftMenu from '@/common/components/LeftMenu/Index'
 // import Footer from '@/common/components/Footer/Index'
-import workbench from './workBench/Index'
+import Workbench from './workBench/Index'
 import UserList from './userList'
 import styles from './Index.scss'
 import Analysis from './analysis/Index'
-import ArticleList from './articleList/Index'
+import ArticleList from './articlelist/Index'
 
 const Management = () => (
   <>
@@ -17,7 +17,7 @@ const Management = () => (
       <LeftMenu />
       <div className={styles.container}>
         <Header />
-        <Route path="/" exact component={workbench} />
+        <Route path="/workbench" component={Workbench} />
         <Route path="/articlelist" component={ArticleList} />
         <Route path="/analysis" component={Analysis} />
         <Route path="/userlist" component={UserList} />

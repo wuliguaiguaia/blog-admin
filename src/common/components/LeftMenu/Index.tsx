@@ -28,7 +28,7 @@ const data = [
     id: 1,
     name: '工作台',
     children: [],
-    href: '/',
+    href: '/workbench',
     icon: <AppstoreOutlined />,
   },
   {

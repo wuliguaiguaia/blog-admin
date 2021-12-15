@@ -159,21 +159,20 @@ const ArticleList = () => {
             try {
               const data = await $http.publish({ id: record.id })
               console.log(data, '')
-
               if (data.errNo === 0) {
                 message.success('发布成功！')
+                fetchData({
+                  page,
+                  prepage: pagesize,
+                  categories: curCates,
+                  sorter,
+                  published,
+                })
               } else {
                 message.error('发布失败！')
               }
             } catch (e) {
               message.error('发布失败！')
-              fetchData({
-                page,
-                prepage: pagesize,
-                categories: curCates,
-                sorter,
-                published,
-              })
             }
           }
           const handleDelete = async () => {
@@ -183,18 +182,18 @@ const ArticleList = () => {
 
               if (data.errNo === 0) {
                 message.success('删除成功！')
+                fetchData({
+                  page,
+                  prepage: pagesize,
+                  categories: curCates,
+                  sorter,
+                  published,
+                })
               } else {
                 message.error('删除失败！')
               }
             } catch (e) {
               message.error('删除失败！')
-              fetchData({
-                page,
-                prepage: pagesize,
-                categories: curCates,
-                sorter,
-                published,
-              })
             }
           }
           return (
@@ -244,7 +243,6 @@ const ArticleList = () => {
   ) => {
     const convertSorter = field ? { [field]: { order: order?.slice(0, -3) } } : {}
     fetchData({
-      type: 0,
       page: pagination.current,
       prepage: pagination.pageSize,
       categories: filters.categories,

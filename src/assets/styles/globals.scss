@@ -237,6 +237,15 @@
     align-items: center;
   }
 
+  .flex-end {
+    justify-self: self-end;
+  }
+
+  .align-baseline {
+    display: flex;
+    align-items: baseline;
+  }
+
   /* icon */
 
   .icon {
@@ -264,12 +273,9 @@
   }
 
   .text-ellipsis {
-    display: box;
     text-overflow: ellipsis;
-    word-wrap: break-word;
+    white-space: nowrap;
     overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
   }
 
   /* 多行省略 */
