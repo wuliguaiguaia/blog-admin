@@ -6,8 +6,28 @@
   height: 80vh;
 }
 
+td.small {
+  color: #838080;
+  font-size: 12px;
+}
+
+td.title {
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.categories {
+  font-size: 10px;
+  padding: 2px 3px;
+  line-height: 1;
+}
+
 .operateContent {
   display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: $main-color;
+  cursor: pointer;
 }
 
 .operate {
@@ -19,11 +39,21 @@
 }
 
 .title {
-
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.resetBtn {
+  margin-left: 10px;
+}
+
+:global {
+  .ant-table-tbody > tr > td,
+  .ant-table-thead > tr > th {
+    text-align: center;
+  }
 }

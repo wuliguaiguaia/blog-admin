@@ -1,15 +1,15 @@
 import { Tooltip } from 'antd'
 import React, {
-  createRef, FunctionComponent, useEffect, useRef, useState,
+  createRef, FunctionComponent, useEffect, useState,
 } from 'react'
 
 interface IProps {
-  selector: string
+  // selector: string
   txt: string,
   width: number
 }
 
-const MyTooltip: FunctionComponent<IProps> = ({selector, txt, width }) => {
+const MyTooltip: FunctionComponent<IProps> = ({ txt, width }) => {
   const [show, setShow] = useState(false)
   const el = createRef<HTMLDivElement>()
   useEffect(() => {
@@ -18,7 +18,7 @@ const MyTooltip: FunctionComponent<IProps> = ({selector, txt, width }) => {
     if (scrollWidth > width) {
       setShow(true)
     }
-  }, [el])
+  }, [el, width])
   return (
     <>
       <Tooltip title={txt} style={{ display: show ? 'block' : 'none' }}>

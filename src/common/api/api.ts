@@ -14,7 +14,10 @@ export const post = {
 
 export const remove = {}
 
-export const put = {}
+export const put = {
+  publish: 'http://localhost:3009/article/publish',
+  delete: 'http://localhost:3009/article/delete',
+}
 
 export const patch = {}
 

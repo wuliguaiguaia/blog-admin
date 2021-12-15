@@ -32,6 +32,8 @@ module.exports = {
       'func-names': 'off',
       'no-use-before-define': 'off',
       'no-unused-vars': 'warn',
+      'jsx-a11y/no-static-element-interactions': 'off',
+      'jsx-a11y/click-events-have-key-events': 'off',
       'import/no-unresolved': [2, { ignore: ['^@'] }],
     }
   }]
