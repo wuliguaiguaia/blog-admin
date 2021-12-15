@@ -1,11 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { BrowserRouter as Router, Route} from 'react-router-dom'
-import management from './pages/management/Index'
+import Editor from './pages/editor/Index'
+import Management from './pages/management/Index'
 
 const App: FunctionComponent = () => (
   <div>
     <Router>
-      <Route path="/" component={management} />
+      <Route path="/" component={Management} />
+      <Route path="/editor/:id" component={Editor} />
     </Router>
   </div>
 )

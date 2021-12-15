@@ -14,6 +14,7 @@ import {
   Table, Tag, Tooltip,
 } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
 import styles from './Index.scss'
 import $http from '@/common/api'
 
@@ -154,7 +155,6 @@ const ArticleList = () => {
         title: '操作',
         width: 160,
         render: (_, record: any) => {
-          const handleUpdate = () => {}
           const handlePublish = async () => {
             try {
               const data = await $http.publish({ id: record.id })
@@ -199,7 +199,7 @@ const ArticleList = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate} onClick={handleUpdate}>修改</span>
+              <span className={styles.operate}><Link to={`/editor/${record.id}`}>修改</Link></span>
               {!record.published ? (
                 <Popconfirm
                   title="请再次确认是否发布？"
