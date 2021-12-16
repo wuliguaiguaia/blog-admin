@@ -14,6 +14,8 @@ import $http from '@/common/api'
 import styles from './Index.scss'
 import 'highlight.js/styles/github.css'
 import { IArticle, ICategory } from '@/common/interface'
+import testImage from '@/assets/imgs/image.png'
+import '@/assets/styles/md.scss'
 
 interface IProps {
   match: {
@@ -25,7 +27,7 @@ const { TextArea } = Input
 
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   console.log(params.id)
-  const { id = 50655683 } = params
+  const { id = 260251848 } = params
   const [data, setData] = useState<IArticle>({
     id,
     viewCount: 0,
@@ -47,8 +49,26 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   const handleTitleBlur = () => setEditTitle(false)
 
   const handlePaste = async (e) => {
-    const file = e.clipboardData.files[0]
+    const file = e.clipboardData?.files?.[0]
     console.log(file)
+
+    if (file) {
+      const form = new FormData()
+      form.append('file', file)
+      const response = await $http.upload(form, {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      })
+      const { data: { filePath } } = response
+      console.log(filePath)
+      if (file.type.includes('image/')) {
+        setData({
+          ...data,
+          content: `${data.content}<img src=${testImage} alt="" class="md-img"/>`,
+        })
+      }
+    }
     e.preventDefault()
   }
   useEffect(() => {

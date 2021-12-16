@@ -25,6 +25,8 @@ export const head = {}
 
 export const options = {}
 
-export const file = {}
+export const file = {
+  upload: 'http://localhost:3009/upload',
+}
 
 export const ws = {}
