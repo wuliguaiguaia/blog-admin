@@ -8,7 +8,7 @@ import Workbench from './workBench/Index'
 import UserList from './userList'
 import styles from './Index.scss'
 import Analysis from './analysis/Index'
-import ArticleList from './articlelist/Index'
+import ArticleList from './articleList/Index'
 
 const Management = () => (
   <>

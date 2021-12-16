@@ -198,7 +198,7 @@ const ArticleList = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate}><Link to={`/editor/${record.id}`}>修改</Link></span>
+              <span className={styles.operate}><Link to="/editor">修改</Link></span>
               {!record.published ? (
                 <Popconfirm
                   title="请再次确认是否发布？"

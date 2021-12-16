@@ -246,6 +246,11 @@
     align-items: baseline;
   }
 
+  .align-end {
+    display: flex;
+    align-items: flex-end;
+  }
+
   /* icon */
 
   .icon {
