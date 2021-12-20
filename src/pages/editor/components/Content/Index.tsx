@@ -8,16 +8,24 @@ import cns from 'classnames'
 import styles from './Index.scss'
 import { Marked } from '@/common/utils/marked'
 import { IArticle } from '@/common/interface'
+import { IHistoryRecord } from '@/common/plugins/historyRecord'
 
 const marked = Marked()
+
 
 interface IProps {
   picUpload: (file: any) => Promise<void>
   dataChange: (data: any) => void
-  data: IArticle
+  data: IArticle,
+  setCursorIndex: (data: any) => void
+  historyRecord: IHistoryRecord
 }
-const Content:FunctionComponent<IProps> = ({picUpload, data, dataChange}) => {
+const Content: FunctionComponent<IProps> = ({
+  picUpload, data, dataChange, setCursorIndex, historyRecord,
+}) => {
   const textAreaEl = createRef<HTMLTextAreaElement>()
+
+  // https://zh.javascript.info/selection-range#biao-dan-kong-jian-zhong-de-xuan-ze
   const handlePaste = async (e: any) => {
     const file = e.clipboardData?.files?.[0]
     if (file) {
@@ -26,9 +34,16 @@ const Content:FunctionComponent<IProps> = ({picUpload, data, dataChange}) => {
     e.preventDefault()
   }
 
+  const handleSelect = () => {
+    const { selectionStart, selectionEnd } = textAreaEl.current
+    setCursorIndex({ start: selectionStart, end: selectionEnd })
+  }
+
   const onTextChange = useCallback((e) => {
-    dataChange({content: e.target.value})
-  }, [dataChange])
+    const text = e.target.value
+    dataChange({ content: text})
+    historyRecord.add(text)
+  }, [dataChange, historyRecord])
 
   useEffect(() => {
     if (textAreaEl.current) {
@@ -44,6 +59,7 @@ const Content:FunctionComponent<IProps> = ({picUpload, data, dataChange}) => {
           className={styles.textAreaContent}
           onChange={onTextChange}
           onPaste={handlePaste}
+          onSelect={handleSelect}
         />
       </div>
       <div className={styles.containerLine} />

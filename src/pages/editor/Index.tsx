@@ -9,16 +9,20 @@ import ToolBar from './components/Toolbar/Index'
 import Content from './components/Content/Index'
 import ConfigModal from './components/ConfigModal/Index'
 import Header from './components/Header/Index'
+import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 
 interface IProps {
   match: {
     params: any
   }
 }
+const historyRecord: IHistoryRecord = new HistoryRecord()
+
+window.historyRecord = historyRecord
 
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   console.log(params.id)
-  const { id = 50655683 } = params
+  const { id = 260251848 } = params
   const [data, setData] = useState<IArticle>({
     id,
     viewCount: 0,
@@ -28,11 +32,14 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     updateTime: '',
     categories: [],
   })
+  const [cursorIndex, setCursorIndex] = useState({ start: 0, end: 0 })
+
   const [isConfigVisibile, setConfigVisibile] = useState(false)
   const handleConfigClick = () => setConfigVisibile(true)
   const picUpload = async (file: any) => {
     const form = new FormData()
     form.append('file', file)
+
     const response = await $http.upload(form, {
       headers: {
         'content-type': 'multipart/form-data',
@@ -41,9 +48,11 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     const { data: { filePath } } = response
     console.log(filePath)
     if (file.type.includes('image/')) {
+      const left = data.content.substr(0, cursorIndex.start)
+      const right = data.content.substr(cursorIndex.end)
       setData({
         ...data,
-        content: `${data.content}<img src=${testImage} alt="" class="md-img"/>`,
+        content: `${left}<img src=${testImage} alt="" class="md-img"/>${right}`,
       })
     }
   }
@@ -60,6 +69,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
       const response = await $http.getarticle({ id })
       const { data: idata } = response
       setData(idata)
+      historyRecord.addFirst(idata.content)
     }
     fetchData()
   }, [id])
@@ -74,11 +84,15 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
       <ToolBar
         picUpload={picUpload}
         handleConfigClick={handleConfigClick}
+        historyRecord={historyRecord}
+        dataChange={dataChange}
       />
       <Content
         data={data}
         picUpload={picUpload}
         dataChange={dataChange}
+        setCursorIndex={setCursorIndex}
+        historyRecord={historyRecord}
       />
       <ConfigModal
         data={data}

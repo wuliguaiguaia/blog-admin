@@ -1,3 +1,5 @@
+$marginLeft: 20px;
+
 .toolbar {
   height: $toolbarHeight;
   border-bottom: 1px solid #f5f5f5;
@@ -23,8 +25,8 @@
 .toolarDivider {
   width: 1px;
   height: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: $marginLeft;
+  margin-right: $marginLeft;
   background-color: #d3d0d0;
 }
 
@@ -39,4 +41,14 @@
 
 .upload {
   display: none;
+}
+
+.redo {
+  transform: rotateY(180deg);
+  margin-left: 15px;
+}
+.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  color: #c4c2c2;
 }
