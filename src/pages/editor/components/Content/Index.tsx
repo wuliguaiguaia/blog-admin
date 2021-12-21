@@ -30,8 +30,8 @@ const Content: FunctionComponent<IProps> = ({
     const file = e.clipboardData?.files?.[0]
     if (file) {
       picUpload(file)
+      e.preventDefault()
     }
-    e.preventDefault()
   }
 
   const handleSelect = () => {

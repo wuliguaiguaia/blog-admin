@@ -18,7 +18,7 @@ export interface IHistoryRecord {
 }
 
 const MAX_COUNT = 100
-const RECORD_TIME = 3000
+const RECORD_TIME = 1000
 
 class HistoryRecord {
   maxCount = 0
@@ -49,11 +49,9 @@ class HistoryRecord {
   add(data: any) {
     if (!this.canRecord) return
     const now = Date.now()
-    const hasChanged = data === this.historyArr[this.historyArr.length - 1]
-    console.log(data, this.historyArr[this.length - 1])
-    if (!hasChanged) return
+    const notChanged = data === this.historyArr[this.historyArr.length - 1]
+    if (notChanged) return
     const timeValid = now - this.lastTime >= this.recordTime
-    console.log(now - this.lastTime)
 
     if (!timeValid) return
     while (this.curIndex < this.length - 1) {
