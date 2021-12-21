@@ -12,5 +12,7 @@ export interface IArticle {
   createTime: string;
   updateTime: string;
   viewCount: number;
-  categories: ICategory[]
+  categories: ICategory[];
+  published: number;
+  deleted: number;
 }

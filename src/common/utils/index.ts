@@ -7,6 +7,8 @@ export const getDate = (str: string) => {
 }
 
 
+export const getDateDetail = (updateTime: string) => updateTime.replace(/-/g, '/').replace('T', ' ').replace(/Z|T/, '').slice(0, -4)
+
 /*
   节流函数：
   每隔 time 执行一次 cb

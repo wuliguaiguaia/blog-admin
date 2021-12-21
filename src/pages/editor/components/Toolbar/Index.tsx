@@ -1,7 +1,7 @@
 import React, { createRef, FunctionComponent } from 'react'
-import { Tooltip } from 'antd'
+import { Tooltip, Switch } from 'antd'
 import {
-  BarsOutlined, PictureOutlined, RollbackOutlined, SettingOutlined,
+  PictureOutlined, PushpinFilled, PushpinOutlined, RollbackOutlined, SettingOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
 import styles from './Index.scss'
@@ -12,14 +12,20 @@ interface IProps {
   picUpload: (file: any) => Promise<void>
   historyRecord: IHistoryRecord
   dataChange: (data: any) => void
+  preview: boolean
+  setPreview: (preview: boolean) => void
 }
 
 const ToolBar: FunctionComponent<IProps> = ({
   handleConfigClick, picUpload, historyRecord, dataChange,
+  preview, setPreview,
 }) => {
   const fileEl = createRef<HTMLInputElement>()
   const handleClickPic = () => {
     fileEl.current?.click()
+  }
+  const handlePreviewChange = (checked:boolean) => {
+    setPreview(checked)
   }
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -60,12 +66,14 @@ const ToolBar: FunctionComponent<IProps> = ({
           <PictureOutlined onClick={handleClickPic} />
           <input type="file" name="file" accept="image/*" className={styles.upload} ref={fileEl} onChange={handleFileChange} />
         </Tooltip>
-        {/* <div className={styles.toolarDivider} /> */}
       </div>
-      <div className={styles.toobarlItem}>
+      <div className={styles.toolbarItem}>
         <span className={styles.toobarLabel}>大纲</span>
-        <BarsOutlined className={styles.toobarIcon} />
-
+        <PushpinOutlined className={styles.toobarIcon} />
+        <PushpinFilled className={styles.toobarIcon} />
+        <div className={styles.toolarDivider} />
+        <span className={styles.toobarLabel}>预览</span>
+        <Switch size="small" defaultChecked={preview} onChange={handlePreviewChange} />
       </div>
     </div>
   )

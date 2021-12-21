@@ -22,7 +22,7 @@ window.historyRecord = historyRecord
 
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   console.log(params.id)
-  const { id = 260251848 } = params
+  const { id = 50655683 } = params
   const [data, setData] = useState<IArticle>({
     id,
     viewCount: 0,
@@ -31,9 +31,12 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     createTime: '',
     updateTime: '',
     categories: [],
+    deleted: 0,
+    published: 0,
   })
-  const [cursorIndex, setCursorIndex] = useState({ start: 0, end: 0 })
 
+  const [cursorIndex, setCursorIndex] = useState({ start: 0, end: 0 })
+  const [preview, setPreview] = useState(true)
   const [isConfigVisibile, setConfigVisibile] = useState(false)
   const handleConfigClick = () => setConfigVisibile(true)
   const picUpload = async (file: any) => {
@@ -63,6 +66,11 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     })
   }
 
+  const [transContentLength, setTransContentLength] = useState(0)
+  const getTransContentLength = (len: number) => {
+    setTransContentLength(len)
+  }
+
   // 刷新404了。。。
   useEffect(() => {
     const fetchData = async () => {
@@ -77,22 +85,26 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   return (
     <div className={styles.wrapper}>
       <Header
-        title={data.title}
-        updateTime={data.updateTime}
+        data={data}
         dataChange={dataChange}
+        transContentLength={transContentLength}
       />
       <ToolBar
         picUpload={picUpload}
         handleConfigClick={handleConfigClick}
         historyRecord={historyRecord}
         dataChange={dataChange}
+        preview={preview}
+        setPreview={setPreview}
       />
       <Content
         data={data}
         picUpload={picUpload}
+        preview={preview}
         dataChange={dataChange}
         setCursorIndex={setCursorIndex}
         historyRecord={historyRecord}
+        getTransContentLength={getTransContentLength}
       />
       <ConfigModal
         data={data}

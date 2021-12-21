@@ -3,20 +3,27 @@ import React, {
 } from 'react'
 import cns from 'classnames'
 import {
-  Button, Input,
+  Button, Dropdown, Input, Menu,
 } from 'antd'
 import {
-  EditOutlined,
+  DeleteOutlined,
+  EditOutlined, MoreOutlined, SendOutlined,
 } from '@ant-design/icons'
 import styles from './Index.scss'
+import { IArticle } from '@/common/interface'
 
 interface IProps {
   dataChange: (data: any) => void
-  title: string,
-  updateTime: string
+  data: IArticle,
+  transContentLength: number
 }
 
-const Header:FunctionComponent<IProps> = ({dataChange, title, updateTime}) => {
+const Header: FunctionComponent<IProps> = ({
+  dataChange, data: {
+    title, updateTime, createTime, published, deleted,
+  },
+  transContentLength,
+}) => {
   const [isEditTitle, setEditTitle] = useState(false)
   const inputEl = createRef<Input>()
   const handleClickEditTitle = () => setEditTitle(true)
@@ -32,6 +39,37 @@ const Header:FunctionComponent<IProps> = ({dataChange, title, updateTime}) => {
       inputEl.current?.blur()
     }
   }, [inputEl, isEditTitle])
+
+  const moreOperate = () => (
+    <Menu className={styles.operateMenu}>
+      <div className={styles.operates}>
+        <Menu.Item className={styles.operateItem} icon={<DeleteOutlined />} disabled={!!deleted}>
+          删除
+        </Menu.Item>
+        <Menu.Item className={styles.operateItem} icon={<SendOutlined />} disabled={!!published}>
+          发布
+        </Menu.Item>
+      </div>
+      <div className={styles.menuDivider} />
+      <div className={styles.details}>
+        <p>
+          字数统计：
+          {transContentLength}
+        </p>
+        <p>
+          创建于：
+          {new Date(createTime).toLocaleDateString()}
+        </p>
+        <p>
+          最后编辑于：
+          {new Date(updateTime).toLocaleDateString() }
+        </p>
+        <p>
+          编辑者：柠檬精
+        </p>
+      </div>
+    </Menu>
+  )
   return (
     <div className={cns([styles.header, 'jusBetween-alignCenter'])}>
       <div className="align-center">
@@ -59,7 +97,11 @@ const Header:FunctionComponent<IProps> = ({dataChange, title, updateTime}) => {
           {updateTime.replace(/T/, ' ').slice(0, -5)}
         </p>
         <Button className={styles.saveBtn} size="middle" type="primary">保存</Button>
-        <Button size="middle" type="primary">发布</Button>
+        <Dropdown overlay={moreOperate} trigger={['click']}>
+          <div className={cns([styles.moreOperate, 'jusCenter-alignCenter'])}>
+            <MoreOutlined />
+          </div>
+        </Dropdown>
       </div>
     </div>
   )

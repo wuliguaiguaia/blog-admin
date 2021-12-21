@@ -1,4 +1,4 @@
-$marginLeft: 20px;
+$marginLeft: 15px;
 
 .toolbar {
   height: $toolbarHeight;
@@ -47,6 +47,7 @@ $marginLeft: 20px;
   transform: rotateY(180deg);
   margin-left: 15px;
 }
+
 .disabled {
   pointer-events: none;
   cursor: not-allowed;

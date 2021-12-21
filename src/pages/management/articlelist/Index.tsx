@@ -17,6 +17,7 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import styles from './Index.scss'
 import $http from '@/common/api'
+import { getDateDetail } from '@/common/utils'
 
 const defaultPerpage = 20
 const ArticleList = () => {
@@ -149,7 +150,7 @@ const ArticleList = () => {
         className: styles.small,
         width: 150,
         sorter: (a, b) => a - b,
-        render: (updateTime: string) => updateTime.replace(/-/g, '/').replace('T', ' ').replace(/Z|T/, '').slice(0, -4),
+        render: (updateTime: string) => getDateDetail(updateTime),
       },
       {
         title: '操作',

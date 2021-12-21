@@ -3,6 +3,7 @@ import React, {
   createRef,
   useEffect,
   useCallback,
+  useState,
 } from 'react'
 import cns from 'classnames'
 import styles from './Index.scss'
@@ -17,13 +18,19 @@ interface IProps {
   picUpload: (file: any) => Promise<void>
   dataChange: (data: any) => void
   data: IArticle,
+  preview: boolean,
   setCursorIndex: (data: any) => void
-  historyRecord: IHistoryRecord
+  historyRecord: IHistoryRecord,
+  getTransContentLength: (num: number) => void
 }
+
 const Content: FunctionComponent<IProps> = ({
-  picUpload, data, dataChange, setCursorIndex, historyRecord,
+  picUpload, data, dataChange, setCursorIndex, historyRecord, getTransContentLength,
+  preview,
 }) => {
   const textAreaEl = createRef<HTMLTextAreaElement>()
+  const [transContent, setTransContent] = useState('')
+  const transEl = createRef<HTMLDivElement>()
 
   // https://zh.javascript.info/selection-range#biao-dan-kong-jian-zhong-de-xuan-ze
   const handlePaste = async (e: any) => {
@@ -50,6 +57,15 @@ const Content: FunctionComponent<IProps> = ({
       textAreaEl.current.value = data.content
     }
   }, [data, textAreaEl])
+
+  useEffect(() => {
+    const text = marked.parse(data.content)
+    if (transEl.current) {
+      getTransContentLength(transEl.current.innerText.length)
+    }
+    setTransContent(text)
+  }, [data.content, getTransContentLength, transEl])
+
   return (
     <div className={cns([styles.container, 'flex'])}>
       <div className={styles.leftContent}>
@@ -62,12 +78,20 @@ const Content: FunctionComponent<IProps> = ({
           onSelect={handleSelect}
         />
       </div>
-      <div className={styles.containerLine} />
-      <div
-        className={styles.rightContent}
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: marked.parse(data.content) }}
-      />
+      {
+        preview ? (
+          <>
+            <div className={styles.containerLine} />
+            <div
+              ref={transEl}
+              className={styles.rightContent}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: transContent}}
+            />
+          </>
+        ) : null
+      }
+
     </div>
   )
 }
