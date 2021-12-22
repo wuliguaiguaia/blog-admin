@@ -12,11 +12,14 @@ export const post = {
   comment: 'comment',
 }
 
-export const remove = {}
+export const remove = {
+  forcedeletearticle: 'http://localhost:3009/article',
+}
 
 export const put = {
-  publish: 'http://localhost:3009/article/publish',
-  delete: 'http://localhost:3009/article/delete',
+  publisharticle: 'http://localhost:3009/article/publish',
+  deletearticle: 'http://localhost:3009/article/delete',
+  updatearticle: 'http://localhost:3009/article/update',
 }
 
 export const patch = {}

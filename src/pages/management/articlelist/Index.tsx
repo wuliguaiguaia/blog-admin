@@ -158,7 +158,7 @@ const ArticleList = () => {
         render: (_, record: any) => {
           const handlePublish = async () => {
             try {
-              const data = await $http.publish({ id: record.id })
+              const data = await $http.publisharticle({ id: record.id })
               console.log(data, '')
               if (data.errNo === 0) {
                 message.success('发布成功！')
@@ -178,7 +178,7 @@ const ArticleList = () => {
           }
           const handleDelete = async () => {
             try {
-              const data = await $http.delete({ id: record.id })
+              const data = await $http.deletearticle({ id: record.id })
               console.log(data, '')
 
               if (data.errNo === 0) {

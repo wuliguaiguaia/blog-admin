@@ -127,4 +127,16 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
+export const saveDocData = ({ key, value } : {key: string, value: any}):
+ThunkAction<void, RootState, unknown, AnyAction> => async (/* dispatch, getState */) => {
+  switch (key) {
+    case 'title':
+    case 'config':
+      console.log(value)
+
+      break
+    default:
+  }
+}
+
 export default reducer
