@@ -16,3 +16,13 @@ export interface IArticle {
   published: number;
   deleted: number;
 }
+
+export enum EditWatchMode {
+  preview = 0,
+  edit = 1,
+}
+
+
+export interface IRootState {
+  editor: IEditorInitialState
+}

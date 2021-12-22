@@ -18,27 +18,27 @@ interface IData {
 
 const requestRender = (type: string, url: string) => {
   switch (type) {
-  case 'get':
-  case 'options':
-  case 'head':
-    return (params: IData, config: IData) => axios[type](url, {
-      params,
-      ...config,
-    }).then((res) => res.data)
-  case 'post':
-  case 'put':
-  case 'patch':
-    return (data: IData, config: IData) => axios[type](url, data, config).then((res) => res.data)
-  case 'remove':
-    return (params: IData, config: IData) => axios.delete(url, {
-      params,
-      ...config,
-    }).then((res) => res.data)
-  case 'file':
-    return (data:IData, config:IData) => axios.post(url, data, config).then((res) => res.data)
-  case 'ws':
-  default:
-    return null
+    case 'get':
+    case 'options':
+    case 'head':
+      return (params: IData, config: IData) => axios[type](url, {
+        params,
+        ...config,
+      }).then((res) => res.data)
+    case 'post':
+    case 'put':
+    case 'patch':
+      return (data: IData, config: IData) => axios[type](url, data, config).then((res) => res.data)
+    case 'remove':
+      return (params: IData, config: IData) => axios.delete(url, {
+        params,
+        ...config,
+      }).then((res) => res.data)
+    case 'file':
+      return (data:IData, config:IData) => axios.post(url, data, config).then((res) => res.data)
+    case 'ws':
+    default:
+      return null
   }
 }
 

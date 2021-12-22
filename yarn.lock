@@ -1161,8 +1161,8 @@
     "@types/react" "*"
 
 "@types/react-redux@^7.1.20":
-  "integrity" "sha512-q42es4c8iIeTgcnB+yJgRTTzftv3eYYvCZOh1Ckn2eX/3o5TdsQYKUWpLoLuGlcY/p+VAhV9IOEZJcWk/vfkXw=="
-  "resolved" "https://registry.npmjs.org/@types/react-redux/-/react-redux-7.1.20.tgz"
+  "integrity" "sha1-QvDmGrq7Yh4SxmyW3alMWEI7198="
+  "resolved" "https://rg.cnpmjs.org/@types/react-redux/download/@types/react-redux-7.1.20.tgz"
   "version" "7.1.20"
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.0"

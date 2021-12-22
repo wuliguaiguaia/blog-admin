@@ -4,42 +4,52 @@ import {
   PictureOutlined, PushpinFilled, PushpinOutlined, RollbackOutlined, SettingOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './Index.scss'
-import { IHistoryRecord } from '@/common/plugins/historyRecord'
+import { picUpload, updateDocData, updateEditingStatus } from '@/store/reducers/editor'
+import { RootState } from '@/store/reducers/interface'
 
-interface IProps {
-  handleConfigClick: () => void
-  picUpload: (file: any) => Promise<void>
-  historyRecord: IHistoryRecord
-  dataChange: (data: any) => void
-  preview: boolean
-  setPreview: (preview: boolean) => void
-}
+interface IProps {}
 
-const ToolBar: FunctionComponent<IProps> = ({
-  handleConfigClick, picUpload, historyRecord, dataChange,
-  preview, setPreview,
-}) => {
+const ToolBar: FunctionComponent<IProps> = () => {
   const fileEl = createRef<HTMLInputElement>()
+  const {
+    editStatus: { preview },
+    historyRecord,
+  } = useSelector((state: RootState) => state.editor)
+  const dispatch = useDispatch()
+
   const handleClickPic = () => {
     fileEl.current?.click()
   }
   const handlePreviewChange = (checked:boolean) => {
-    setPreview(checked)
+    dispatch(updateEditingStatus({
+      preview: checked,
+    }))
   }
   const handleFileChange = (e) => {
     const file = e.target.files[0]
-    picUpload(file)
+    dispatch(picUpload(file))
   }
   const handleUndo = () => {
-    historyRecord.undo((data) => {
-      dataChange({content: data})
+    historyRecord.undo((data: string) => {
+      dispatch(updateDocData({
+        content: data,
+      }))
     })
   }
   const handleRedo = () => {
-    historyRecord.redo((data) => {
-      dataChange({ content: data })
+    historyRecord.redo((data: string) => {
+      dispatch(updateDocData({
+        content: data,
+      }))
     })
+  }
+
+  const handleConfigClick = () => {
+    dispatch(updateEditingStatus({
+      configModalVisible: true,
+    }))
   }
   return (
     <div className={styles.toolbar}>

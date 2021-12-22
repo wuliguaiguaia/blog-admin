@@ -9,28 +9,30 @@ import {
   DeleteOutlined,
   EditOutlined, MoreOutlined, SendOutlined,
 } from '@ant-design/icons'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './Index.scss'
-import { IArticle } from '@/common/interface'
+import { updateDocData } from '@/store/reducers/editor'
+import { RootState } from '@/store/reducers/interface'
 
-interface IProps {
-  dataChange: (data: any) => void
-  data: IArticle,
-  transContentLength: number
-}
+interface IProps {}
 
-const Header: FunctionComponent<IProps> = ({
-  dataChange, data: {
-    title, updateTime, createTime, published, deleted,
-  },
-  transContentLength,
-}) => {
+const Header: FunctionComponent<IProps> = () => {
   const [isEditTitle, setEditTitle] = useState(false)
   const inputEl = createRef<Input>()
   const handleClickEditTitle = () => setEditTitle(true)
   const handleTitleBlur = () => setEditTitle(false)
+  const {
+    transContentLength,
+    docData: {
+      createTime, updateTime, title, deleted, published,
+    },
+  } = useSelector((state: RootState) => state.editor)
+  const dispatch = useDispatch()
   const onTextChange = useCallback((e) => {
-    dataChange({title: e.target.value})
-  }, [dataChange])
+    dispatch(updateDocData({
+      title: e.target.value,
+    }))
+  }, [dispatch])
 
   useEffect(() => {
     if (isEditTitle) {

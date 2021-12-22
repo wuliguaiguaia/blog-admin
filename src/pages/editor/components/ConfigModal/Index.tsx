@@ -2,34 +2,36 @@ import React, { FunctionComponent, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Select, Modal } from 'antd'
 import cns from 'classnames'
-import { IArticle, ICategory } from '@/common/interface'
+import { ICategory } from '@/common/interface'
 import styles from './Index.scss'
-import { getCategoryList } from '@/store/reducers/editor'
+import { getCategoryList, updateEditingStatus } from '@/store/reducers/editor'
+import { RootState } from '@/store/reducers/interface'
 
 const { Option } = Select
 
-interface IProps {
-  data: IArticle,
-  isConfigVisibile: boolean,
-  setConfigVisibile: (v: boolean) => void
-}
+interface IProps {}
 
-const ConfigModal: FunctionComponent<IProps> = ({ data, isConfigVisibile, setConfigVisibile }) => {
-  const handleConfigSubmit = () => setConfigVisibile(false)
-  const handleConfigCancel = () => setConfigVisibile(false)
-  const { categoryList } = useSelector((state: any) => state.editor)
+const ConfigModal: FunctionComponent<IProps> = () => {
+  const {
+    docData, editStatus:
+    { configModalVisible },
+  } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
+
+  const handleConfigSubmit = () => dispatch(updateEditingStatus({ configModalVisible: false }))
+
+  const handleConfigCancel = () => dispatch(updateEditingStatus({ configModalVisible: false }))
+
+  const { categoryList } = useSelector((state: any) => state.editor)
+
   useEffect(() => {
-    const fetch = async () => {
-      dispatch(getCategoryList())
-    }
-    fetch()
+    dispatch(getCategoryList())
   }, [dispatch])
 
   return (
     <Modal
       title="文档配置项"
-      visible={isConfigVisibile}
+      visible={configModalVisible}
       onOk={handleConfigSubmit}
       okText="确定"
       cancelText="取消"
@@ -44,7 +46,7 @@ const ConfigModal: FunctionComponent<IProps> = ({ data, isConfigVisibile, setCon
           style={{ width: '70%' }}
           placeholder="Please select"
           // value={selectedCates}
-          defaultValue={data.categories.map((item) => item.id)}
+          defaultValue={docData.categories.map((item: ICategory) => item.id)}
         >
           {
             categoryList.map((item: ICategory) => (
