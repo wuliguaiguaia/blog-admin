@@ -1,9 +1,10 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Select, Modal } from 'antd'
 import cns from 'classnames'
 import { IArticle, ICategory } from '@/common/interface'
 import styles from './Index.scss'
-import $http from '@/common/api'
+import { getCategoryList } from '@/store/reducers/editor'
 
 const { Option } = Select
 
@@ -14,18 +15,16 @@ interface IProps {
 }
 
 const ConfigModal: FunctionComponent<IProps> = ({ data, isConfigVisibile, setConfigVisibile }) => {
-  const [cates, setCates] = useState([])
   const handleConfigSubmit = () => setConfigVisibile(false)
   const handleConfigCancel = () => setConfigVisibile(false)
-
+  const { categoryList } = useSelector((state: any) => state.editor)
+  const dispatch = useDispatch()
   useEffect(() => {
     const fetch = async () => {
-      const response:any = await $http.getcategorylist()
-      const idata = response.data.list.map(({ id: iid, name }: ICategory) => ({id: iid, name }))
-      setCates(idata)
+      dispatch(getCategoryList())
     }
     fetch()
-  }, [])
+  }, [dispatch])
 
   return (
     <Modal
@@ -48,7 +47,7 @@ const ConfigModal: FunctionComponent<IProps> = ({ data, isConfigVisibile, setCon
           defaultValue={data.categories.map((item) => item.id)}
         >
           {
-            cates.map((item: ICategory) => (
+            categoryList.map((item: ICategory) => (
               <Option key={item.id} value={item.id}>
                 {item.name}
               </Option>

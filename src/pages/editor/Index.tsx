@@ -18,8 +18,6 @@ interface IProps {
 }
 const historyRecord: IHistoryRecord = new HistoryRecord()
 
-window.historyRecord = historyRecord
-
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   console.log(params.id)
   const { id = 50655683 } = params
@@ -34,6 +32,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     deleted: 0,
     published: 0,
   })
+  // const { docData } = useSelector((state) => state.editor)
 
   const [cursorIndex, setCursorIndex] = useState({ start: 0, end: 0 })
   const [preview, setPreview] = useState(true)
