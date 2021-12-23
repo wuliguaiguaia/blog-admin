@@ -22,3 +22,9 @@ export enum EditWatchMode {
   edit = 1,
 }
 
+export interface NavList {
+  level: number;
+  text: string;
+  children?: NavList[]
+}
+

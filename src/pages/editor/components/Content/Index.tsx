@@ -7,14 +7,15 @@ import React, {
 } from 'react'
 import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
+import { renderToString} from 'react-dom/server'
 import styles from './Index.scss'
-import { Marked } from '@/common/utils/marked'
+import { Marked, renderer } from '@/common/utils/marked'
 import { picUpload, updateDocData, updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import '@/assets/styles/md.scss'
 import 'highlight.js/styles/github.css'
-import { EditWatchMode } from '@/common/interface'
-
+import { EditWatchMode, NavList } from '@/common/interface'
+import MarkdownNavbar from '../MarkdownNav/Index'
 
 const marked = Marked()
 
@@ -64,8 +65,17 @@ const Content: FunctionComponent<IProps> = () => {
     }
   }, [docData.content, textAreaEl])
 
+  const [navList, setNavList] = useState<NavList[]>([])
   useEffect(() => {
     const text = marked.parse(docData.content)
+    const list:NavList[] = []
+    renderer.heading = (txt: string, level) => {
+      list.push({ text: txt, level })
+      setNavList(list)
+      const markerContents = renderToString(<div className={cns('md-title', `md-title-${level}`)}><a id={`#${txt}`} href={`/editor/${docData.id}#${txt}`}>{txt}</a></div>)
+      return markerContents
+    }
+
     if (transEl.current) {
       dispatch(updateEditorState({
         transContentLength: transEl.current.innerText.length,
@@ -79,51 +89,60 @@ const Content: FunctionComponent<IProps> = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, docData.content])
 
+  const Outline = () => (
+    <div className={styles.outline}>
+      <div className={styles.outlineTitle}>大纲</div>
+      <MarkdownNavbar data={navList} canClick />
+    </div>
+  )
+
   return (
     <>
-
       {
         editWatchMode === EditWatchMode.edit
           ? (
             <>
               <div className={cns([styles.container, 'flex'])}>
-                <div className={styles.leftContent}>
-                  <pre className={styles.preContent}>{docData.content}</pre>
-                  <textarea
-                    ref={textAreaEl}
-                    className={styles.textAreaContent}
-                    onChange={onTextChange}
-                    onPaste={handlePaste}
-                    onSelect={handleSelect}
-                  />
-                </div>
                 {
-                  preview ? (
-                    <>
-                      <div className={styles.containerLine} />
-                      <div
-                        ref={transEl}
-                        className={styles.rightContent}
-                        // eslint-disable-next-line react/no-danger
-                        dangerouslySetInnerHTML={{ __html: transContent }}
+                  !preview ? (
+                    <div className={styles.leftContent}>
+                      <pre className={styles.preContent}>{docData.content}</pre>
+                      <textarea
+                        ref={textAreaEl}
+                        className={styles.textAreaContent}
+                        onChange={onTextChange}
+                        onPaste={handlePaste}
+                        onSelect={handleSelect}
                       />
-                    </>
+                    </div>
                   ) : null
                 }
-
+                <>
+                  <div className={styles.containerLine} />
+                  <div
+                    ref={transEl}
+                    className={styles.rightContent}
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: transContent }}
+                  />
+                </>
+                { preview ? <Outline /> : null}
               </div>
             </>
           )
           : (
-            <div className={styles.previewContainer}>
-              <h1 className={styles.bigTitle}>
-                {docData.title}
-              </h1>
-              <div
-                ref={transEl}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: transContent }}
-              />
+            <div className={cns([styles.previewContainer, 'flex'])}>
+              <div className={styles.leftPreviewContent}>
+                <h1 className={styles.bigTitle}>
+                  {docData.title}
+                </h1>
+                <div
+                  ref={transEl}
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: transContent }}
+                />
+              </div>
+              <Outline />
             </div>
           )
       }

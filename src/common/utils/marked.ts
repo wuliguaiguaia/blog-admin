@@ -2,8 +2,8 @@ import { marked } from 'marked'
 import hljs from 'highlight.js'
 
 
+export const renderer = new marked.Renderer()
 export const Marked = () => {
-  const renderer = new marked.Renderer()
   marked.setOptions({
     renderer,
     gfm: true,

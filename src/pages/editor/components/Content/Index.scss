@@ -1,3 +1,5 @@
+$outlineWidth: 280px;
+
 .container {
   height: calc(100vh - $headerHeight - $toolbarHeight);
   overflow-y: scroll;
@@ -32,6 +34,11 @@
   // overflow-x: hidden;
 }
 
+.leftContent,
+.leftPreviewContent {
+  flex: 1;
+}
+
 .preContent {
   display: block;
   overflow: hidden;
@@ -64,4 +71,22 @@
   border: none;
   outline: none;
   resize: none;
+}
+
+.outline {
+  width: $outlineWidth;
+  margin-top: 35px;
+  font-size: 14px;
+  color: #595959;
+}
+
+.outlineTitle {
+  margin-bottom: 12px;
+  padding-top: 8px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  flex-shrink: 0;
+  font-weight: 700;
 }
