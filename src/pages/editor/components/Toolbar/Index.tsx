@@ -1,13 +1,19 @@
 import React, { createRef, FunctionComponent } from 'react'
-import { Tooltip, Switch } from 'antd'
 import {
-  PictureOutlined, PushpinFilled, PushpinOutlined, RollbackOutlined, SettingOutlined,
+  Tooltip, Switch, Popover,
+} from 'antd'
+import {
+  PictureOutlined,
+  RollbackOutlined,
+  SettingOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './Index.scss'
 import { picUpload, updateDocData, updateEditingStatus } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
+import Help from '../Help/Index'
 
 interface IProps {}
 
@@ -51,6 +57,7 @@ const ToolBar: FunctionComponent<IProps> = () => {
       configModalVisible: true,
     }))
   }
+
   return (
     <div className={styles.toolbar}>
       <div className={styles.toolbarItem} onClick={handleConfigClick}>
@@ -78,12 +85,12 @@ const ToolBar: FunctionComponent<IProps> = () => {
         </Tooltip>
       </div>
       <div className={styles.toolbarItem}>
-        <span className={styles.toobarLabel}>大纲</span>
-        <PushpinOutlined className={styles.toobarIcon} />
-        <PushpinFilled className={styles.toobarIcon} />
-        <div className={styles.toolarDivider} />
         <span className={styles.toobarLabel}>预览</span>
         <Switch size="small" defaultChecked={preview} onChange={handlePreviewChange} />
+        <div className={styles.toolarDivider} />
+        <Popover content={<Help />} title="编辑说明" trigger="hover" placement="bottom">
+          <QuestionCircleOutlined />
+        </Popover>
       </div>
     </div>
   )

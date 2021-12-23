@@ -12,19 +12,10 @@ module.exports = merge(baseWebpackConfig, {
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: '[name].js',
+    publicPath: '/'
   },
   devtool: dev.devtool,
   devServer: {
-    // clientLogLevel: 'warning',
-    // historyApiFallback: {
-    //   rewrites: [
-    //     {
-    //       from: /.*/,
-    //       to: path.posix.join('public', 'index.html')
-    //     }
-    //   ]
-    // },
-    // contentBase: path.resolve(__dirname, '../dist'),
     historyApiFallback: true,
     // progress: true,
     hot: true,
@@ -52,17 +43,17 @@ module.exports = merge(baseWebpackConfig, {
     //   // ignored: /node_modules/,
     // },
   },
- /*  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
-  }, */
+  /*  optimization: {
+     splitChunks: {
+       cacheGroups: {
+         vendor: {
+           test: /[\\/]node_modules[\\/]/,
+           name: 'vendors',
+           chunks: 'all'
+         }
+       }
+     }
+   }, */
   plugins: [
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],

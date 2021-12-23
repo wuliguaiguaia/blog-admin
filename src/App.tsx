@@ -10,7 +10,7 @@ const App: FunctionComponent = () => (
     <Router>
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
-        <Route path="/editor/" component={Editor} />
+        <Route exact path="/editor/:id" component={Editor} />
         <Route path="/" component={Management} />
       </Switch>
     </Router>

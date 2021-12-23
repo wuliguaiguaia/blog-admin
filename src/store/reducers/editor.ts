@@ -21,7 +21,6 @@ export interface IInitialState {
   getDataLoading: boolean,
   editStatus: {
     preview: boolean
-    outline: boolean
     configModalVisible: boolean
   }
 }
@@ -40,7 +39,7 @@ export const initialState: IInitialState = {
   }, /* 文档数据 */
   categoryList: [], /* 所有分类 */
   getDataLoading: false,
-  editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
+  editWatchMode: EditWatchMode.edit, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
     end: 0,
@@ -48,8 +47,7 @@ export const initialState: IInitialState = {
   transContentLength: 0, /* 内容长度 */
   historyRecord: new HistoryRecord(),
   editStatus: {
-    preview: true,
-    outline: false,
+    preview: false,
     configModalVisible: false,
   },
 }

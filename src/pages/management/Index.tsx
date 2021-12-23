@@ -5,14 +5,13 @@ import Header from '@/common/components/Header/Index'
 import LeftMenu from '@/common/components/LeftMenu/Index'
 // import Footer from '@/common/components/Footer/Index'
 import Workbench from './workBench/Index'
-import UserList from './userList'
+import UserList from './userList/index'
 import styles from './Index.scss'
 import Analysis from './analysis/Index'
 import ArticleList from './articleList/Index'
 
 const Management = () => (
   <>
-    {/* <Router> */}
     <div className={cns(['flex', styles.wrapper])}>
       <LeftMenu />
       <div className={styles.container}>
@@ -23,8 +22,6 @@ const Management = () => (
         <Route path="/userlist" component={UserList} />
       </div>
     </div>
-    {/* <Footer /> */}
-    {/* </Router> */}
   </>
 )
 
