@@ -59,7 +59,6 @@ class HistoryRecord {
     }
     this.historyArr.push(data)
     this.curIndex += 1
-    console.log(this.length)
     this.lastTime = now
     while (this.length > this.maxCount) {
       this.historyArr.shift()

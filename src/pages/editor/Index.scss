@@ -1,2 +1,9 @@
 .wrapper {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+.loading {
+  position: absolute !important;
+  z-index: $loadingZIndex;
 }

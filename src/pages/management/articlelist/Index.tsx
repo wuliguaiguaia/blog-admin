@@ -159,7 +159,6 @@ const ArticleList = () => {
           const handlePublish = async () => {
             try {
               const data = await $http.publisharticle({ id: record.id })
-              console.log(data, '')
               if (data.errNo === 0) {
                 message.success('发布成功！')
                 fetchData({
@@ -179,8 +178,6 @@ const ArticleList = () => {
           const handleDelete = async () => {
             try {
               const data = await $http.deletearticle({ id: record.id })
-              console.log(data, '')
-
               if (data.errNo === 0) {
                 message.success('删除成功！')
                 fetchData({
@@ -199,7 +196,7 @@ const ArticleList = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate}><Link to="/editor">查看</Link></span>
+              <span className={styles.operate}><Link to="/editor" target="_blank">查看</Link></span>
               {!record.published ? (
                 <Popconfirm
                   title="请再次确认是否发布？"
@@ -237,10 +234,6 @@ const ArticleList = () => {
     pagination: any,
     filters: any,
     { field, order }: {field: string, order: null | 'string'},
-    extra: {
-      currentDataSource: [],
-      action: 'paginate'/* : paginate | sort | filter */
-    },
   ) => {
     const convertSorter = field ? { [field]: { order: order?.slice(0, -3) } } : {}
     fetchData({
@@ -255,7 +248,6 @@ const ArticleList = () => {
     setCurCates(filters.categories)
     setSorter(convertSorter)
     setPublished(filters.published ? filters.published[0] : null)
-    console.log(pagination, filters, field, order, extra)
   }
   const handleInputEnter = () => {
     if (!searchValue) return

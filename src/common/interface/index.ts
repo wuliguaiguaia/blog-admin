@@ -12,7 +12,7 @@ export interface IArticle {
   createTime: string;
   updateTime: string;
   viewCount: number;
-  categories: ICategory[];
+  categories: number[];
   published: number;
   deleted: number;
 }
@@ -22,7 +22,3 @@ export enum EditWatchMode {
   edit = 1,
 }
 
-
-export interface IRootState {
-  editor: IEditorInitialState
-}

@@ -13,6 +13,7 @@ import { picUpload, updateDocData, updateEditorState } from '@/store/reducers/ed
 import { RootState } from '@/store/reducers/interface'
 import '@/assets/styles/md.scss'
 import 'highlight.js/styles/github.css'
+import { EditWatchMode } from '@/common/interface'
 
 
 const marked = Marked()
@@ -27,6 +28,7 @@ const Content: FunctionComponent<IProps> = () => {
     historyRecord,
     docData,
     editStatus: { preview },
+    editWatchMode,
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
 
@@ -78,32 +80,54 @@ const Content: FunctionComponent<IProps> = () => {
   }, [dispatch, docData.content])
 
   return (
-    <div className={cns([styles.container, 'flex'])}>
-      <div className={styles.leftContent}>
-        <pre className={styles.preContent}>{docData.content}</pre>
-        <textarea
-          ref={textAreaEl}
-          className={styles.textAreaContent}
-          onChange={onTextChange}
-          onPaste={handlePaste}
-          onSelect={handleSelect}
-        />
-      </div>
-      {
-        preview ? (
-          <>
-            <div className={styles.containerLine} />
-            <div
-              ref={transEl}
-              className={styles.rightContent}
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: transContent}}
-            />
-          </>
-        ) : null
-      }
+    <>
 
-    </div>
+      {
+        editWatchMode === EditWatchMode.edit
+          ? (
+            <>
+              <div className={cns([styles.container, 'flex'])}>
+                <div className={styles.leftContent}>
+                  <pre className={styles.preContent}>{docData.content}</pre>
+                  <textarea
+                    ref={textAreaEl}
+                    className={styles.textAreaContent}
+                    onChange={onTextChange}
+                    onPaste={handlePaste}
+                    onSelect={handleSelect}
+                  />
+                </div>
+                {
+                  preview ? (
+                    <>
+                      <div className={styles.containerLine} />
+                      <div
+                        ref={transEl}
+                        className={styles.rightContent}
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{ __html: transContent }}
+                      />
+                    </>
+                  ) : null
+                }
+
+              </div>
+            </>
+          )
+          : (
+            <div className={styles.previewContainer}>
+              <h1 className={styles.bigTitle}>
+                {docData.title}
+              </h1>
+              <div
+                ref={transEl}
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: transContent }}
+              />
+            </div>
+          )
+      }
+    </>
   )
 }
 

@@ -1,10 +1,12 @@
-import React, { FunctionComponent, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Select, Modal } from 'antd'
 import cns from 'classnames'
-import { ICategory } from '@/common/interface'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Select, Modal, message } from 'antd'
 import styles from './Index.scss'
-import { getCategoryList, updateEditingStatus } from '@/store/reducers/editor'
+import { ICategory } from '@/common/interface'
+import {
+  getCategoryList, saveDocData, updateDocData, updateEditingStatus,
+} from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 
 const { Option } = Select
@@ -13,16 +15,34 @@ interface IProps {}
 
 const ConfigModal: FunctionComponent<IProps> = () => {
   const {
-    docData, editStatus:
-    { configModalVisible },
+    docData,
+    editStatus: { configModalVisible },
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
+  const { categories } = docData
+  const [loading, setLoading] = useState(false)
+  const { categoryList } = useSelector((state: any) => state.editor)
+  const [selectedCates, setSelectedCates] = useState<number[]>(categories)
 
-  const handleConfigSubmit = () => dispatch(updateEditingStatus({ configModalVisible: false }))
+  const handleConfigSubmit = () => {
+    setLoading(true)
+    setTimeout(() => {
+      function cb() {
+        setLoading(false)
+        dispatch(updateDocData({ categories: selectedCates }))
+        dispatch(updateEditingStatus({ configModalVisible: false }))
+        message.success('修改成功')
+      }
+      dispatch(saveDocData({
+        categories: selectedCates,
+      }, cb))
+    }, 200)
+  }
 
   const handleConfigCancel = () => dispatch(updateEditingStatus({ configModalVisible: false }))
-
-  const { categoryList } = useSelector((state: any) => state.editor)
+  const handleSelectedCatesChange = (value: number[]) => {
+    setSelectedCates(value)
+  }
 
   useEffect(() => {
     dispatch(getCategoryList())
@@ -31,10 +51,11 @@ const ConfigModal: FunctionComponent<IProps> = () => {
   return (
     <Modal
       title="文档配置项"
-      visible={configModalVisible}
-      onOk={handleConfigSubmit}
       okText="确定"
       cancelText="取消"
+      confirmLoading={loading}
+      visible={configModalVisible}
+      onOk={handleConfigSubmit}
       onCancel={handleConfigCancel}
     >
       <div className={cns(['align-center', styles.catesWrapper])}>
@@ -45,8 +66,8 @@ const ConfigModal: FunctionComponent<IProps> = () => {
           allowClear
           style={{ width: '70%' }}
           placeholder="Please select"
-          // value={selectedCates}
-          defaultValue={docData.categories.map((item: ICategory) => item.id)}
+          value={selectedCates}
+          onChange={handleSelectedCatesChange}
         >
           {
             categoryList.map((item: ICategory) => (

@@ -278,13 +278,20 @@
     position: sticky;
   }
 
+  .absolute-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* 多行省略 */
   .text-ellipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
 
-  /* 多行省略 */
   @mixin multi-ellipsis($lines) {
     display: box;
     overflow: hidden;

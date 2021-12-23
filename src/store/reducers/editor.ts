@@ -1,5 +1,6 @@
 import { ThunkAction } from 'redux-thunk'
 import { AnyAction } from 'redux'
+import { message } from 'antd'
 import { RootState } from '@/store/reducers/interface'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 import { IArticle, ICategory, EditWatchMode } from '@/common/interface'
@@ -17,6 +18,7 @@ export interface IInitialState {
   }
   transContentLength: number
   historyRecord: IHistoryRecord
+  getDataLoading: boolean,
   editStatus: {
     preview: boolean
     outline: boolean
@@ -37,6 +39,7 @@ export const initialState: IInitialState = {
     published: 0,
   }, /* 文档数据 */
   categoryList: [], /* 所有分类 */
+  getDataLoading: false,
   editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
@@ -60,14 +63,14 @@ const reducer = (state = initialState, action: { type: any; data: any }) => {
       return {
         ...state,
         docData: {
-          ...state.docData, data,
+          ...state.docData, ...data,
         },
       }
     case UpdateEditingStatus:
       return {
         ...state,
         editStatus: {
-          ...state.editStatus, data,
+          ...state.editStatus, ...data,
         },
       }
     default:
@@ -92,19 +95,24 @@ export const updateEditingStatus = (data: any) => ({
 
 
 export const getCategoryList = ():
-ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  const { categoryList } = getState().editor
+  if (categoryList.length !== 0) return
   const res = await $http.getcategorylist()
   const { data: { list } } = res
   dispatch(updateEditorState({categoryList: list || []}))
 }
 
 export const getArticleData = (id: number):
-ThunkAction<void, RootState, unknown, AnyAction > => async (dispatch, getState) => {
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  dispatch(updateEditorState({ getDataLoading: true }))
   const { historyRecord } = getState().editor
   const res = await $http.getarticle({ id })
   const { data } = res
+  data.categories = data.categories?.map((item: ICategory) => item.id) || []
   dispatch(updateEditorState({ docData: data }))
   historyRecord.addFirst(data.content)
+  dispatch(updateEditorState({getDataLoading: false}))
 }
 
 export const picUpload = (file: any):
@@ -127,16 +135,15 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
-export const saveDocData = ({ key, value } : {key: string, value: any}):
-ThunkAction<void, RootState, unknown, AnyAction> => async (/* dispatch, getState */) => {
-  switch (key) {
-    case 'title':
-    case 'config':
-      console.log(value)
-
-      break
-    default:
+export const saveDocData = (data: any, cb?: () => void):
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  const { docData } = getState().editor
+  const { id } = docData
+  const response = await $http.updatearticle({id, ...data})
+  if (response.errNo !== 0) {
+    message.error('修改失败')
   }
+  if (cb) cb()
 }
 
 export default reducer

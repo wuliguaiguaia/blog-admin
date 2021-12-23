@@ -4,6 +4,23 @@
   position: relative;
 }
 
+.previewContainer {
+  height: calc(100vh - $headerHeight);
+  overflow-y: scroll;
+  position: relative;
+  padding: 0 $previewPadding;
+}
+
+.bigTitle {
+  font-size: 25px;
+  line-height: 1.389;
+  font-weight: 500;
+  color: #262626;
+  margin-right: 0px;
+  word-break: break-word;
+  margin-bottom: 32px;
+}
+
 .leftContent,
 .rightContent {
   width: 50vw;
@@ -18,7 +35,7 @@
 .preContent {
   display: block;
   overflow: hidden;
-  min-height: 100%;
+  // min-height: 100%;
   // white-space: pre-wrap;
   // word-wrap: break-word !important;
   // visibility: hidden;
