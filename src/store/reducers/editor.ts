@@ -1,10 +1,11 @@
-import { ThunkAction } from 'redux-thunk'
-import { AnyAction } from 'redux'
 import { message } from 'antd'
+import { AnyAction } from 'redux'
+import { ThunkAction } from 'redux-thunk'
+import $http from '@/common/api'
 import { RootState } from '@/store/reducers/interface'
+import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 import { IArticle, ICategory, EditWatchMode } from '@/common/interface'
-import $http from '@/common/api'
 import { UpdateDocData, UpdateEditorState, UpdateEditingStatus } from '../actionTypes'
 import testImage from '@/assets/imgs/image.png'
 
@@ -18,7 +19,8 @@ export interface IInitialState {
   }
   transContentLength: number
   historyRecord: IHistoryRecord
-  getDataLoading: boolean,
+  shortcutKey: IShortcutKey
+  getDataLoading: boolean
   editStatus: {
     preview: boolean
     configModalVisible: boolean
@@ -46,6 +48,7 @@ export const initialState: IInitialState = {
   }, /* 光标位置 */
   transContentLength: 0, /* 内容长度 */
   historyRecord: new HistoryRecord(),
+  shortcutKey: new ShortcutKey(),
   editStatus: {
     preview: false,
     configModalVisible: false,

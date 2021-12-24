@@ -6,7 +6,6 @@ export const getDate = (str: string) => {
   return `${year} 年 ${month} 月 ${day} 日`
 }
 
-
 export const getDateDetail = (updateTime: string) => updateTime.replace(/-/g, '/').replace('T', ' ').replace(/Z|T/, '').slice(0, -4)
 
 /*
@@ -15,17 +14,21 @@ export const getDateDetail = (updateTime: string) => updateTime.replace(/-/g, '/
 */
 export const throttle = (cb: Function, time: number) => {
   let flag = true
+  let timer: NodeJS.Timeout | null = null
   return (...arg: any[]) => {
     if (!flag) return
     cb(...arg)
     flag = false
-    setTimeout(() => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
       flag = true
     }, time)
   }
 }
 
-
+/*
+  某年某月有多少天
+*/
 export const getDateCount = (year: number, month: number) => {
   const date = new Date(year, month - 1, 0)
   return date.getDate()

@@ -1,3 +1,7 @@
+/*
+  请求封装
+*/
+
 import axios from 'axios'
 // import { loadingUtil } from '../../components/Loadingbar/index'
 /*

@@ -28,3 +28,13 @@ export interface NavList {
   children?: NavList[]
 }
 
+export interface IOboolean {
+  [k: string]: boolean
+}
+export interface IOany {
+  [k: string]: any
+}
+
+export interface IONumberAny {
+  [k: number]: any
+}

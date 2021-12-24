@@ -1,4 +1,6 @@
-import React, { createRef, FunctionComponent } from 'react'
+import React, {
+  createRef, FunctionComponent, useCallback, useEffect, useState,
+} from 'react'
 import {
   Tooltip, Switch, Popover,
 } from 'antd'
@@ -19,44 +21,74 @@ interface IProps {}
 
 const ToolBar: FunctionComponent<IProps> = () => {
   const fileEl = createRef<HTMLInputElement>()
+  const helpPopoverEl = createRef<HTMLDivElement>()
   const {
     editStatus: { preview },
     historyRecord,
+    shortcutKey,
   } = useSelector((state: RootState) => state.editor)
+  const [helpPopoverVisible, setHelpPopoverVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const handleClickPic = () => {
+  const handleClickPic = useCallback(() => {
     fileEl.current?.click()
-  }
-  const handlePreviewChange = (checked:boolean) => {
+  }, [fileEl])
+
+  const handlePreviewChange = useCallback(() => {
+    console.log(preview, '-----')
     dispatch(updateEditingStatus({
-      preview: checked,
+      preview: !preview,
     }))
-  }
-  const handleFileChange = (e) => {
+  }, [dispatch, preview])
+
+  const handleFileChange = useCallback((e) => {
     const file = e.target.files[0]
     dispatch(picUpload(file))
-  }
-  const handleUndo = () => {
+  }, [dispatch])
+  const handleUndo = useCallback(() => {
+    console.log('undo')
     historyRecord.undo((data: string) => {
       dispatch(updateDocData({
         content: data,
       }))
     })
-  }
-  const handleRedo = () => {
+  }, [dispatch, historyRecord])
+  const handleRedo = useCallback(() => {
+    console.log('redo')
     historyRecord.redo((data: string) => {
       dispatch(updateDocData({
         content: data,
       }))
     })
-  }
-
-  const handleConfigClick = () => {
+  }, [dispatch, historyRecord])
+  const handleConfigClick = useCallback(() => {
     dispatch(updateEditingStatus({
       configModalVisible: true,
     }))
-  }
+  }, [dispatch])
+  const handleClickHelp = useCallback(() => {
+    setHelpPopoverVisible(!helpPopoverVisible)
+  }, [helpPopoverVisible])
+
+  useEffect(() => {
+    shortcutKey.subscribe({ keys: ['ctrl', 'y'], cb: handleRedo })
+    shortcutKey.subscribe({ keys: ['ctrl', 'z'], cb: handleUndo })
+    shortcutKey.subscribe({ keys: ['ctrl', 'shift', 'z'], cb: handleRedo })
+    shortcutKey.subscribe({ keys: ['alt', 'p'], cb: handleClickPic })
+    shortcutKey.subscribe({ keys: ['alt', 'v'], cb: handlePreviewChange })
+    shortcutKey.subscribe({ keys: ['alt', 'q'], cb: handleConfigClick })
+    shortcutKey.subscribe({ keys: ['alt', 'h'], cb: handleClickHelp })
+    return () => {
+      shortcutKey.unSubscribe({ keys: ['ctrl', 'y'], cb: handleRedo })
+      shortcutKey.unSubscribe({ keys: ['ctrl', 'z'], cb: handleUndo })
+      shortcutKey.unSubscribe({ keys: ['ctrl', 'shift', 'z'], cb: handleRedo })
+      shortcutKey.unSubscribe({ keys: ['alt', 'p'], cb: handleClickPic })
+      shortcutKey.unSubscribe({ keys: ['alt', 'v'], cb: handlePreviewChange })
+      shortcutKey.unSubscribe({ keys: ['alt', 'q'], cb: handleConfigClick })
+      shortcutKey.unSubscribe({ keys: ['alt', 'h'], cb: handleClickHelp })
+    }
+  }, [handleClickHelp, handleClickPic,
+    handleConfigClick, handlePreviewChange, handleRedo, handleUndo, shortcutKey])
 
   return (
     <div className={styles.toolbar}>
@@ -81,14 +113,30 @@ const ToolBar: FunctionComponent<IProps> = () => {
         <div className={styles.toolarDivider} />
         <Tooltip placement="bottom" title="图片">
           <PictureOutlined onClick={handleClickPic} />
-          <input type="file" name="file" accept="image/*" className={styles.upload} ref={fileEl} onChange={handleFileChange} />
+          <input
+            type="file"
+            name="file"
+            accept="image/*"
+            className={styles.upload}
+            ref={fileEl}
+            onChange={handleFileChange}
+          />
         </Tooltip>
       </div>
       <div className={styles.toolbarItem}>
         <span className={styles.toobarLabel}>预览</span>
-        <Switch size="small" defaultChecked={preview} onChange={handlePreviewChange} />
+        <Switch size="small" checked={preview} onChange={handlePreviewChange} />
         <div className={styles.toolarDivider} />
-        <Popover content={<Help />} title="编辑说明" trigger="hover" placement="bottom">
+        <Popover
+          content={<Help />}
+          title="编辑说明"
+          trigger={['hover', 'focus', 'click']}
+          placement="bottom"
+          ref={helpPopoverEl}
+          visible={helpPopoverVisible}
+          onMouseEnter={handleClickHelp}
+          onMouseLeave={handleClickHelp}
+        >
           <QuestionCircleOutlined />
         </Popover>
       </div>

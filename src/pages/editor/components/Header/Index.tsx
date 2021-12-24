@@ -31,6 +31,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
     docData: {
       createTime, updateTime, title, deleted, published, id,
     },
+    historyRecord,
     editWatchMode,
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
@@ -60,10 +61,14 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
 
   }
   const handleEditModeToogle = () => {
+    const mode = editWatchMode === EditWatchMode.edit
+      ? EditWatchMode.preview : EditWatchMode.edit
     dispatch(updateEditorState({
-      editWatchMode: editWatchMode === EditWatchMode.edit
-        ? EditWatchMode.preview : EditWatchMode.edit,
+      editWatchMode: mode,
     }))
+    if (mode === EditWatchMode.preview) {
+      historyRecord.destroy()
+    }
   }
   const handleDelete = () => {
     const modal = confirm({
@@ -169,6 +174,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       </Menu.Item>
     </Menu>
   )
+
   return (
     <div className={cns([styles.header, 'jusBetween-alignCenter', editWatchMode === EditWatchMode.preview ? styles.preview : styles.edit])}>
       {editWatchMode === EditWatchMode.edit ? (
