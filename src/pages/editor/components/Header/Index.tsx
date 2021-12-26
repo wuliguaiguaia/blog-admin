@@ -29,7 +29,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
   const {
     transContentLength,
     docData: {
-      createTime, updateTime, title, deleted, published, id,
+      createTime, updateTime, title, deleted, published, id, content,
     },
     historyRecord,
     editWatchMode,
@@ -58,7 +58,9 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
     }))
   }
   const handleSave = () => {
-
+    dispatch(saveDocData({
+      content,
+    }))
   }
   const handleEditModeToogle = () => {
     const mode = editWatchMode === EditWatchMode.edit

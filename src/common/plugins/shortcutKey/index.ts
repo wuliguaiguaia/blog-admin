@@ -1,11 +1,6 @@
-import { IOboolean } from '../interface/index'
-import { code2KeyMap } from '../constants/keymap'
+import { IHelperKeysValid, IOStrbool } from '../../interface/index'
+import { code2KeyMap } from '../../constants/keymap'
 
-
-/*
-  快捷键封装
-  1 编辑页
-*/
 
 const sign = '<:::>'
 /*
@@ -20,16 +15,27 @@ const utils = {
 }
  */
 
+/*
+  快捷键封装
+  组合键、整体/部分禁用
+*/
 export interface IShortcutKey {
   readonly init: () => void
   readonly bindEvents: () => void
+  readonly enable: boolean
   destory: () => void
+  setEnable: (enable: boolean) => void
+  updateValidList: (map: IHelperKeysValid[]) => void
   subscribe: ({ keys, cb }: { keys: string[], cb: () => void}) => void
   unSubscribe: ({ keys, cb }: {keys: string[], cb?: () => void}) => void
 }
 
 class ShortcutKey {
   listeners: {[k: string]: any[]} = {}
+
+  enable: boolean = false
+
+  validList: IOStrbool = {}
 
   constructor() {
     console.log(1)
@@ -67,12 +73,12 @@ class ShortcutKey {
     }
   }
 
+  onKeyDown(e: any) {
+    console.log(this.validList)
 
-  onKeyDown(e) {
-    console.log(e, this.listeners)
-
+    if (!this.enable) return
     const keys = []
-    const groupKeys: IOboolean = {
+    const groupKeys: IOStrbool = {
       alt: e.altKey,
       ctrl: e.ctrlKey || e.metaKey,
       shift: e.shiftKey,
@@ -86,8 +92,8 @@ class ShortcutKey {
     const curKey = `${code2KeyMap[e.keyCode]}`
     if (curKey) keys.push(curKey.toLocaleLowerCase())
     const keyStr = keys.join(sign)
+    if (!this.validList[keyStr]) return
     const cbs = this.listeners[keyStr]
-    console.log(keyStr, cbs)
     if (!cbs?.length) return
     e.preventDefault()
     cbs.forEach((cb) => {
@@ -101,6 +107,19 @@ class ShortcutKey {
 
   destory() {
     this.removeEvents()
+    this.validList = {}
+    this.listeners = {}
+  }
+
+  setEnable(value: boolean) {
+    this.enable = value
+  }
+
+  updateValidList(map: IHelperKeysValid[]) {
+    map.forEach(({ keys, enable }) => {
+      const keyStr = keys.join(sign)
+      this.validList[keyStr] = enable
+    })
   }
 
   removeEvents() {

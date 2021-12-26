@@ -28,7 +28,17 @@ export interface NavList {
   children?: NavList[]
 }
 
-export interface IOboolean {
+
+export interface IHelperKeysValid{
+  keys: string[];
+  enable: boolean
+}
+export interface IHelperKeys extends IHelperKeysValid {
+  cb: string;
+  title: string;
+}
+
+export interface IOStrbool {
   [k: string]: boolean
 }
 export interface IOany {
@@ -37,4 +47,11 @@ export interface IOany {
 
 export interface IONumberAny {
   [k: number]: any
+}
+export interface IOString {
+  [k: string]: string
+}
+
+export interface IOStringAny {
+  [k: string]: any
 }

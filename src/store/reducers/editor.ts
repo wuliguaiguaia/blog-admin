@@ -6,7 +6,9 @@ import { RootState } from '@/store/reducers/interface'
 import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 import { IArticle, ICategory, EditWatchMode } from '@/common/interface'
-import { UpdateDocData, UpdateEditorState, UpdateEditingStatus } from '../actionTypes'
+import {
+  UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
+} from '../actionTypes'
 import testImage from '@/assets/imgs/image.png'
 
 export interface IInitialState {
@@ -21,7 +23,9 @@ export interface IInitialState {
   historyRecord: IHistoryRecord
   shortcutKey: IShortcutKey
   getDataLoading: boolean
+  helperKeys: any
   editStatus: {
+    outline: boolean,
     preview: boolean
     configModalVisible: boolean
   }
@@ -41,6 +45,7 @@ export const initialState: IInitialState = {
   }, /* 文档数据 */
   categoryList: [], /* 所有分类 */
   getDataLoading: false,
+  helperKeys: {},
   editWatchMode: EditWatchMode.edit, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
@@ -50,6 +55,7 @@ export const initialState: IInitialState = {
   historyRecord: new HistoryRecord(),
   shortcutKey: new ShortcutKey(),
   editStatus: {
+    outline: true,
     preview: false,
     configModalVisible: false,
   },
@@ -74,6 +80,13 @@ const reducer = (state = initialState, action: { type: any; data: any }) => {
           ...state.editStatus, ...data,
         },
       }
+    case UpdateEditingHelperKeys:
+      return {
+        ...state,
+        helperKeys: {
+          ...state.helperKeys, ...data,
+        },
+      }
     default:
       return { ...state }
   }
@@ -91,6 +104,11 @@ export const updateDocData = (data: any) => ({
 
 export const updateEditingStatus = (data: any) => ({
   type: UpdateEditingStatus,
+  data,
+})
+
+export const updateEditingHelperKeys = (data: any) => ({
+  type: UpdateEditingHelperKeys,
   data,
 })
 

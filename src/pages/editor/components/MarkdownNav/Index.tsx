@@ -23,7 +23,7 @@ const MarkdownNavbar: FunctionComponent<IProps> = ({
     history.push(`/editor/${id}#${encodeURIComponent(text)}`)
   }
   return (
-    <div ref={titlesRef}>
+    <div ref={titlesRef} className={styles.wrapper}>
       {data.length ? (
         <ul className={cns(styles.navbar)}>
           {

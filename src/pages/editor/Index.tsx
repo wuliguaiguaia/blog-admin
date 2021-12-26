@@ -27,10 +27,16 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     },
     getDataLoading,
     editWatchMode,
+    shortcutKey,
   } = useSelector((state: RootState) => state.editor)
   useEffect(() => {
     dispatch(getArticleData(id))
-  }, [dispatch, id, editWatchMode])
+    if (editWatchMode === EditWatchMode.edit) {
+      shortcutKey.setEnable(true)
+    } else {
+      shortcutKey.setEnable(false)
+    }
+  }, [dispatch, id, editWatchMode, shortcutKey])
 
   return (
     <div className={styles.wrapper}>

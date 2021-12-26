@@ -24,11 +24,13 @@ interface IProps {}
 const Content: FunctionComponent<IProps> = () => {
   const transEl = createRef<HTMLDivElement>()
   const textAreaEl = createRef<HTMLTextAreaElement>()
+  const leftContentEl = createRef<HTMLDivElement>()
   const [transContent, setTransContent] = useState('')
+  const [divideLineLeft, setDivideLineLeft] = useState(0)
   const {
     historyRecord,
     docData,
-    editStatus: { preview },
+    editStatus: { outline },
     editWatchMode,
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
@@ -90,11 +92,20 @@ const Content: FunctionComponent<IProps> = () => {
   }, [dispatch, docData.content])
 
   const Outline = () => (
-    <div className={styles.outline}>
+    <div className={cns([styles.outline,
+      editWatchMode === EditWatchMode.preview && styles.outlineWithPadding])}
+    >
       <div className={styles.outlineTitle}>大纲</div>
       <MarkdownNavbar data={navList} canClick />
     </div>
   )
+
+  useEffect(() => {
+    const el = leftContentEl.current
+    if (el) {
+      setDivideLineLeft(el.offsetWidth)
+    }
+  }, [leftContentEl])
 
   return (
     <>
@@ -103,46 +114,43 @@ const Content: FunctionComponent<IProps> = () => {
           ? (
             <>
               <div className={cns([styles.container, 'flex'])}>
-                {
-                  !preview ? (
-                    <div className={styles.leftContent}>
-                      <pre className={styles.preContent}>{docData.content}</pre>
-                      <textarea
-                        ref={textAreaEl}
-                        className={styles.textAreaContent}
-                        onChange={onTextChange}
-                        onPaste={handlePaste}
-                        onSelect={handleSelect}
-                      />
-                    </div>
-                  ) : null
-                }
-                <>
-                  <div className={styles.containerLine} />
+                <div className={cns([styles.editContent, 'flex'])}>
+                  <div className={styles.leftContent} ref={leftContentEl}>
+                    <pre className={styles.preContent}>{docData.content}</pre>
+                    <textarea
+                      ref={textAreaEl}
+                      className={styles.textAreaContent}
+                      onChange={onTextChange}
+                      onPaste={handlePaste}
+                      onSelect={handleSelect}
+                    />
+                  </div>
+                  <div className={styles.divideLine} style={{ left: `${divideLineLeft}px`}} />
                   <div
                     ref={transEl}
                     className={styles.rightContent}
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: transContent }}
                   />
-                </>
-                { preview ? <Outline /> : null}
+                </div>
+                { outline ? <Outline /> : null}
               </div>
             </>
           )
           : (
-            <div className={cns([styles.previewContainer, 'flex'])}>
-              <div className={styles.leftPreviewContent}>
-                <h1 className={styles.bigTitle}>
-                  {docData.title}
-                </h1>
+            <div className={cns([styles.previewContainer])}>
+              <h1 className={styles.bigTitle}>
+                {docData.title}
+              </h1>
+              <div className={cns(['flex', styles.previewContent])}>
                 <div
+                  className={cns([styles.leftPreviewContent])}
                   ref={transEl}
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{ __html: transContent }}
                 />
+                <Outline />
               </div>
-              <Outline />
             </div>
           )
       }

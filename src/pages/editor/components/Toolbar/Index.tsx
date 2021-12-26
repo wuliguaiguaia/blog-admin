@@ -13,17 +13,45 @@ import {
 import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './Index.scss'
-import { picUpload, updateDocData, updateEditingStatus } from '@/store/reducers/editor'
+import {
+  picUpload, updateDocData, updateEditingHelperKeys, updateEditingStatus,
+} from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
-import Help from '../Help/Index'
+import Helper from '../Helper/Index'
+import { IHelperKeys, IOString } from '@/common/interface'
 
-interface IProps {}
+
+const helperKeysMap: IHelperKeys[] = [
+  {
+    keys: ['alt', 'q'], cb: 'handleConfigClick', title: '打开配置项', enable: true,
+  },
+  {
+    keys: ['ctrl', 'z'], cb: 'handleUndo', title: '撤销', enable: true,
+  },
+  {
+    keys: ['ctrl', 'y'], cb: 'handleRedo', title: '重做', enable: true,
+  },
+  {
+    keys: ['ctrl', 'shift', 'z'], cb: 'handleRedo', title: '重做', enable: true,
+  },
+  {
+    keys: ['alt', 'p'], cb: 'handleClickPic', title: '插入图片', enable: true,
+  },
+  {
+    keys: ['alt', 'v'], cb: 'handleOutlineChange', title: '大纲切换', enable: true,
+  },
+  {
+    keys: ['alt', 'h'], cb: 'handleClickHelp', title: '切换帮助面板', enable: true,
+  },
+]
+
+interface IProps { }
 
 const ToolBar: FunctionComponent<IProps> = () => {
   const fileEl = createRef<HTMLInputElement>()
   const helpPopoverEl = createRef<HTMLDivElement>()
   const {
-    editStatus: { preview },
+    editStatus: { outline, configModalVisible },
     historyRecord,
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
@@ -34,19 +62,40 @@ const ToolBar: FunctionComponent<IProps> = () => {
     fileEl.current?.click()
   }, [fileEl])
 
-  const handlePreviewChange = useCallback(() => {
-    console.log(preview, '-----')
+  const handleOutlineChange = useCallback(() => {
+    const status = !outline
     dispatch(updateEditingStatus({
-      preview: !preview,
+      outline: status,
     }))
-  }, [dispatch, preview])
+    const setValidList = (enable: boolean) => [
+      {
+        keys: ['alt', 'q'], cb: 'handleConfigClick', title: '打开配置项', enable,
+      },
+      {
+        keys: ['ctrl', 'z'], cb: 'handleUndo', title: '撤销', enable,
+      },
+      {
+        keys: ['ctrl', 'y'], cb: 'handleRedo', title: '重做', enable,
+      },
+      {
+        keys: ['ctrl', 'shift', 'z'], cb: 'handleRedo', title: '重做', enable,
+      },
+      {
+        keys: ['alt', 'p'], cb: 'handleClickPic', title: '插入图片', enable,
+      },
+    ]
+    if (status) {
+      shortcutKey.updateValidList(setValidList(false))
+    } else {
+      shortcutKey.updateValidList(setValidList(true))
+    }
+  }, [dispatch, outline, shortcutKey])
 
   const handleFileChange = useCallback((e) => {
     const file = e.target.files[0]
     dispatch(picUpload(file))
   }, [dispatch])
   const handleUndo = useCallback(() => {
-    console.log('undo')
     historyRecord.undo((data: string) => {
       dispatch(updateDocData({
         content: data,
@@ -54,7 +103,6 @@ const ToolBar: FunctionComponent<IProps> = () => {
     })
   }, [dispatch, historyRecord])
   const handleRedo = useCallback(() => {
-    console.log('redo')
     historyRecord.redo((data: string) => {
       dispatch(updateDocData({
         content: data,
@@ -62,33 +110,71 @@ const ToolBar: FunctionComponent<IProps> = () => {
     })
   }, [dispatch, historyRecord])
   const handleConfigClick = useCallback(() => {
+    const status = !configModalVisible
     dispatch(updateEditingStatus({
-      configModalVisible: true,
+      configModalVisible: status,
     }))
-  }, [dispatch])
+    const setValidList = (enable: boolean) => [
+      {
+        keys: ['ctrl', 'z'], cb: 'handleUndo', title: '撤销', enable,
+      },
+      {
+        keys: ['ctrl', 'y'], cb: 'handleRedo', title: '重做', enable,
+      },
+      {
+        keys: ['ctrl', 'shift', 'z'], cb: 'handleRedo', title: '重做', enable,
+      },
+      {
+        keys: ['alt', 'p'], cb: 'handleClickPic', title: '插入图片', enable,
+      },
+      {
+        keys: ['alt', 'v'], cb: 'handleOutlineChange', title: '切换预览模式', enable,
+      },
+    ]
+    if (status) {
+      shortcutKey.updateValidList(setValidList(false))
+    } else {
+      shortcutKey.updateValidList(setValidList(true))
+    }
+  }, [configModalVisible, dispatch, shortcutKey])
   const handleClickHelp = useCallback(() => {
     setHelpPopoverVisible(!helpPopoverVisible)
   }, [helpPopoverVisible])
 
   useEffect(() => {
-    shortcutKey.subscribe({ keys: ['ctrl', 'y'], cb: handleRedo })
-    shortcutKey.subscribe({ keys: ['ctrl', 'z'], cb: handleUndo })
-    shortcutKey.subscribe({ keys: ['ctrl', 'shift', 'z'], cb: handleRedo })
-    shortcutKey.subscribe({ keys: ['alt', 'p'], cb: handleClickPic })
-    shortcutKey.subscribe({ keys: ['alt', 'v'], cb: handlePreviewChange })
-    shortcutKey.subscribe({ keys: ['alt', 'q'], cb: handleConfigClick })
-    shortcutKey.subscribe({ keys: ['alt', 'h'], cb: handleClickHelp })
-    return () => {
-      shortcutKey.unSubscribe({ keys: ['ctrl', 'y'], cb: handleRedo })
-      shortcutKey.unSubscribe({ keys: ['ctrl', 'z'], cb: handleUndo })
-      shortcutKey.unSubscribe({ keys: ['ctrl', 'shift', 'z'], cb: handleRedo })
-      shortcutKey.unSubscribe({ keys: ['alt', 'p'], cb: handleClickPic })
-      shortcutKey.unSubscribe({ keys: ['alt', 'v'], cb: handlePreviewChange })
-      shortcutKey.unSubscribe({ keys: ['alt', 'q'], cb: handleConfigClick })
-      shortcutKey.unSubscribe({ keys: ['alt', 'h'], cb: handleClickHelp })
+    const maps = helperKeysMap.reduce((res: IOString, { keys, title }) => {
+      const keyStr = keys.join('+')
+      res[keyStr] = title
+      return res
+    }, {})
+    dispatch(updateEditingHelperKeys(maps))
+  }, [dispatch])
+
+  useEffect(() => {
+    const utils: any = {
+      handleConfigClick,
+      handleUndo,
+      handleRedo,
+      handleClickPic,
+      handleOutlineChange,
+      handleClickHelp,
     }
-  }, [handleClickHelp, handleClickPic,
-    handleConfigClick, handlePreviewChange, handleRedo, handleUndo, shortcutKey])
+    helperKeysMap.forEach(({ keys, cb, enable}) => {
+      if (utils[cb]) {
+        shortcutKey.subscribe({ keys, cb: utils[cb] })
+        shortcutKey.updateValidList([{ keys, enable }])
+      }
+    })
+
+    return () => {
+      helperKeysMap.forEach(({ keys, cb }) => {
+        if (utils[cb]) {
+          shortcutKey.unSubscribe({ keys, cb: utils[cb] })
+        }
+      })
+    }
+  }, [handleClickHelp, handleClickPic, handleConfigClick, handleOutlineChange,
+    handleRedo, handleUndo, shortcutKey])
 
   return (
     <div className={styles.toolbar}>
@@ -124,11 +210,11 @@ const ToolBar: FunctionComponent<IProps> = () => {
         </Tooltip>
       </div>
       <div className={styles.toolbarItem}>
-        <span className={styles.toobarLabel}>预览</span>
-        <Switch size="small" checked={preview} onChange={handlePreviewChange} />
+        <span className={styles.toobarLabel}>大纲</span>
+        <Switch size="small" checked={outline} onChange={handleOutlineChange} />
         <div className={styles.toolarDivider} />
         <Popover
-          content={<Help />}
+          content={<Helper />}
           title="编辑说明"
           trigger={['hover', 'focus', 'click']}
           placement="bottom"
