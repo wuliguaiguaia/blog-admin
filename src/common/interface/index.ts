@@ -4,7 +4,11 @@ export interface ICategory {
   articlesLen?: number;
 }
 
-export interface IArticle {
+export interface IOStringAny {
+  [k: string]: any
+}
+
+export interface IArticle extends IOStringAny{
   id: number;
   title: string;
   content: string;
@@ -20,6 +24,11 @@ export interface IArticle {
 export enum EditWatchMode {
   preview = 0,
   edit = 1,
+}
+
+export enum SaveStatus {
+  loading = 0,
+  end = 1,
 }
 
 export interface NavList {
@@ -52,11 +61,14 @@ export interface IOString {
   [k: string]: string
 }
 
-export interface IOStringAny {
-  [k: string]: any
-}
 
 export enum EditType {
   add = 0,
   update = 1,
+}
+
+
+export interface Response {
+  data: any
+  errNo: number
 }

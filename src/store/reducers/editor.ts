@@ -1,17 +1,18 @@
-import { message } from 'antd'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
+import { message } from 'antd'
 import $http from '@/common/api'
 import { RootState } from '@/store/reducers/interface'
 import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 import {
-  IArticle, ICategory, EditWatchMode, EditType,
+  IArticle, ICategory, EditWatchMode, EditType, SaveStatus, Response,
 } from '@/common/interface'
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
 import testImage from '@/assets/imgs/image.png'
+import { setLocalData } from '@/common/plugins/indexedDB'
 
 export interface IInitialState {
   docData: IArticle
@@ -26,7 +27,9 @@ export interface IInitialState {
   shortcutKey: IShortcutKey
   getDataLoading: boolean
   helperKeys: any
+  backupData: string
   editType: EditType,
+  saveStatus: SaveStatus,
   editStatus: {
     outline: boolean,
     preview: boolean
@@ -50,6 +53,7 @@ export const initialState: IInitialState = {
   categoryList: [], /* 所有分类 */
   getDataLoading: false,
   helperKeys: {},
+  backupData: '',
   editWatchMode: EditWatchMode.edit, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
@@ -57,6 +61,7 @@ export const initialState: IInitialState = {
   }, /* 光标位置 */
   transContentLength: 0, /* 内容长度 */
   historyRecord: new HistoryRecord(),
+  saveStatus: SaveStatus.end, /* 保存状态 */
   shortcutKey: new ShortcutKey(),
   editStatus: {
     outline: true,
@@ -158,15 +163,26 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
-export const saveDocData = (data: any, cb?: () => void):
+export const saveDocData = (data: any, cb?: (response: any) => void, multiArr?: string[]):
 ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
   const { docData } = getState().editor
   const { id } = docData
-  const response = await $http.updatearticle({id, ...data})
-  if (response.errNo !== 0) {
-    message.error('修改失败')
+  if (multiArr) { /* 附加值保存 */
+    multiArr.forEach((key) => {
+      data[key] = docData[key]
+    })
   }
-  if (cb) cb()
+  const response:Response = await $http.updatearticle({ id, ...data })
+  const { errNo } = response
+  let idata = response.data
+  if (errNo !== 0) {
+    message.warning('保存失败，将暂存到本地！')
+    setLocalData({id}).then(() => {
+    }).catch(() => {
+    })
+    idata = {} /* 本地保存的不返回数据 */
+  }
+  if (cb) cb(idata)
 }
 
 export default reducer

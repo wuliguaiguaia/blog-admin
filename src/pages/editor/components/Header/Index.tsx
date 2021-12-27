@@ -16,6 +16,7 @@ import { saveDocData, updateDocData, updateEditorState } from '@/store/reducers/
 import { RootState } from '@/store/reducers/interface'
 import $http from '@/common/api'
 import { EditWatchMode } from '@/common/interface'
+import Save from '../Save'
 
 const { confirm } = Modal
 
@@ -29,7 +30,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
   const {
     transContentLength,
     docData: {
-      createTime, updateTime, title, deleted, published, id, content,
+      createTime, updateTime, title, deleted, published, id,
     },
     historyRecord,
     editWatchMode,
@@ -53,13 +54,10 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
   }, [dispatch])
   const handleTitleBlur = (e: any) => {
     setEditTitle(false)
+    const {value} = e.target
+    if (value === title) return
     dispatch(saveDocData({
-      title: e.target.value,
-    }))
-  }
-  const handleSave = () => {
-    dispatch(saveDocData({
-      content,
+      title: value,
     }))
   }
   const handleEditModeToogle = () => {
@@ -204,11 +202,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       <div className="align-center">
         {editWatchMode === EditWatchMode.edit ? (
           <>
-            <p className={styles.updateTime}>
-              最后更新于
-              {updateTime.replace(/T/, ' ').slice(0, -5)}
-            </p>
-            <Button loading className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
+            <Save />
             <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>预览</Button>
           </>
         ) : (

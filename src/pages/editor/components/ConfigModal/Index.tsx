@@ -25,6 +25,9 @@ const ConfigModal: FunctionComponent<IProps> = () => {
   const [selectedCates, setSelectedCates] = useState<number[]>(categories)
 
   const checkForm = () => {
+    /* 1 检查是否有变化 */
+    if (JSON.stringify(selectedCates) === JSON.stringify(categories)) return false
+    /* 2 是否符合条件 */
     if (selectedCates.length === 0) {
       message.error('分类必选')
       return false
