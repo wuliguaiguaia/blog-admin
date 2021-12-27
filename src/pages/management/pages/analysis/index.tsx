@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Index.scss'
+import styles from './index.scss'
 
 const Analysis = () => {
   const s = ''

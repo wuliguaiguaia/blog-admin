@@ -55,3 +55,8 @@ export interface IOString {
 export interface IOStringAny {
   [k: string]: any
 }
+
+export enum EditType {
+  add = 0,
+  update = 1,
+}

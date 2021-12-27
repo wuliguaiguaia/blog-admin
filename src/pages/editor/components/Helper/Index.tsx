@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/reducers/interface'
-import styles from './Index.scss'
+import styles from './index.scss'
 
 const Helper = () => {
   const { helperKeys } = useSelector((state: RootState) => state.editor)

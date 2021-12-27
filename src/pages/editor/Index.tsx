@@ -2,11 +2,11 @@ import React, { FunctionComponent, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spin } from 'antd'
 import cns from 'classnames'
-import styles from './Index.scss'
-import ToolBar from './components/Toolbar/Index'
-import Content from './components/Content/Index'
-import ConfigModal from './components/ConfigModal/Index'
-import Header from './components/Header/Index'
+import styles from './index.scss'
+import ToolBar from './components/Toolbar'
+import Content from './components/Content'
+import ConfigModal from './components/ConfigModal'
+import Header from './components/Header'
 import { getArticleData } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import { EditWatchMode } from '@/common/interface'
@@ -16,10 +16,9 @@ interface IProps {
     params: any
   }
 }
-
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
   console.log(params.id)
-  const { id = 50655683 } = params
+  const { id = 260251848 } = params
   const dispatch = useDispatch()
   const {
     editStatus: {
@@ -29,6 +28,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     editWatchMode,
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
+
   useEffect(() => {
     dispatch(getArticleData(id))
     if (editWatchMode === EditWatchMode.edit) {

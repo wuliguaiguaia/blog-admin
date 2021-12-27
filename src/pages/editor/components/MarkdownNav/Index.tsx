@@ -5,7 +5,7 @@ import React, {
 import cns from 'classnames'
 import { withRouter } from 'react-router-dom'
 import { NavList } from '@/common/interface/index'
-import styles from './Index.scss'
+import styles from './index.scss'
 
 interface IProps {
   data: NavList[],

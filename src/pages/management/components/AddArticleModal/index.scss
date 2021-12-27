@@ -1,0 +1,28 @@
+.row {
+  color: #8c8c8c;
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.label {
+  margin-right: 10px;
+  width: 80px;
+  text-align: right;
+}
+
+.must {
+  color: rgb(230, 74, 74);
+}
+
+.formItem {
+  flex: 1;
+  max-width: 60%;
+}
+
+:global {
+  .ant-select-selection-placeholder {
+    font-size: 11px;
+  }
+}

@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import styles from './Index.scss'
+import styles from './index.scss'
 import { saveDocData, updateDocData, updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import $http from '@/common/api'
@@ -190,6 +190,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
                 value={title}
                 onChange={onTextChange}
                 onBlur={handleTitleBlur}
+                onPressEnter={handleTitleBlur}
               />
             ) : (
               <>
@@ -207,8 +208,8 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
               最后更新于
               {updateTime.replace(/T/, ' ').slice(0, -5)}
             </p>
-            <Button className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
-            <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>退出</Button>
+            <Button loading className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
+            <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>预览</Button>
           </>
         ) : (
           <>

@@ -12,13 +12,13 @@ import {
 } from '@ant-design/icons'
 import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import styles from './Index.scss'
+import styles from './index.scss'
 import {
   picUpload, updateDocData, updateEditingHelperKeys, updateEditingStatus,
 } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
-import Helper from '../Helper/Index'
 import { IHelperKeys, IOString } from '@/common/interface'
+import Helper from '../Helper'
 
 
 const helperKeysMap: IHelperKeys[] = [

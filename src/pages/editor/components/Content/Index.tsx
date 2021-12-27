@@ -8,14 +8,14 @@ import React, {
 import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { renderToString} from 'react-dom/server'
-import styles from './Index.scss'
+import styles from './index.scss'
 import { Marked, renderer } from '@/common/utils/marked'
 import { picUpload, updateDocData, updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import '@/assets/styles/md.scss'
 import 'highlight.js/styles/github.css'
 import { EditWatchMode, NavList } from '@/common/interface'
-import MarkdownNavbar from '../MarkdownNav/Index'
+import MarkdownNavbar from '../MarkdownNav'
 
 const marked = Marked()
 
@@ -70,6 +70,7 @@ const Content: FunctionComponent<IProps> = () => {
   const [navList, setNavList] = useState<NavList[]>([])
   useEffect(() => {
     const text = marked.parse(docData.content)
+    setTransContent(text)
     const list:NavList[] = []
     renderer.heading = (txt: string, level) => {
       list.push({ text: txt, level })
@@ -77,19 +78,16 @@ const Content: FunctionComponent<IProps> = () => {
       const markerContents = renderToString(<div className={cns('md-title', `md-title-${level}`)}><a id={`#${txt}`} href={`/editor/${docData.id}#${txt}`}>{txt}</a></div>)
       return markerContents
     }
+  }, [dispatch, docData.content, docData.id])
 
+  useEffect(() => {
     if (transEl.current) {
       dispatch(updateEditorState({
         transContentLength: transEl.current.innerText.length,
       }))
     }
-    setTransContent(text)
-    /* Maximum update depth exceeded.
-    This can happen when a component calls setState inside useEffect,
-    but useEffect either doesn't have a dependency array,
-    or one of the dependencies changes on every render. */
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, docData.content])
+  }, [dispatch, transContent])
 
   const Outline = () => (
     <div className={cns([styles.outline,

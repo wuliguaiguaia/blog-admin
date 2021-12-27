@@ -5,7 +5,9 @@ import $http from '@/common/api'
 import { RootState } from '@/store/reducers/interface'
 import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
-import { IArticle, ICategory, EditWatchMode } from '@/common/interface'
+import {
+  IArticle, ICategory, EditWatchMode, EditType,
+} from '@/common/interface'
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
@@ -24,6 +26,7 @@ export interface IInitialState {
   shortcutKey: IShortcutKey
   getDataLoading: boolean
   helperKeys: any
+  editType: EditType,
   editStatus: {
     outline: boolean,
     preview: boolean
@@ -43,6 +46,7 @@ export const initialState: IInitialState = {
     deleted: 0,
     published: 0,
   }, /* 文档数据 */
+  editType: EditType.add,
   categoryList: [], /* 所有分类 */
   getDataLoading: false,
   helperKeys: {},

@@ -1,6 +1,6 @@
 import { Select } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
-import styles from './Index.scss'
+import styles from './index.scss'
 import CalendarGraph from '@/common/components/CalendarGraph'
 
 const { Option } = Select

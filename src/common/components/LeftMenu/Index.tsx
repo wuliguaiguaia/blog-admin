@@ -16,7 +16,7 @@ import {
 } from '@ant-design/icons'
 import cns from 'classnames'
 import { Link } from 'react-router-dom'
-import styles from './Index.scss'
+import styles from './index.scss'
 
 const { SubMenu } = Menu
 

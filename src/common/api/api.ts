@@ -10,6 +10,7 @@ export const get = {
 
 export const post = {
   comment: 'comment',
+  addarticle: 'http://localhost:3009/article',
 }
 
 export const remove = {

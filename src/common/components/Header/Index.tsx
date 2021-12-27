@@ -1,6 +1,6 @@
 import React from 'react'
 import cns from 'classnames'
-import styles from './Index.scss'
+import styles from './index.scss'
 
 const Header = () => {
   const a = ''

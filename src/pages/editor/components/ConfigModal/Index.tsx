@@ -2,7 +2,7 @@ import cns from 'classnames'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Select, Modal, message } from 'antd'
-import styles from './Index.scss'
+import styles from './index.scss'
 import { ICategory } from '@/common/interface'
 import {
   getCategoryList, saveDocData, updateDocData, updateEditingStatus,
@@ -24,7 +24,16 @@ const ConfigModal: FunctionComponent<IProps> = () => {
   const { categoryList } = useSelector((state: any) => state.editor)
   const [selectedCates, setSelectedCates] = useState<number[]>(categories)
 
+  const checkForm = () => {
+    if (selectedCates.length === 0) {
+      message.error('分类必选')
+      return false
+    }
+    return true
+  }
+
   const handleConfigSubmit = () => {
+    if (!checkForm()) return
     setLoading(true)
     setTimeout(() => {
       function cb() {

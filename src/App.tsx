@@ -2,8 +2,8 @@ import React, { FunctionComponent } from 'react'
 import {
   BrowserRouter as Router, Route, Redirect, Switch,
 } from 'react-router-dom'
-import Editor from './pages/editor/Index'
-import Management from './pages/management/Index'
+import Editor from './pages/editor'
+import Management from './pages/management'
 
 const App: FunctionComponent = () => (
   <div>

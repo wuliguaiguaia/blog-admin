@@ -1,6 +1,7 @@
 
 import React, {
   ChangeEventHandler,
+  FunctionComponent,
   useCallback,
   useEffect,
   useState,
@@ -15,12 +16,16 @@ import {
 } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import styles from './Index.scss'
+import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
+import AddArticleModal from '../../components/AddArticleModal'
+
+interface IProps {
+}
 
 const defaultPerpage = 20
-const ArticleList = () => {
+const ArticleList: FunctionComponent<IProps> = () => {
   const [list, setList] = useState([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -32,6 +37,7 @@ const ArticleList = () => {
   const [curCates, setCurCates] = useState([])
   const [sorter, setSorter] = useState({})
   const [published, setPublished] = useState<null | number>(null)
+  const [addArticleModalVisible, setAddArticleModalVisible] = useState(false)
 
   const fetchData = useCallback(async ({
     page: _page, prepage, categories, sorter: _sorter, type: _type, published: _published,
@@ -155,6 +161,7 @@ const ArticleList = () => {
       {
         title: '操作',
         width: 160,
+        fixed: 'right',
         render: (_, record: any) => {
           const handlePublish = async () => {
             try {
@@ -266,42 +273,50 @@ const ArticleList = () => {
   }
   const handleReset = () => window.location.reload()
 
+  const handleAddArticle = () => setAddArticleModalVisible(true)
+
   return (
-    <div className={cns([styles.articlelist])}>
-      <div className={styles.header}>
-        <Button type="primary">
-          <PlusOutlined />
-          <span className={styles.addBtn}>添加文章</span>
-        </Button>
-        <div className="flex">
-          <Input
-            placeholder="请输入..."
-            value={searchValue}
-            onChange={handleValueChange}
-            suffix={<SearchOutlined style={{ cursor: 'pointer' }} onClick={handleInputEnter} />}
-            onPressEnter={handleInputEnter}
-          />
-          <Button className={styles.resetBtn} type="primary" onClick={handleReset} size="middle">重置</Button>
+    <>
+      <div className={cns([styles.articlelist])}>
+        <div className={styles.header}>
+          <Button type="primary" onClick={handleAddArticle}>
+            <PlusOutlined />
+            <span className={styles.addBtn}>添加文章</span>
+          </Button>
+          <div className="flex">
+            <Input
+              placeholder="请输入..."
+              value={searchValue}
+              onChange={handleValueChange}
+              suffix={<SearchOutlined style={{ cursor: 'pointer' }} onClick={handleInputEnter} />}
+              onPressEnter={handleInputEnter}
+            />
+            <Button className={styles.resetBtn} type="primary" onClick={handleReset} size="middle">重置</Button>
+          </div>
         </div>
+        <Table
+          className={styles.table}
+          dataSource={list}
+          loading={loading}
+          size="small"
+          columns={columns}
+          scroll={{ y: '70vh' }}
+          rowKey="id"
+          onChange={handleTableChange}
+          pagination={{
+            position: ['bottomRight'],
+            total,
+            showSizeChanger: true,
+            defaultPageSize: pagesize,
+            showTotal: (_total) => `共 ${_total} 条数据`,
+          }}
+        />
       </div>
-      <Table
-        className={styles.table}
-        dataSource={list}
-        loading={loading}
-        size="small"
-        columns={columns}
-        scroll={{ y: '70vh' }}
-        rowKey="id"
-        onChange={handleTableChange}
-        pagination={{
-          position: ['bottomRight'],
-          total,
-          showSizeChanger: true,
-          defaultPageSize: pagesize,
-          showTotal: (_total) => `共 ${_total} 条数据`,
-        }}
+      <AddArticleModal
+        modalVisible={addArticleModalVisible}
+        setModalVisible={setAddArticleModalVisible}
       />
-    </div>
+    </>
   )
 }
 
