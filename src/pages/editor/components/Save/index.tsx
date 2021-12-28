@@ -87,7 +87,7 @@ const Save = () => {
   }, [handleSave])
   /*
     只有当handlesave 变化才销毁再重启， 其实就是content 发生变化，5s 后进行保存，
-    【结论：开始变化5s后悔保存一次，content不变化不会触发保存】
+    【5s内不变化才保存，content不变化不会触发保存】
     handleSave 有callback时就一定要加到依赖里
 
     在timeout里再加timeout，为什么每次 backup 得到的都不是更新后的？？？
