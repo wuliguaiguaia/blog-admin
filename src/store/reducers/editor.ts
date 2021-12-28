@@ -194,6 +194,9 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
       setLocal()
     } else {
       console.log(123)
+      dispatch(updateEditorState({
+        backupData: data.content, /* 重置 */
+      }))
       if (cb) cb(idata)
     }
   } catch (err) {

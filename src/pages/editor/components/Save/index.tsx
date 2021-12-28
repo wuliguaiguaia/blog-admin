@@ -21,7 +21,6 @@ const Save = () => {
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
 
-
   const { offline } = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
   const savehandler = useCallback((callback?: any) => {
@@ -55,11 +54,8 @@ const Save = () => {
       if (callback) callback()
       return
     }
-    dispatch(updateEditorState({
-      backupData: content, /* 重置 */
-    }))
     savehandler(callback)
-  }, [backupData, content, dispatch, saveStatus, savehandler])
+  }, [backupData, content, saveStatus, savehandler])
 
   const handleEditModeToogle = () => {
     const cb = () => {
@@ -77,11 +73,11 @@ const Save = () => {
 
   useEffect(() => {
     console.log('新增定时器')
-    let timer = setTimeout(function fn() {
+    const timer = setTimeout(() => {
       const cb = () => {
         console.log('重启定时器')
         clearTimeout(timer)
-        timer = setTimeout(fn, 5000)
+        // timer = setTimeout(fn, 5000)
       }
       handleSave(null, cb) /* 保存后加定时器 */
     }, 5000)
@@ -89,13 +85,20 @@ const Save = () => {
       clearTimeout(timer)
     }
   }, [handleSave])
+  /*
+    只有当handlesave 变化才销毁再重启， 其实就是content 发生变化，5s 后进行保存，
+    【结论：开始变化5s后悔保存一次，content不变化不会触发保存】
+    handleSave 有callback时就一定要加到依赖里
+
+    在timeout里再加timeout，为什么每次 backup 得到的都不是更新后的？？？
+  */
 
   useEffect(() => {
     shortcutKey.subscribe({ keys: ['ctrl', 's'], cb: handleSave })
     const keyStr = ['ctrl', 's'].join('+')
     dispatch(updateEditingHelperKeys({ [keyStr]: '保存' }))
     shortcutKey.updateValidList([{ keys: ['ctrl', 's'], enable: true }])
-  }, [])
+  }, [handleSave])
 
   useEffect(() => {
     const handleBeforeUnload = (e: any) => {
