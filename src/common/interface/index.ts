@@ -38,9 +38,9 @@ export interface NavList {
 }
 
 
-export interface IHelperKeysValid{
+export interface IHelperKeysValid {
   keys: string[];
-  enable: boolean
+  enable: boolean;
 }
 export interface IHelperKeys extends IHelperKeysValid {
   cb: string;

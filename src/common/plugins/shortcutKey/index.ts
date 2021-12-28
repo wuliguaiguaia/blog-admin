@@ -38,7 +38,6 @@ class ShortcutKey {
   validList: IOStrbool = {}
 
   constructor() {
-    console.log(1)
     this.init()
   }
 
@@ -49,7 +48,6 @@ class ShortcutKey {
 
   bindEvents() {
     window.addEventListener('keydown', this.onKeyDown.bind(this))
-    // window.addEventListener('keyup', this.onKeyUp)
   }
 
   subscribe({ keys, cb }: { keys: string[], cb: () => void}) {
@@ -74,8 +72,6 @@ class ShortcutKey {
   }
 
   onKeyDown(e: any) {
-    console.log(this.validList)
-
     if (!this.enable) return
     const keys = []
     const groupKeys: IOStrbool = {
@@ -101,10 +97,6 @@ class ShortcutKey {
     })
   }
 
-  onKeyUp(e: any) {
-    console.log(e)
-  }
-
   destory() {
     this.removeEvents()
     this.validList = {}
@@ -116,7 +108,7 @@ class ShortcutKey {
   }
 
   updateValidList(map: IHelperKeysValid[]) {
-    map.forEach(({ keys, enable }) => {
+    map.forEach(({keys, enable}) => {
       const keyStr = keys.join(sign)
       this.validList[keyStr] = enable
     })
@@ -124,7 +116,6 @@ class ShortcutKey {
 
   removeEvents() {
     window.removeEventListener('keydown', this.onKeyDown)
-    // window.removeEventListener('keyup', this.onKeyUp)
   }
 }
 

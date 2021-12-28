@@ -12,7 +12,7 @@ import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
 import testImage from '@/assets/imgs/image.png'
-import { setLocalData } from '@/common/plugins/indexedDB'
+import { putLocalData } from '@/common/plugins/indexedDB'
 
 export interface IInitialState {
   docData: IArticle
@@ -138,9 +138,12 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   const res = await $http.getarticle({ id })
   const { data } = res
   data.categories = data.categories?.map((item: ICategory) => item.id) || []
-  dispatch(updateEditorState({ docData: data }))
+  dispatch(updateEditorState({
+    docData: data,
+    getDataLoading: false,
+    backupData: data.content,
+  }))
   historyRecord.addFirst(data.content)
-  dispatch(updateEditorState({getDataLoading: false}))
 }
 
 export const picUpload = (file: any):
@@ -172,17 +175,31 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
       data[key] = docData[key]
     })
   }
-  const response:Response = await $http.updatearticle({ id, ...data })
-  const { errNo } = response
-  let idata = response.data
-  if (errNo !== 0) {
-    message.warning('保存失败，将暂存到本地！')
-    setLocalData({id}).then(() => {
+
+  let idata = {}
+
+  const setLocal = () => {
+    putLocalData({ id, ...data }).then(() => {
+      if (cb) cb(idata)
     }).catch(() => {
+      message.error('本地保存依旧失败，打点已上传')
     })
     idata = {} /* 本地保存的不返回数据 */
   }
-  if (cb) cb(idata)
+  try {
+    const response:Response = await $http.updatearticle({ id, ...data })
+    const { errNo } = response
+    idata = response.data
+    if (errNo !== 0) {
+      setLocal()
+    } else {
+      console.log(123)
+      if (cb) cb(idata)
+    }
+  } catch (err) {
+    message.warning('保存失败，将暂存到本地！')
+    setLocal()
+  }
 }
 
 export default reducer

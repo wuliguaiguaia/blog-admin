@@ -80,7 +80,7 @@ const AddArticleModal: FunctionComponent<IProps> = ({
   }
   useEffect(() => {
     dispatch(getCategoryList())
-  }, [dispatch])
+  }, [])
 
   return (
     <Modal

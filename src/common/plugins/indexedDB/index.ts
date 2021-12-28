@@ -1,11 +1,11 @@
-import { IOStringAny } from '../../interface/index'
 /**
  * 文档内容离线存储
  */
 
 import { DB } from './db'
-import { DBConfig, DocCacheConfig } from './constants'
 import { DBStore } from './dbstore'
+import { IOStringAny } from '@/common/interface'
+import { DBConfig, DocCacheConfig } from './constants'
 
 const DBUtil = new DB()
 let store:any = null

@@ -1,29 +1,37 @@
 import { useDispatch, useSelector } from 'react-redux'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Button, message } from 'antd'
 import { RootState } from '@/store/reducers/interface'
 import styles from './index.scss'
-import { saveDocData, updateDocData, updateEditorState } from '@/store/reducers/editor'
-import { SaveStatus } from '@/common/interface'
+import {
+  saveDocData, updateDocData, updateEditingHelperKeys, updateEditorState,
+} from '@/store/reducers/editor'
+import { EditWatchMode, SaveStatus } from '@/common/interface'
+import { getDateDetail } from '@/common/utils'
+import { getLocalData } from '@/common/plugins/indexedDB'
 
 const Save = () => {
+  console.log('render')
   const {
     saveStatus,
-    docData: { content, updateTime },
+    docData: { content, updateTime, id },
     backupData,
+    editWatchMode,
+    historyRecord,
+    shortcutKey,
   } = useSelector((state: RootState) => state.editor)
+
+
   const { offline } = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
-  const handleSave = () => {
+  const savehandler = useCallback((callback?: any) => {
     dispatch(updateEditorState({
       saveStatus: SaveStatus.loading,
     }))
     const cb = (res: any) => {
       const { updateTime: iupdateTime } = res
       if (iupdateTime) {
-        dispatch(updateEditorState({
-          backupData: content,
-        }))
+        console.log('222')
         dispatch(updateDocData({
           updateTime: iupdateTime,
         }))
@@ -31,24 +39,63 @@ const Save = () => {
       dispatch(updateEditorState({
         saveStatus: SaveStatus.end,
       }))
+      if (callback) callback()
     }
     dispatch(saveDocData({
       content,
     }, cb, ['title', 'categories']))
+  }, [content, dispatch])
+
+  const handleSave = useCallback((_e?: any, callback?: any) => {
+    console.log('11111', content === backupData)
+    console.log('content', content)
+    console.log('backupData', backupData)
+    const notChange = backupData === content
+    if (notChange || saveStatus === SaveStatus.loading) {
+      if (callback) callback()
+      return
+    }
+    dispatch(updateEditorState({
+      backupData: content, /* 重置 */
+    }))
+    savehandler(callback)
+  }, [backupData, content, dispatch, saveStatus, savehandler])
+
+  const handleEditModeToogle = () => {
+    const cb = () => {
+      const mode = editWatchMode === EditWatchMode.edit
+        ? EditWatchMode.preview : EditWatchMode.edit
+      dispatch(updateEditorState({
+        editWatchMode: mode,
+      }))
+      if (mode === EditWatchMode.preview) {
+        historyRecord.destroy()
+      }
+    }
+    handleSave(null, cb) /* 保存后退出 */
   }
 
   useEffect(() => {
+    console.log('新增定时器')
     let timer = setTimeout(function fn() {
-      const notChange = backupData === content
-      if (notChange) return
-      handleSave()
-      timer = setTimeout(fn, 5000)
+      const cb = () => {
+        console.log('重启定时器')
+        clearTimeout(timer)
+        timer = setTimeout(fn, 5000)
+      }
+      handleSave(null, cb) /* 保存后加定时器 */
     }, 5000)
     return () => {
       clearTimeout(timer)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backupData, content])
+  }, [handleSave])
+
+  useEffect(() => {
+    shortcutKey.subscribe({ keys: ['ctrl', 's'], cb: handleSave })
+    const keyStr = ['ctrl', 's'].join('+')
+    dispatch(updateEditingHelperKeys({ [keyStr]: '保存' }))
+    shortcutKey.updateValidList([{ keys: ['ctrl', 's'], enable: true }])
+  }, [])
 
   useEffect(() => {
     const handleBeforeUnload = (e: any) => {
@@ -61,7 +108,7 @@ const Save = () => {
           return ''
         }
       }
-      return true
+      return false
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
   }, [backupData, content, offline, saveStatus])
@@ -71,15 +118,29 @@ const Save = () => {
       // message.warning('保存失败，尝试为你存储到本地...')
     }
   }, [offline, saveStatus])
+
+  useEffect(() => {
+    if (!id) return
+    getLocalData({ id }).then((res) => {
+      const { updatedAt } = res
+      const curTime = new Date(updateTime).getTime()
+      if (Number(updatedAt) <= curTime) return
+      savehandler()
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editWatchMode, id])
   return (
     <>
       <p className={styles.updateTime}>
         最后更新于
-        {updateTime.replace(/T/, ' ').slice(0, -5)}
+        {getDateDetail(updateTime)}
       </p>
       <Button loading={saveStatus === SaveStatus.loading} className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
+      <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>预览</Button>
     </>
   )
 }
 
 export default Save
+
+

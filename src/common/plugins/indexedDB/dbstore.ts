@@ -1,6 +1,4 @@
-import {
-  IOStringAny,
-} from '../../interface/index'
+import { IOStringAny} from '../../interface/index'
 /* ** 数据表操作 ** */
 export class DBStore {
   db: {
@@ -82,7 +80,7 @@ export class DBStore {
         .put(data)
       request.onsuccess = (event:any) => {
         success?.(event)
-        resolve()
+        resolve(true)
       }
 
       request.onerror = (event:any) => {

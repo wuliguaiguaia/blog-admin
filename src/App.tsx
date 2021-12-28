@@ -14,7 +14,7 @@ const App: FunctionComponent = () => {
     const offlineListener = () => dispatch(updateCommonState({offline: true}))
     window.addEventListener('online', onlineListener)
     window.addEventListener('offline', offlineListener)
-  }, [dispatch])
+  }, [])
 
   return (
     <div>

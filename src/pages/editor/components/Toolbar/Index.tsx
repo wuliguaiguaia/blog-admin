@@ -17,7 +17,7 @@ import {
   picUpload, updateDocData, updateEditingHelperKeys, updateEditingStatus,
 } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
-import { IHelperKeys, IOString } from '@/common/interface'
+import { IHelperKeys, IHelperKeysValid, IOString } from '@/common/interface'
 import Helper from '../Helper'
 
 
@@ -67,76 +67,33 @@ const ToolBar: FunctionComponent<IProps> = () => {
     dispatch(updateEditingStatus({
       outline: status,
     }))
-    const setValidList = (enable: boolean) => [
-      {
-        keys: ['alt', 'q'], cb: 'handleConfigClick', title: '打开配置项', enable,
-      },
-      {
-        keys: ['ctrl', 'z'], cb: 'handleUndo', title: '撤销', enable,
-      },
-      {
-        keys: ['ctrl', 'y'], cb: 'handleRedo', title: '重做', enable,
-      },
-      {
-        keys: ['ctrl', 'shift', 'z'], cb: 'handleRedo', title: '重做', enable,
-      },
-      {
-        keys: ['alt', 'p'], cb: 'handleClickPic', title: '插入图片', enable,
-      },
-    ]
-    if (status) {
-      shortcutKey.updateValidList(setValidList(false))
-    } else {
-      shortcutKey.updateValidList(setValidList(true))
-    }
-  }, [dispatch, outline, shortcutKey])
+  }, [outline])
 
   const handleFileChange = useCallback((e) => {
     const file = e.target.files[0]
     dispatch(picUpload(file))
-  }, [dispatch])
+  }, [])
+
   const handleUndo = useCallback(() => {
     historyRecord.undo((data: string) => {
       dispatch(updateDocData({
         content: data,
       }))
     })
-  }, [dispatch, historyRecord])
+  }, [historyRecord])
   const handleRedo = useCallback(() => {
     historyRecord.redo((data: string) => {
       dispatch(updateDocData({
         content: data,
       }))
     })
-  }, [dispatch, historyRecord])
+  }, [historyRecord])
   const handleConfigClick = useCallback(() => {
     const status = !configModalVisible
     dispatch(updateEditingStatus({
       configModalVisible: status,
     }))
-    const setValidList = (enable: boolean) => [
-      {
-        keys: ['ctrl', 'z'], cb: 'handleUndo', title: '撤销', enable,
-      },
-      {
-        keys: ['ctrl', 'y'], cb: 'handleRedo', title: '重做', enable,
-      },
-      {
-        keys: ['ctrl', 'shift', 'z'], cb: 'handleRedo', title: '重做', enable,
-      },
-      {
-        keys: ['alt', 'p'], cb: 'handleClickPic', title: '插入图片', enable,
-      },
-      {
-        keys: ['alt', 'v'], cb: 'handleOutlineChange', title: '切换预览模式', enable,
-      },
-    ]
-    if (status) {
-      shortcutKey.updateValidList(setValidList(false))
-    } else {
-      shortcutKey.updateValidList(setValidList(true))
-    }
-  }, [configModalVisible, dispatch, shortcutKey])
+  }, [configModalVisible])
   const handleClickHelp = useCallback(() => {
     setHelpPopoverVisible(!helpPopoverVisible)
   }, [helpPopoverVisible])
@@ -148,7 +105,7 @@ const ToolBar: FunctionComponent<IProps> = () => {
       return res
     }, {})
     dispatch(updateEditingHelperKeys(maps))
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     const utils: any = {
@@ -159,10 +116,9 @@ const ToolBar: FunctionComponent<IProps> = () => {
       handleOutlineChange,
       handleClickHelp,
     }
-    helperKeysMap.forEach(({ keys, cb, enable}) => {
+    helperKeysMap.forEach(({ keys, cb}) => {
       if (utils[cb]) {
         shortcutKey.subscribe({ keys, cb: utils[cb] })
-        shortcutKey.updateValidList([{ keys, enable }])
       }
     })
 
@@ -173,8 +129,35 @@ const ToolBar: FunctionComponent<IProps> = () => {
         }
       })
     }
-  }, [handleClickHelp, handleClickPic, handleConfigClick, handleOutlineChange,
-    handleRedo, handleUndo, shortcutKey])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleClickHelp, handleClickPic,
+    handleConfigClick, handleOutlineChange, handleRedo, handleUndo])
+
+
+  useEffect(() => {
+    const setValidList:(enable: boolean) => [string[], boolean][] = (enable: boolean) => [
+      [['alt', 'q'], true],
+      [['ctrl', 'z'], enable],
+      [['ctrl', 'y'], enable],
+      [['ctrl', 'shift', 'z'], enable],
+      [['alt', 'p'], enable],
+      [['alt', 'v'], enable],
+      [['alt', 'h'], enable],
+    ]
+    if (configModalVisible) {
+      const datas = setValidList(false)
+        .map(([keys, enable]) => ({
+          keys, enable,
+        }))
+      shortcutKey.updateValidList(datas)
+    } else {
+      const datas:IHelperKeysValid[] = setValidList(true)
+        .map(([keys, enable]) => ({
+          keys, enable,
+        }))
+      shortcutKey.updateValidList(datas)
+    }
+  }, [configModalVisible])
 
   return (
     <div className={styles.toolbar}>

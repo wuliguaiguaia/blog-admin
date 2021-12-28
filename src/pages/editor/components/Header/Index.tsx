@@ -32,9 +32,9 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
     docData: {
       createTime, updateTime, title, deleted, published, id,
     },
-    historyRecord,
     editWatchMode,
   } = useSelector((state: RootState) => state.editor)
+  const [curTitle, setCurTitle] = useState(title)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -45,31 +45,29 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
     }
   }, [inputEl, isEditTitle])
 
+  useEffect(() => {
+    setCurTitle(title)
+  }, [title])
 
   const handleClickEditTitle = () => setEditTitle(true)
   const onTextChange = useCallback((e) => {
-    dispatch(updateDocData({
-      title: e.target.value,
-    }))
-  }, [dispatch])
+    console.log(1, e.target.value)
+
+    setCurTitle(e.target.value)
+  }, [])
+
   const handleTitleBlur = (e: any) => {
     setEditTitle(false)
-    const {value} = e.target
+    const { value } = e.target
     if (value === title) return
     dispatch(saveDocData({
       title: value,
     }))
-  }
-  const handleEditModeToogle = () => {
-    const mode = editWatchMode === EditWatchMode.edit
-      ? EditWatchMode.preview : EditWatchMode.edit
-    dispatch(updateEditorState({
-      editWatchMode: mode,
+    dispatch(updateDocData({
+      title: e.target.value,
     }))
-    if (mode === EditWatchMode.preview) {
-      historyRecord.destroy()
-    }
   }
+
   const handleDelete = () => {
     const modal = confirm({
       title: '确认删除？',
@@ -174,6 +172,11 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       </Menu.Item>
     </Menu>
   )
+  const handleEditModeToogle = () => {
+    dispatch(updateEditorState({
+      editWatchMode: EditWatchMode.edit,
+    }))
+  }
 
   return (
     <div className={cns([styles.header, 'jusBetween-alignCenter', editWatchMode === EditWatchMode.preview ? styles.preview : styles.edit])}>
@@ -185,14 +188,14 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
                 ref={inputEl}
                 className={cns([styles.titleInput, 'click-outside'])}
                 placeholder="请输入名称~"
-                value={title}
+                value={curTitle}
                 onChange={onTextChange}
                 onBlur={handleTitleBlur}
                 onPressEnter={handleTitleBlur}
               />
             ) : (
               <>
-                <div className={styles.title}>{title}</div>
+                <div className={styles.title}>{curTitle}</div>
                 <EditOutlined className={styles.editIcon} onClick={handleClickEditTitle} />
               </>
             )
@@ -201,10 +204,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       ) : <div />}
       <div className="align-center">
         {editWatchMode === EditWatchMode.edit ? (
-          <>
-            <Save />
-            <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>预览</Button>
-          </>
+          <Save />
         ) : (
           <>
             <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle}>编辑</Button>

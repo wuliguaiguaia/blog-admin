@@ -36,7 +36,10 @@ const ConfigModal: FunctionComponent<IProps> = () => {
   }
 
   const handleConfigSubmit = () => {
-    if (!checkForm()) return
+    if (!checkForm()) {
+      dispatch(updateEditingStatus({ configModalVisible: false }))
+      return
+    }
     setLoading(true)
     setTimeout(() => {
       function cb() {
@@ -58,7 +61,7 @@ const ConfigModal: FunctionComponent<IProps> = () => {
 
   useEffect(() => {
     dispatch(getCategoryList())
-  }, [dispatch])
+  }, [])
 
   return (
     <Modal

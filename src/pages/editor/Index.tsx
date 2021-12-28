@@ -17,7 +17,6 @@ interface IProps {
   }
 }
 const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
-  console.log(params.id)
   const { id = 260251848 } = params
   const dispatch = useDispatch()
   const {
@@ -36,7 +35,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
     } else {
       shortcutKey.setEnable(false)
     }
-  }, [dispatch, id, editWatchMode, shortcutKey])
+  }, [id, editWatchMode])
 
   return (
     <div className={styles.wrapper}>

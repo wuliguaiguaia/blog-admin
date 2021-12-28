@@ -59,7 +59,7 @@ const Content: FunctionComponent<IProps> = () => {
     const text = e.target.value
     dispatch(updateDocData({ content: text }))
     historyRecord.add(text)
-  }, [dispatch, historyRecord])
+  }, [historyRecord])
 
   useEffect(() => {
     if (textAreaEl.current) {
@@ -78,7 +78,7 @@ const Content: FunctionComponent<IProps> = () => {
       const markerContents = renderToString(<div className={cns('md-title', `md-title-${level}`)}><a id={`#${txt}`} href={`/editor/${docData.id}#${txt}`}>{txt}</a></div>)
       return markerContents
     }
-  }, [dispatch, docData.content, docData.id])
+  }, [docData.content, docData.id])
 
   useEffect(() => {
     if (transEl.current) {
@@ -87,7 +87,7 @@ const Content: FunctionComponent<IProps> = () => {
       }))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, transContent])
+  }, [transContent])
 
   const Outline = () => (
     <div className={cns([styles.outline,

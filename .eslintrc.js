@@ -37,7 +37,8 @@ module.exports = {
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
       'import/no-unresolved': [2, { ignore: ['^@'] }],
       'class-methods-use-this': 'off',
-      'no-param-reassign': 'off'
+      'no-param-reassign': 'off',
+      // 'react-hooks/exhaustive-deps': 'off'
     }
   }]
 }
