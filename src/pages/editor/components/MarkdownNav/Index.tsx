@@ -3,24 +3,26 @@ import React, {
   FunctionComponent,
 } from 'react'
 import cns from 'classnames'
-import { withRouter } from 'react-router-dom'
 import { NavList } from '@/common/interface/index'
 import styles from './index.scss'
 
 interface IProps {
   data: NavList[],
-  history: any,
-  match: any,
+  activeNav: string,
+  setActiveNav: (nav: string) => void,
+  id: number
+  history: any
 }
-const MarkdownNavbar: FunctionComponent<IProps> = ({
-  history, match, data = [],
+
+const MarkdownNav:FunctionComponent<IProps> = ({
+  data = [], activeNav, setActiveNav, id, history,
 }) => {
-  const {id} = match.params
   const titlesRef = createRef<HTMLDivElement>()
   const levels = data.map((item) => item.level)
   const maxLevel = Math.min(...levels)
   const handleClickNav = (text: string) => {
-    history.push(`/editor/${id}#${encodeURIComponent(text)}`)
+    setActiveNav(text)
+    history.push(`/editor/${id}#${text}`)
   }
   return (
     <div ref={titlesRef} className={styles.wrapper}>
@@ -35,7 +37,16 @@ const MarkdownNavbar: FunctionComponent<IProps> = ({
                   className={styles['title-wrapper']}
                   onClick={handleClickNav.bind(undefined, text)}
                 >
-                  <div className={cns(styles[`title-${level - maxLevel + 1}`], styles.title, 'text-ellipsis')}>{text}</div>
+                  <div className={cns([
+                    styles[`title-${level - maxLevel + 1}`],
+                    activeNav === text && styles.active,
+                    styles.title,
+                    'text-ellipsis',
+                  ])}
+                  >
+                    {text}
+
+                  </div>
                 </li>
               )
             })
@@ -47,4 +58,4 @@ const MarkdownNavbar: FunctionComponent<IProps> = ({
   )
 }
 
-export default withRouter(MarkdownNavbar)
+export default MarkdownNav

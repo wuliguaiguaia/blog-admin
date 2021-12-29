@@ -54,7 +54,7 @@ export const initialState: IInitialState = {
   getDataLoading: false,
   helperKeys: {},
   backupData: '',
-  editWatchMode: EditWatchMode.edit, /* 查看模式: 编辑 or 预览 */
+  editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
     end: 0,

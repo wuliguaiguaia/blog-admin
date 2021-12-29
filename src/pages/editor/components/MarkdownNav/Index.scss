@@ -5,9 +5,7 @@
 
 .navbar {
   cursor: pointer;
-  position: relative;
   overflow: scroll;
-
   &::after {
     content: " ";
     background: #e8e8e8;
@@ -58,7 +56,7 @@
 .title {
   line-height: 2;
   font-size: 12px;
-  pointer-events: none;
+  // pointer-events: none;
   margin-left: 15px;
 }
 

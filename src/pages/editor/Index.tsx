@@ -4,19 +4,20 @@ import { Spin } from 'antd'
 import cns from 'classnames'
 import styles from './index.scss'
 import ToolBar from './components/Toolbar'
-import Content from './components/Content'
 import ConfigModal from './components/ConfigModal'
 import Header from './components/Header'
 import { getArticleData } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import { EditWatchMode } from '@/common/interface'
+import Content from './components/Content'
 
 interface IProps {
   match: {
     params: any
-  }
+  },
+  history: any
 }
-const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
+const Editor: FunctionComponent<IProps> = ({match: { params }, history}) => {
   const { id = 260251848 } = params
   const dispatch = useDispatch()
   const {
@@ -42,7 +43,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }}) => {
       <Spin size="large" spinning={getDataLoading} tip="为您加载最新数据中..." className={cns(['absolute-center', styles.loading])} />
       <Header />
       { editWatchMode === EditWatchMode.preview ? null : <ToolBar /> }
-      <Content />
+      <Content history={history} />
       { configModalVisible ? <ConfigModal /> : null}
     </div>
   )
