@@ -30,9 +30,10 @@ $editorContainerPadding: 30px;
   position: fixed;
   background-color: #e6e6e6;
   top: calc($editorContainerPadding + $headerHeight + $toolbarHeight);
-  height: calc(
-    100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
-  );
+  height:
+    calc(
+      100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
+    );
 }
 
 .preContent {
