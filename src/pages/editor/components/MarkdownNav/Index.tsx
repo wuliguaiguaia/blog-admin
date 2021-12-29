@@ -24,6 +24,8 @@ const MarkdownNav:FunctionComponent<IProps> = ({
     setActiveNav(text)
     history.push(`/editor/${id}#${text}`)
   }
+  console.log(123)
+
   return (
     <div ref={titlesRef} className={styles.wrapper}>
       {data.length ? (

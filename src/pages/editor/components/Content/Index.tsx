@@ -26,7 +26,6 @@ interface IProps {
 
 const Content: FunctionComponent<IProps> = ({ history }) => {
   const transEl = createRef<HTMLDivElement>()
-  const scrollEl = createRef<HTMLDivElement>()
   const textAreaEl = createRef<HTMLTextAreaElement>()
   const leftContentEl = createRef<HTMLDivElement>()
   const [transContent, setTransContent] = useState('')
@@ -196,14 +195,11 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
               <h1 className={styles.bigTitle}>
                 {title}
               </h1>
-              <div className={cns(['flex', styles.previewContent])} ref={scrollEl}>
-                <div
-                  className={cns([styles.leftPreviewContent])}
-                  ref={transEl}
-                  // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{ __html: transContent }}
-                />
-              </div>
+              <div
+                className={cns([styles.previewContent])}
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: transContent }}
+              />
               <Outline />
             </div>
           )

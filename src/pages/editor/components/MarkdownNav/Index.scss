@@ -6,6 +6,7 @@
 .navbar {
   cursor: pointer;
   overflow: scroll;
+
   &::after {
     content: " ";
     background: #e8e8e8;

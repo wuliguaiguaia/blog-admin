@@ -79,7 +79,6 @@ $editorContainerPadding: 30px;
   display: flex;
   align-items: center;
   height: 30px;
-  flex-shrink: 0;
   font-weight: 700;
 }
 
@@ -87,15 +86,11 @@ $editorContainerPadding: 30px;
 
 .previewContainer {
   padding-left: $previewPadding;
-  overflow-y: hidden;
 }
 
 .previewContent {
   height: calc(100vh - $headerHeight - 35px - 52px);
   overflow: hidden;
-}
-
-.leftPreviewContent {
   flex: 1;
   margin-right: 50px;
   position: sticky;
@@ -108,7 +103,8 @@ $editorContainerPadding: 30px;
   position: fixed;
   top: 60px;
   right: 0;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
   max-height: calc(100% - 80px);
 }
 
