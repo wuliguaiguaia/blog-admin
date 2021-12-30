@@ -30,9 +30,10 @@ $editorContainerPadding: 30px;
   position: fixed;
   background-color: #e6e6e6;
   top: calc($editorContainerPadding + $headerHeight + $toolbarHeight);
-  height: calc(
-    100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
-  );
+  height:
+    calc(
+      100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
+    );
 }
 
 .preContent {
@@ -119,16 +120,20 @@ $editorContainerPadding: 30px;
   font-weight: 700;
   color: #262626;
 }
+
 @media screen and (max-width: 770px) {
   .outlineWithPadding {
     display: none;
   }
+
   .previewContainer {
     width: 100%;
   }
+
   .previewContent {
     padding: 0 20px;
   }
+
   .bigTitle {
     margin-left: 20px;
   }
