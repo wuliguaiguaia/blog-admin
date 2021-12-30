@@ -122,6 +122,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
   */
   useEffect(() => {
     if (!transEl.current) return
+
     const elArr = document.querySelectorAll('.md-title')
     const offsetArr:HTMLDivElement[] = []
     elArr.forEach((el) => {
@@ -196,6 +197,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
                 {title}
               </h1>
               <div
+                ref={transEl}
                 className={cns([styles.previewContent])}
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: transContent }}
