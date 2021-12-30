@@ -30,10 +30,9 @@ $editorContainerPadding: 30px;
   position: fixed;
   background-color: #e6e6e6;
   top: calc($editorContainerPadding + $headerHeight + $toolbarHeight);
-  height:
-    calc(
-      100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
-    );
+  height: calc(
+    100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
+  );
 }
 
 .preContent {
@@ -86,18 +85,20 @@ $editorContainerPadding: 30px;
 /* preview */
 
 .previewContainer {
-  padding-left: $previewPadding;
+  position: sticky;
+  height: calc(100vh - $headerHeight);
 }
 
 .previewContent {
-  height: calc(100vh - $headerHeight - 35px - 52px);
+  width: calc(100vw - $outlineWidth);
+  height: calc(100vh - 52px);
   overflow: hidden;
   flex: 1;
-  margin-right: 50px;
   position: sticky;
   overflow-y: scroll;
   // padding-bottom: 20px;
   scroll-behavior: smooth;
+  padding: 0 $previewPadding;
 }
 
 .outlineWithPadding {
@@ -110,11 +111,25 @@ $editorContainerPadding: 30px;
 }
 
 .bigTitle {
-  font-size: 25px;
-  line-height: 1.389;
-  font-weight: 500;
-  color: #262626;
-  margin-right: 0;
   word-break: break-word;
   margin-bottom: 32px;
+  font-size: 36px;
+  line-height: 1.389;
+  margin-right: 0;
+  font-weight: 700;
+  color: #262626;
+}
+@media screen and (max-width: 770px) {
+  .outlineWithPadding {
+    display: none;
+  }
+  .previewContainer {
+    width: 100%;
+  }
+  .previewContent {
+    padding: 0 20px;
+  }
+  .bigTitle {
+    margin-left: 20px;
+  }
 }

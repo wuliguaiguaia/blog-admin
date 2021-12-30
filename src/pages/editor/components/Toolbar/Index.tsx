@@ -1,9 +1,7 @@
 import React, {
   createRef, FunctionComponent, useCallback, useEffect, useState,
 } from 'react'
-import {
-  Tooltip, Switch, Popover,
-} from 'antd'
+import { Tooltip, Switch, Popover } from 'antd'
 import {
   PictureOutlined,
   RollbackOutlined,

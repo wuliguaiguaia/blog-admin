@@ -1,11 +1,116 @@
 :global {
+  .md-wrapper {
+    line-height: 1.74;
+    letter-spacing: 0.05em;
+    color: #262626;
+    font-size: 14px;
+    -webkit-box-direction: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    p {
+      margin-bottom: 0;
+    }
+
+    /* 列表 */
+    li {
+      // padding-left: 28px;
+      list-style: inherit;
+      margin-bottom: 0;
+    }
+    ul {
+      margin-left: 28px;
+      margin-bottom: 0;
+      list-style: disc;
+    }
+
+    ol {
+      margin-left: 28px;
+      margin-bottom: 0;
+      list-style: decimal;
+    }
+
+    /* 表格 */
+    table {
+      margin: 10px 0;
+      min-width: 80%;
+      th,
+      td {
+        border: 1px solid #d9d9d9;
+        padding: 4px 8px;
+      }
+    }
+
+    /* 引用 */
+    blockquote {
+      display: block;
+      padding-left: 10px;
+      margin: 10px 0;
+      border-left: 3px solid #eee;
+      p {
+        color: rgb(38, 38, 38);
+        opacity: 0.7;
+      }
+    }
+
+    /* 代码 */
+    p > code {
+      word-break: break-word;
+      border-radius: 2px;
+      overflow-x: auto;
+      background-color: #fff5f5;
+      color: #ff502c;
+      font-size: 0.87em;
+      padding: 0.065em 0.4em;
+    }
+
+    /* 分割线 */
+    hr {
+      margin: 30px 0;
+      border: 1px solid #e8e8e8;
+      transform: scaleY(0.8);
+    }
+  }
+
+  /* 图片 */
   .md-img {
     max-width: 100%;
   }
 
+  /* 标题 */
   .md-title {
+    display: block;
+    margin: 7px 0;
+    font-weight: bold;
+
+    a {
+      color: #262626;
+    }
   }
 
   .md-title-1 {
+    font-size: 28px;
+    line-height: 36px;
+    margin: 0 0 10px 0;
+  }
+  .md-title-2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .md-title-3 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .md-title-4 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .md-title-5 {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .md-title-6 {
+    font-size: 14px;
+    line-height: 24px;
   }
 }

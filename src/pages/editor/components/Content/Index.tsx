@@ -9,7 +9,7 @@ import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { renderToString} from 'react-dom/server'
 import styles from './index.scss'
-import { Marked, renderer } from '@/common/utils/marked'
+import { changeText, Marked, renderer } from '@/common/utils/marked'
 import { picUpload, updateDocData, updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import '@/assets/styles/md.scss'
@@ -65,12 +65,13 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
 
 
   useEffect(() => {
-    const text = marked.parse(content)
+    /* 自定义marked render 修改输出内容 */
+    let text = marked.parse(content)
+    text = changeText(text)
     setTransContent(text)
     const list:NavList[] = []
     renderer.heading = (txt: string, level) => {
       console.log('[[[[')
-
       list.push({ text: txt, level })
       setNavList(list)
       const markerContents = renderToString(<div id={txt} className={cns('md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
@@ -182,7 +183,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
                   <div className={styles.divideLine} style={{ left: `${divideLineLeft}px`}} />
                   <div
                     ref={transEl}
-                    className={styles.rightContent}
+                    className={cns([styles.rightContent, 'md-wrapper'])}
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: transContent }}
                   />
@@ -193,15 +194,17 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
           )
           : (
             <div className={cns([styles.previewContainer])}>
-              <h1 className={styles.bigTitle}>
-                {title}
-              </h1>
-              <div
-                ref={transEl}
-                className={cns([styles.previewContent])}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: transContent }}
-              />
+              <div className={styles.previewContent}>
+                <h1 className={styles.bigTitle}>
+                  {title}
+                </h1>
+                <div
+                  ref={transEl}
+                  className={cns(['md-wrapper'])}
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: transContent }}
+                />
+              </div>
               <Outline />
             </div>
           )

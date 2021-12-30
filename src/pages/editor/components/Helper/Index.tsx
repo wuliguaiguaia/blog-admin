@@ -8,6 +8,12 @@ const Helper = () => {
   return (
     <div>
       <li>
+
+        <div className={styles.title}>
+          markdown 语法参考：
+        </div>
+        <p><a href="https://www.markdown.xyz/basic-syntax/">Markdown 基本语法</a></p>
+
         <div className={styles.title}>快捷键</div>
         <ul>
           {

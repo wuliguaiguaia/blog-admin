@@ -19,3 +19,8 @@ export const Marked = () => {
 
   return marked
 }
+
+export interface IChangeText {
+  (text: string):string
+}
+export const changeText: IChangeText = (text: string) => text
