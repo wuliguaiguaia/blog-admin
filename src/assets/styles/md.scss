@@ -89,6 +89,11 @@
     a {
       color: #262626;
     }
+    &:hover {
+      a {
+        color: rgb(62, 145, 247);
+      }
+    }
   }
 
   .md-title-1 {

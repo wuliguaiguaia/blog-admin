@@ -1,11 +1,6 @@
 .wrapper {
   height: 100%;
-  overflow: scroll;
-}
-
-.navbar {
-  cursor: pointer;
-  overflow: scroll;
+  display: flex; /* 不加无法滚动 */
 
   &::after {
     content: " ";
@@ -17,9 +12,22 @@
     left: 0;
     z-index: -1;
   }
+}
+
+.navbar {
+  cursor: pointer;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 0;
 
   .title-wrapper {
     position: relative;
+    border-left: 2px solid transparent;
+  }
+
+  .title-wrapper.active {
+    color: #0070f3;
+    border-left-color: #0070f3;
   }
 
   .line {
@@ -48,10 +56,6 @@
   border-radius: 50%;
   border: 3px solid #bdbdbdd9;
   margin-right: 10px;
-}
-
-.active {
-  color: #0070f3;
 }
 
 .title {

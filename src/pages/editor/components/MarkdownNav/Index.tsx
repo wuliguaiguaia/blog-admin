@@ -1,10 +1,13 @@
 import React, {
   createRef,
   FunctionComponent,
+  useEffect,
 } from 'react'
 import cns from 'classnames'
+import { useDispatch } from 'react-redux'
 import { NavList } from '@/common/interface/index'
 import styles from './index.scss'
+import { updateEditorState } from '@/store/reducers/editor'
 
 interface IProps {
   data: NavList[],
@@ -20,12 +23,17 @@ const MarkdownNav:FunctionComponent<IProps> = ({
   const titlesRef = createRef<HTMLDivElement>()
   const levels = data.map((item) => item.level)
   const maxLevel = Math.min(...levels)
+  const dispatch = useDispatch()
   const handleClickNav = (text: string) => {
     setActiveNav(text)
     history.push(`/editor/${id}#${text}`)
+    dispatch(updateEditorState({isClickNav: true}))
   }
-  console.log(123)
 
+  useEffect(() => {
+    const { hash } = window.location
+    setActiveNav(decodeURIComponent(hash.slice(1)))
+  }, [])
   return (
     <div ref={titlesRef} className={styles.wrapper}>
       {data.length ? (
@@ -36,12 +44,11 @@ const MarkdownNav:FunctionComponent<IProps> = ({
               return (
                 <li
                   key={index}
-                  className={styles['title-wrapper']}
+                  className={cns([styles['title-wrapper'], activeNav === text && styles.active])}
                   onClick={handleClickNav.bind(undefined, text)}
                 >
                   <div className={cns([
                     styles[`title-${level - maxLevel + 1}`],
-                    activeNav === text && styles.active,
                     styles.title,
                     'text-ellipsis',
                   ])}

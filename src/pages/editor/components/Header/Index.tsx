@@ -180,28 +180,31 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
 
   return (
     <div className={cns([styles.header, 'jusBetween-alignCenter', editWatchMode === EditWatchMode.preview ? styles.preview : styles.edit])}>
-      {editWatchMode === EditWatchMode.edit ? (
-        <div className="align-center">
-          {
-            isEditTitle ? (
-              <Input
-                ref={inputEl}
-                className={cns([styles.titleInput, 'click-outside'])}
-                placeholder="请输入名称~"
-                value={curTitle}
-                onChange={onTextChange}
-                onBlur={handleTitleBlur}
-                onPressEnter={handleTitleBlur}
-              />
-            ) : (
-              <>
-                <div className={styles.title}>{curTitle}</div>
-                <EditOutlined className={styles.editIcon} onClick={handleClickEditTitle} />
-              </>
-            )
-          }
-        </div>
-      ) : <div />}
+      {
+        editWatchMode === EditWatchMode.edit ? (
+          <div className="align-center">
+            {
+              isEditTitle ? (
+                <Input
+                  ref={inputEl}
+                  className={cns([styles.titleInput, 'click-outside'])}
+                  placeholder="请输入名称~"
+                  value={curTitle}
+                  onChange={onTextChange}
+                  onBlur={handleTitleBlur}
+                  onPressEnter={handleTitleBlur}
+                />
+              ) : (
+                <>
+                  <div className={styles.title}>{curTitle}</div>
+                  <EditOutlined className={styles.editIcon} onClick={handleClickEditTitle} />
+                </>
+              )
+            }
+          </div>
+        )
+          : <div className={styles.previewTitle}>{curTitle}</div>
+      }
       <div className="align-center">
         {editWatchMode === EditWatchMode.edit ? (
           <Save />

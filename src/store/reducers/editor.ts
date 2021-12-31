@@ -30,6 +30,8 @@ export interface IInitialState {
   backupData: string
   editType: EditType,
   saveStatus: SaveStatus,
+  editorScrollTop: number,
+  isClickNav: boolean,
   editStatus: {
     outline: boolean,
     preview: boolean
@@ -60,6 +62,8 @@ export const initialState: IInitialState = {
     end: 0,
   }, /* 光标位置 */
   transContentLength: 0, /* 内容长度 */
+  editorScrollTop: 0,
+  isClickNav: false,
   historyRecord: new HistoryRecord(),
   saveStatus: SaveStatus.end, /* 保存状态 */
   shortcutKey: new ShortcutKey(),
