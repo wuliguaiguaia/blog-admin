@@ -8,6 +8,7 @@ $editorContainerPadding: 30px;
   left: 0;
   top: 100px;
 }
+
 .hasOutline {
   width: calc(100% - $outlineWidth);
 }
@@ -32,9 +33,10 @@ $editorContainerPadding: 30px;
   position: fixed;
   background-color: #e6e6e6;
   top: calc($editorContainerPadding + $headerHeight + $toolbarHeight);
-  height: calc(
-    100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
-  );
+  height:
+    calc(
+      100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
+    );
 }
 
 .preContent {
@@ -71,8 +73,9 @@ $editorContainerPadding: 30px;
   padding-right: 20px;
   bottom: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgb(255 255 255 / 80%);
   $top: calc($headerHeight + $toolbarHeight + 30px);
+
   backdrop-filter: blur(30px);
   max-height: calc(100vh - $top - 30px);
   overflow: hidden;
@@ -81,6 +84,7 @@ $editorContainerPadding: 30px;
 
 .outlineInPreview {
   $top: calc($headerHeight + 30px);
+
   top: $top;
   max-height: calc(100vh - $top - 30px);
 }
