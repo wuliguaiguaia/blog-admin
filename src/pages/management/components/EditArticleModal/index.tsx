@@ -22,7 +22,7 @@ interface IAddArticle {
   title: string,
   categories: number[]
 }
-const AddArticleModal: FunctionComponent<IProps> = ({
+const EditArticleModal: FunctionComponent<IProps> = ({
   modalVisible,
   setModalVisible,
 }) => {
@@ -130,4 +130,4 @@ const AddArticleModal: FunctionComponent<IProps> = ({
     </Modal>
   )
 }
-export default AddArticleModal
+export default EditArticleModal

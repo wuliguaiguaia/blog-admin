@@ -13,6 +13,8 @@ import {
   UserOutlined,
   RightOutlined,
   LeftOutlined,
+  FolderOpenOutlined,
+  TagsOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
 import { Link } from 'react-router-dom'
@@ -33,9 +35,22 @@ const data = [
   },
   {
     id: 2,
-    name: '文档管理', /* 增加、分类、未发布、日期 */
-    href: '/articlelist',
-    icon: <ReadOutlined />,
+    name: '文档管理',
+    icon: <FolderOpenOutlined />,
+    children: [
+      {
+        id: 2.1,
+        name: '文档列表',
+        href: '/articlelist',
+        icon: <ReadOutlined />,
+      },
+      {
+        id: 2.2,
+        name: '分类列表',
+        href: '/categorylist',
+        icon: <TagsOutlined />,
+      },
+    ],
   },
   {
     id: 3,

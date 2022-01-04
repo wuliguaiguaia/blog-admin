@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
-import AddArticleModal from '../../components/AddArticleModal'
+import EditArticleModal from '../../components/EditArticleModal'
 
 interface IProps {
 }
@@ -312,7 +312,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }}
         />
       </div>
-      <AddArticleModal
+      <EditArticleModal
         modalVisible={addArticleModalVisible}
         setModalVisible={setAddArticleModalVisible}
       />

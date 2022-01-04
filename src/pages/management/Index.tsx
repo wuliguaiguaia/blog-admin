@@ -8,6 +8,7 @@ import UserList from './pages/userList/index'
 import styles from './index.scss'
 import Analysis from './pages/analysis/index'
 import ArticleList from './pages/articleList'
+import CategoryList from './pages/categoryList'
 
 const Management = () => (
   <>
@@ -17,6 +18,7 @@ const Management = () => (
         <Header />
         <Route path="/workbench" component={Workbench} />
         <Route path="/articlelist" component={ArticleList} />
+        <Route path="/categorylist" component={CategoryList} />
         <Route path="/analysis" component={Analysis} />
         <Route path="/userlist" component={UserList} />
       </div>
