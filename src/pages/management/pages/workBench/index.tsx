@@ -12,17 +12,16 @@ const Workbench: FunctionComponent = () => {
     <div>
       <div className={styles.title}>
         <h1>创作指数</h1>
-        <Select
-          className={styles.select}
-          defaultValue={2021}
-          style={{ width: 120 }}
-          onChange={handleChange}
-        >
-          <Option value="2021">2021</Option>
-          <Option value="2022">2022</Option>
-        </Select>
       </div>
-
+      <Select
+        className={styles.select}
+        defaultValue={2021}
+        style={{ width: 120 }}
+        onChange={handleChange}
+      >
+        <Option value="2021">2021</Option>
+        <Option value="2022">2022</Option>
+      </Select>
       <CalendarGraph year={year} />
     </div>
   )
