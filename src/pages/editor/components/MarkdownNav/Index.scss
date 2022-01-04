@@ -29,24 +29,6 @@
     color: #0070f3;
     border-left-color: #0070f3;
   }
-
-  .line {
-    position: absolute;
-    top: 20px;
-    left: 4px;
-    height: calc(100% - 10px);
-    border-left: 2px solid #f0f0f0;
-  }
-
-  .circle {
-    width: 10px;
-    height: 10px;
-    background-color: #fff;
-    border: 2px solid transparent;
-    border-radius: 100px;
-    border-color: #1890ff;
-    margin-right: 10px;
-  }
 }
 
 .icon-title {
@@ -61,13 +43,14 @@
 .title {
   line-height: 2;
   font-size: 12px;
-  // pointer-events: none;
   margin-left: 15px;
+  padding-left: 6.5em;
 }
 
 .title-1 {
   font-size: 13px;
   font-weight: 700;
+  padding-left: 0;
 }
 
 .title-2 {
@@ -86,6 +69,9 @@
 
 .title-5 {
   padding-left: 6em;
+}
+.title-6 {
+  padding-left: 6.5em;
 }
 
 .empty {

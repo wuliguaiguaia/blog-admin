@@ -72,7 +72,6 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     setTransContent(text)
     const list:NavList[] = []
     renderer.heading = (txt: string, level) => {
-      console.log('[[[[')
       list.push({ text: txt, level })
       setNavList(list)
       const markerContents = renderToString(<div id={txt} className={cns('md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
@@ -121,6 +120,8 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
 
   /*
     每次点击目录跳转的过程中 scroll 事件触发会有抖动
+    因为 scrollTop 的修改触发了 scroll 事件
+    需要使用 wheel 和 touch 事件进行代替！！！！
   */
   useEffect(() => {
     if (!scrollEl.current) return
@@ -143,11 +144,13 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
       })
       setActiveNav(elArr[index].innerText)
     }
-    scrollEl.current.addEventListener('scroll', handleScroll)
+    scrollEl.current.addEventListener('wheel', handleScroll)
   }, [scrollEl])
 
 
-  /* useMemo 后隐藏的标题点击后不会再跳回去 */
+  /* useMemo 后隐藏的标题点击后不会再跳回去
+    不用的话每次都重新渲染一个新的组件，所以会跳回去
+  */
   const Outline = useMemo(() => (
     <div className={cns([styles.outline,
       editWatchMode === EditWatchMode.preview && styles.outlineInPreview])}
@@ -167,30 +170,28 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
       {
         editWatchMode === EditWatchMode.edit
           ? (
-            <>
-              <div className={cns([styles.container, 'flex', outline ? styles.hasOutline : ''])} ref={scrollEl}>
-                <div className={cns([styles.editContent, 'flex'])}>
-                  <div className={styles.leftContent} ref={leftContentEl}>
-                    <pre className={styles.preContent}>{content}</pre>
-                    <textarea
-                      ref={textAreaEl}
-                      className={styles.textAreaContent}
-                      onChange={onTextChange}
-                      onPaste={handlePaste}
-                      onSelect={handleSelect}
-                    />
-                  </div>
-                  <div className={styles.divideLine} style={{ left: `${divideLineLeft}px` }} />
-                  <div
-                    ref={transEl}
-                    className={cns([styles.rightContent, 'md-wrapper'])}
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: transContent }}
+            <div className={cns([styles.container, 'flex', outline ? styles.hasOutline : ''])} ref={scrollEl}>
+              <div className={cns([styles.editContent, 'flex'])}>
+                <div className={styles.leftContent} ref={leftContentEl}>
+                  <pre className={styles.preContent}>{content}</pre>
+                  <textarea
+                    ref={textAreaEl}
+                    className={styles.textAreaContent}
+                    onChange={onTextChange}
+                    onPaste={handlePaste}
+                    onSelect={handleSelect}
                   />
                 </div>
-                {outline ? Outline : null}
+                <div className={styles.divideLine} style={{ left: `${divideLineLeft}px` }} />
+                <div
+                  ref={transEl}
+                  className={cns([styles.rightContent, 'md-wrapper'])}
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: transContent }}
+                />
               </div>
-            </>
+              {outline ? Outline : null}
+            </div>
           )
           : (
             <div className={cns([styles.previewContainer])} ref={scrollEl}>

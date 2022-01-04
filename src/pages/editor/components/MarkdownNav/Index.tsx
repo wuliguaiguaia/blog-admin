@@ -4,10 +4,8 @@ import React, {
   useEffect,
 } from 'react'
 import cns from 'classnames'
-import { useDispatch } from 'react-redux'
 import { NavList } from '@/common/interface/index'
 import styles from './index.scss'
-import { updateEditorState } from '@/store/reducers/editor'
 
 interface IProps {
   data: NavList[],
@@ -23,11 +21,9 @@ const MarkdownNav:FunctionComponent<IProps> = ({
   const titlesRef = createRef<HTMLDivElement>()
   const levels = data.map((item) => item.level)
   const maxLevel = Math.min(...levels)
-  const dispatch = useDispatch()
   const handleClickNav = (text: string) => {
     setActiveNav(text)
     history.push(`/editor/${id}#${text}`)
-    dispatch(updateEditorState({isClickNav: true}))
   }
 
   useEffect(() => {
