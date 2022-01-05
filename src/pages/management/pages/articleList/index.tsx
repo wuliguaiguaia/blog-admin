@@ -22,8 +22,8 @@ import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import EditArticleModal from '../../components/EditArticleModal'
 import { RootState } from '@/store/reducers/interface'
-import { UpdateEditorState } from '@/store/actionTypes'
 import { getCategoryList } from '@/store/reducers/editor'
+import { ICategory } from '@/common/interface'
 
 interface IProps {
 }
@@ -41,11 +41,23 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [curCates, setCurCates] = useState([])
   const [sorter, setSorter] = useState({})
   const [published, setPublished] = useState<null | number>(null)
-  const [addArticleModalVisible, setAddArticleModalVisible] = useState(false)
+  const [editArticleModalVisible, setEditArticleModalVisible] = useState(false)
+  const [editType, setEditType] = useState(0)
+  const [editData, setEditData] = useState({title: '', categories: [], id: 0})
   const dispatch = useDispatch()
 
   const fetchData = useCallback(async ({
-    page: _page, prepage, categories, sorter: _sorter, type: _type, published: _published,
+    page: _page = page,
+    prepage = pagesize,
+    categories = curCates,
+    sorter: _sorter = sorter,
+    published: _published = published,
+  }: {
+    page?: number,
+    prepage?: number,
+    categories?: number[],
+    sorter?: any,
+    published?: number | null
   }) => {
     setLoading(true)
     const params = {
@@ -61,7 +73,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
     let data
     let response
 
-    if (_type === 0 || !searchValue) {
+    if (!searchValue) {
       response = await $http.getarticlelist(params)
       data = response.data
       ilist = data.list
@@ -70,13 +82,13 @@ const ArticleList: FunctionComponent<IProps> = () => {
       response = await $http.search({...params, words: searchValue, columns: ['title']})
       data = response.data
       // eslint-disable-next-line no-underscore-dangle
-      ilist = data.list.map((item: any) => item._source)
+      ilist = data.list.map((item: { _source: any }) => item._source)
       itotal = data.total
     }
     if (itotal !== 0 && ilist.length === 0) {
       /* 处理删除最后一页数据异常 */
       fetchData({
-        page: _page - 1, prepage, categories, sorter: _sorter, type: _type, published: _published,
+        page: _page - 1, prepage, categories, sorter: _sorter, published: _published,
       })
       setPage(_page - 1)
     } else {
@@ -209,9 +221,17 @@ const ArticleList: FunctionComponent<IProps> = () => {
               message.error('删除失败！')
             }
           }
+
+          const handleEdit = () => {
+            const { id, title, categories } = record
+            setEditData({ id, title, categories: categories.map((item: ICategory) => item.id) })
+            setEditType(1)
+            setEditArticleModalVisible(true)
+          }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate}><Link to={`/editor/${record.id}`} target="_blank">查看</Link></span>
+              <span className={styles.operate} onClick={handleEdit}>修改</span>
+              <span className={styles.operate}><Link to={`/article/${record.id}/preview`} target="_blank">查看</Link></span>
               {!record.published ? (
                 <Popconfirm
                   title="请再次确认是否发布？"
@@ -240,7 +260,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
 
   useEffect(() => {
     fetchData({
-      page: 1, prepage: defaultPerpage, categories: null, sorter: null, type: 0, published: null,
+      page: 1, prepage: defaultPerpage, categories: [], sorter: null, published: null,
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -281,7 +301,11 @@ const ArticleList: FunctionComponent<IProps> = () => {
   }
   const handleReset = () => window.location.reload()
 
-  const handleAddArticle = () => setAddArticleModalVisible(true)
+  const handleAddArticle = () => {
+    setEditData({})
+    setEditType(0)
+    setEditArticleModalVisible(true)
+  }
 
   return (
     <>
@@ -321,8 +345,11 @@ const ArticleList: FunctionComponent<IProps> = () => {
         />
       </div>
       <EditArticleModal
-        modalVisible={addArticleModalVisible}
-        setModalVisible={setAddArticleModalVisible}
+        type={editType}
+        initialData={editData}
+        refresh={fetchData}
+        modalVisible={editArticleModalVisible}
+        setModalVisible={setEditArticleModalVisible}
       />
     </>
   )

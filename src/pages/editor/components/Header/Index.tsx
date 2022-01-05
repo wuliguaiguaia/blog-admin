@@ -7,7 +7,7 @@ import {
 } from 'antd'
 import {
   DeleteOutlined,
-  EditOutlined, ExclamationCircleOutlined, MoreOutlined, SendOutlined,
+  EditOutlined, ExclamationCircleOutlined, MoreOutlined, RollbackOutlined, SendOutlined,
 } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -51,8 +51,6 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
 
   const handleClickEditTitle = () => setEditTitle(true)
   const onTextChange = useCallback((e) => {
-    console.log(1, e.target.value)
-
     setCurTitle(e.target.value)
   }, [])
 
@@ -132,8 +130,21 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       onCancel() { },
     })
   }
+
+  const handleExit = () => {
+    history.push('/articlelist')
+  }
   const moreOperate = () => (
     <Menu className={styles.operateMenu}>
+      <Menu.Item
+        className={styles.operateItem}
+        icon={<SendOutlined />}
+        disabled={!!published}
+        onClick={handlePublish}
+        key="publish"
+      >
+        发布
+      </Menu.Item>
       <Menu.Item
         className={styles.operateItem}
         icon={<DeleteOutlined />}
@@ -145,12 +156,11 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       </Menu.Item>
       <Menu.Item
         className={styles.operateItem}
-        icon={<SendOutlined />}
-        disabled={!!published}
-        onClick={handlePublish}
-        key="publish"
+        icon={<RollbackOutlined />}
+        onClick={handleExit}
+        key="exit"
       >
-        发布
+        退出
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item className={styles.details} key="detail">

@@ -21,7 +21,7 @@ const App: FunctionComponent = () => {
       <Router>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
-          <Route exact path="/editor/:id" component={Editor} />
+          <Route path="/article/:id/:type" component={Editor} />
           <Route path="/" component={Management} />
         </Switch>
       </Router>

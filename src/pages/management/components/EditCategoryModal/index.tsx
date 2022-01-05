@@ -5,12 +5,7 @@ import {
 } from 'antd'
 import styles from './index.scss'
 import $http from '@/common/api'
-import { ICategory } from '@/common/interface'
-
-enum EditType {
-  add = 0,
-  update = 1,
-}
+import { EditType, ICategory } from '@/common/interface'
 
 interface IProps {
   modalVisible: boolean,

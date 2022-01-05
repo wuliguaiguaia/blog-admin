@@ -6,7 +6,7 @@ import styles from './index.scss'
 import ToolBar from './components/Toolbar'
 import ConfigModal from './components/ConfigModal'
 import Header from './components/Header'
-import { getArticleData } from '@/store/reducers/editor'
+import { getArticleData, updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import { EditWatchMode } from '@/common/interface'
 import Content from './components/Content'
@@ -18,7 +18,7 @@ interface IProps {
   history: any
 }
 const Editor: FunctionComponent<IProps> = ({match: { params }, history}) => {
-  const { id = 260251848 } = params
+  const { id, type = 'preview' } = params
   const dispatch = useDispatch()
   const {
     editStatus: {
@@ -29,6 +29,9 @@ const Editor: FunctionComponent<IProps> = ({match: { params }, history}) => {
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
 
+  useEffect(() => {
+    dispatch(updateEditorState({editWatchMode: type === 'edit' ? EditWatchMode.edit : EditWatchMode.preview}))
+  }, [type])
   useEffect(() => {
     dispatch(getArticleData(id))
     if (editWatchMode === EditWatchMode.edit) {

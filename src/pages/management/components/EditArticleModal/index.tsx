@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   Select, Modal, Input, message,
 } from 'antd'
-import { ICategory } from '@/common/interface'
+import { EditType, ICategory } from '@/common/interface'
 import {
   getCategoryList,
 } from '@/store/reducers/editor'
@@ -12,19 +12,33 @@ import styles from './index.scss'
 import $http from '@/common/api'
 
 const { Option } = Select
-
+interface IAddArticle {
+  title: string,
+  categories: number[],
+  id?: 0,
+  content?: string
+}
 interface IProps {
   modalVisible: boolean,
   setModalVisible: (visible: boolean) => void
+  type: EditType
+  initialData: IAddArticle
+  refresh: ({
+    page, prepage, categories, sorter, published,
+  }: {
+    page?: number;
+    prepage?: number
+    categories?: number[]; sorter?: any; published?: number | null;
+  }) => Promise<void>,
 }
 
-interface IAddArticle {
-  title: string,
-  categories: number[]
-}
+
 const EditArticleModal: FunctionComponent<IProps> = ({
   modalVisible,
   setModalVisible,
+  type,
+  initialData,
+  refresh,
 }) => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -35,6 +49,10 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     content: '',
   }
   const [data, setData] = useState<IAddArticle>(defaultData)
+
+  useEffect(() => {
+    setData(type === 0 ? defaultData : initialData)
+  }, [type, initialData])
 
   const checkForm = () => {
     if (data.title.trim() === '') {
@@ -52,15 +70,19 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     const cansubmit = checkForm()
     if (!cansubmit) return
     setLoading(true)
-    const res = await $http.addarticle({...data})
+    const api = type === 0 ? 'addarticle' : 'updatearticle'
+    const res = await $http[api]({...data})
     setTimeout(() => {
       setLoading(false)
       if (res.errNo !== 0) {
         message.error(res.errStr)
       } else {
         setModalVisible(false)
-        const {origin} = window.location
-        window.open(`${origin}/editor/${res.data.id}`)
+        refresh({})
+        if (type === 0) {
+          const {origin} = window.location
+          window.open(`${origin}/article/${res.data.id}/edit`)
+        }
       }
     }, 200)
   }
@@ -84,7 +106,7 @@ const EditArticleModal: FunctionComponent<IProps> = ({
 
   return (
     <Modal
-      title="添加文章"
+      title={type === 0 ? '添加文章' : '修改文章'}
       okText="确定"
       cancelText="取消"
       confirmLoading={loading}
