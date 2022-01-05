@@ -8,8 +8,8 @@ const Header = () => (
   <div className={cns([styles.header, 'jus-between'])}>
     <div />
     <div>
-      <Button className={styles.btn}><Link to="/login">登录</Link></Button>
-      <Button className={styles.btn} type="primary"><Link to="/register">快速注册</Link></Button>
+      <Button className={styles.btn}><Link to="/u/login">登录</Link></Button>
+      <Button className={styles.btn} type="primary"><Link to="/u/register">快速注册</Link></Button>
     </div>
   </div>
 )

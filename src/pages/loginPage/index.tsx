@@ -6,9 +6,9 @@ import Register from './pages/Register'
 
 const LoginPage = () => (
   <div>
-    <Route exact path="/login" component={Login} />
-    <Route exact path="/register" component={Register} />
-    <Route exact path="/password_reset" component={PasswordReset} />
+    <Route exact path="/u/login" component={Login} />
+    <Route exact path="/u/register" component={Register} />
+    <Route exact path="/u/password_reset" component={PasswordReset} />
   </div>
 )
 
