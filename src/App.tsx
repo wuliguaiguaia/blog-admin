@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router, Route, Redirect, Switch,
 } from 'react-router-dom'
 import Editor from './pages/editor'
+import LoginPage from './pages/login'
 import Management from './pages/management'
 import { updateCommonState } from './store/reducers/common'
 
@@ -22,6 +23,7 @@ const App: FunctionComponent = () => {
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
           <Route path="/article/:id/:type" component={Editor} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/" component={Management} />
         </Switch>
       </Router>

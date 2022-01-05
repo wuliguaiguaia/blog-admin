@@ -15,9 +15,7 @@ const Login = () => {
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
   }
-
   // const status
-
   return (
     <Form
       name="normal_login"

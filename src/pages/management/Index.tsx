@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 import cns from 'classnames'
-import Header from '@/common/components/Header'
 import LeftMenu from '@/common/components/LeftMenu'
 import Workbench from './pages/workBench'
 import UserList from './pages/userList/index'
@@ -9,6 +8,7 @@ import styles from './index.scss'
 import Analysis from './pages/analysis/index'
 import ArticleList from './pages/articleList'
 import CategoryList from './pages/categoryList'
+import Header from './components/Header'
 
 const Management = () => (
   <>
