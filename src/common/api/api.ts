@@ -11,16 +11,19 @@ export const get = {
 export const post = {
   comment: 'comment',
   addarticle: 'http://localhost:3009/article',
+  addcategory: 'http://localhost:3009/category',
 }
 
 export const remove = {
   forcedeletearticle: 'http://localhost:3009/article',
+  deletecategory: 'http://localhost:3009/category',
 }
 
 export const put = {
   publisharticle: 'http://localhost:3009/article/publish',
   deletearticle: 'http://localhost:3009/article/delete',
   updatearticle: 'http://localhost:3009/article/update',
+  updatecategory: 'http://localhost:3009/category',
 }
 
 export const patch = {}

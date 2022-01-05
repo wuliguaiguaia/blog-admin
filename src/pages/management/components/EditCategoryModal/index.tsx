@@ -1,14 +1,23 @@
 import cns from 'classnames'
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import {
   Modal, Input, message,
 } from 'antd'
 import styles from './index.scss'
 import $http from '@/common/api'
+import { ICategory } from '@/common/interface'
+
+enum EditType {
+  add = 0,
+  update = 1,
+}
 
 interface IProps {
   modalVisible: boolean,
   setModalVisible: (visible: boolean) => void
+  refresh: () => void,
+  initialData: ICategory,
+  type: EditType
 }
 
 interface IAddCategory {
@@ -17,12 +26,17 @@ interface IAddCategory {
 const EditCategoryModal: FunctionComponent<IProps> = ({
   modalVisible,
   setModalVisible,
+  refresh,
+  initialData,
+  type,
 }) => {
   const [loading, setLoading] = useState(false)
-  const defaultData = {
-    name: '',
-  }
+  const defaultData = { name: '' }
   const [data, setData] = useState<IAddCategory>(defaultData)
+
+  useEffect(() => {
+    setData(type === 0 ? defaultData : initialData)
+  }, [initialData, type])
 
   const checkForm = () => {
     if (data.name.trim() === '') {
@@ -36,17 +50,19 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
     const cansubmit = checkForm()
     if (!cansubmit) return
     setLoading(true)
-    const res = await $http.addcategory({...data})
+    const api = type === 0 ? 'addcategory' : 'updatecategory'
+    const res = await $http[api]({...data})
     setTimeout(() => {
       setLoading(false)
       if (res.errNo !== 0) {
         message.error(res.errStr)
       } else {
+        setData(defaultData)
         setModalVisible(false)
+        refresh()
       }
     }, 200)
   }
-
 
   const handleConfigCancel = () => {
     setData(defaultData)
@@ -60,7 +76,7 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
 
   return (
     <Modal
-      title="添加分类"
+      title={type === 0 ? '添加分类' : '修改分类'}
       okText="确定"
       cancelText="取消"
       confirmLoading={loading}
@@ -84,4 +100,5 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
     </Modal>
   )
 }
+
 export default EditCategoryModal

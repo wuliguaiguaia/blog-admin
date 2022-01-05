@@ -13,10 +13,12 @@ import {
   Table, Tooltip,
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { useDispatch } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import EditCategoryModal from '../../components/EditCategoryModal'
+import { updateEditorState } from '@/store/reducers/editor'
 
 interface IProps {
 }
@@ -26,9 +28,10 @@ const CategoryList: FunctionComponent<IProps> = () => {
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(0)
   const [columns, setColumns] = useState<any>([])
-  const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false)
-
-
+  const [editCategoryModalVisible, setEditCategoryModalVisible] = useState(false)
+  const [editCate, setEditCate] = useState({name: '', id: 0})
+  const [editCateType, setEditCateType] = useState(0)
+  const dispatch = useDispatch()
   /*
     Maximum update depth exceeded.
     This can happen when a component calls setState inside useEffect,
@@ -38,9 +41,10 @@ const CategoryList: FunctionComponent<IProps> = () => {
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const response:any = await $http.getcategorylist()
+    const response: any = await $http.getcategorylist()
     setList(response.data.list)
     setTotal(response.data.total)
+    dispatch(updateEditorState({categoryList: response.data.list}))
     setLoading(false)
   }, [])
 
@@ -73,6 +77,14 @@ const CategoryList: FunctionComponent<IProps> = () => {
         ),
       },
       {
+        title: '文章数量',
+        dataIndex: 'articlesLen',
+        className: styles.small,
+        width: 150,
+        sorter: (a: any, b: any) => a.articlesLen - b.articlesLen,
+        defaultSortOrder: 'descend',
+      },
+      {
         title: '更新时间',
         dataIndex: 'updateTime',
         className: styles.small,
@@ -89,7 +101,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
         render: (_, record: any) => {
           const handleDelete = async () => {
             try {
-              const data = await $http.deletecategory({ id: record.id })
+              const data = await $http.deletecategory({}, { data: { id: record.id } })
               if (data.errNo === 0) {
                 message.success('删除成功！')
                 fetchData()
@@ -101,7 +113,10 @@ const CategoryList: FunctionComponent<IProps> = () => {
             }
           }
           const handleEdit = async () => {
-
+            const {name, id} = record
+            setEditCateType(1)
+            setEditCate({name, id})
+            setEditCategoryModalVisible(true)
           }
           return (
             <div className={styles.operateContent}>
@@ -122,7 +137,11 @@ const CategoryList: FunctionComponent<IProps> = () => {
   }, [fetchData])
 
 
-  const handleAddCategory = () => setAddCategoryModalVisible(true)
+  const handleAddCategory = () => {
+    setEditCateType(0)
+    setEditCate({ name: '', id: 0})
+    setEditCategoryModalVisible(true)
+  }
 
   return (
     <>
@@ -151,8 +170,11 @@ const CategoryList: FunctionComponent<IProps> = () => {
         />
       </div>
       <EditCategoryModal
-        modalVisible={addCategoryModalVisible}
-        setModalVisible={setAddCategoryModalVisible}
+        modalVisible={editCategoryModalVisible}
+        setModalVisible={setEditCategoryModalVisible}
+        refresh={fetchData}
+        initialData={editCate}
+        type={editCateType}
       />
     </>
   )

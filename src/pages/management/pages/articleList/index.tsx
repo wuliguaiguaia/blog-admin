@@ -16,10 +16,14 @@ import {
 } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import EditArticleModal from '../../components/EditArticleModal'
+import { RootState } from '@/store/reducers/interface'
+import { UpdateEditorState } from '@/store/actionTypes'
+import { getCategoryList } from '@/store/reducers/editor'
 
 interface IProps {
 }
@@ -38,6 +42,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [sorter, setSorter] = useState({})
   const [published, setPublished] = useState<null | number>(null)
   const [addArticleModalVisible, setAddArticleModalVisible] = useState(false)
+  const dispatch = useDispatch()
 
   const fetchData = useCallback(async ({
     page: _page, prepage, categories, sorter: _sorter, type: _type, published: _published,
@@ -81,14 +86,17 @@ const ArticleList: FunctionComponent<IProps> = () => {
     }
   }, [searchValue])
 
+  const { categoryList } = useSelector((state: RootState) => state.editor)
+  useEffect(() => {
+    dispatch(getCategoryList())
+  }, [])
   useEffect(() => {
     const fetch = async () => {
-      const response:any = await $http.getcategorylist()
-      const data = response.data.list.map(({ id, name }) => ({ text: name, value: id }))
+      const data = categoryList.map(({ id, name }) => ({ text: name, value: id }))
       setCates(data)
     }
     fetch()
-  }, [])
+  }, [categoryList])
 
   useEffect(() => {
     setColumns([
