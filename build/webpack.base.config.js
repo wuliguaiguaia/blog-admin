@@ -53,7 +53,7 @@ module.exports = {
           loader: "less-loader",
         })
       },
-      // //针对antd不启用模块化css
+      //针对antd不启用模块化css
       {
         test: /\.css$/,
         include: /node_modules|antd\.css/,
@@ -84,6 +84,7 @@ module.exports = {
             fallback: 'file-loader',
             name: utils.assetsPath('imgs/[name].[hash:7].[ext]'),
             exclude: resolve('node_modules'),
+            esModule: false
           },
         }]
       },
@@ -109,7 +110,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
-      '@': resolve('./src/')
+      '@': resolve('src')
     }
   },
   plugins: [].filter(Boolean),

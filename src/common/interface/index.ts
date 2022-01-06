@@ -4,6 +4,13 @@ export interface ICategory {
   articlesLen?: number;
 }
 
+
+export enum LoginType {
+  login = 'login',
+  register = 'register',
+  password_reset = 'password_reset',
+}
+
 export interface IOStringAny {
   [k: string]: any
 }

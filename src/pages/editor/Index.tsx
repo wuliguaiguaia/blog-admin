@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spin } from 'antd'
 import cns from 'classnames'
+import { RouteComponentProps } from 'react-router-dom'
 import styles from './index.scss'
 import ToolBar from './components/Toolbar'
 import ConfigModal from './components/ConfigModal'
@@ -11,13 +12,13 @@ import { RootState } from '@/store/reducers/interface'
 import { EditWatchMode } from '@/common/interface'
 import Content from './components/Content'
 
-interface IProps {
-  match: {
-    params: any
-  },
-  history: any
+interface IRouteParams {
+  id: string,
+  type: 'edit' | 'preview'
 }
-const Editor: FunctionComponent<IProps> = ({match: { params }, history}) => {
+const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
+  match: {params }, history,
+}) => {
   const { id, type = 'preview' } = params
   const dispatch = useDispatch()
   const {
@@ -33,7 +34,7 @@ const Editor: FunctionComponent<IProps> = ({match: { params }, history}) => {
     dispatch(updateEditorState({editWatchMode: type === 'edit' ? EditWatchMode.edit : EditWatchMode.preview}))
   }, [type])
   useEffect(() => {
-    dispatch(getArticleData(id))
+    dispatch(getArticleData(+id))
     if (editWatchMode === EditWatchMode.edit) {
       shortcutKey.setEnable(true)
     } else {
