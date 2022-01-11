@@ -1,7 +1,7 @@
 nrm use taobao
 
 
-npm i
+npm i    
 
 
 
