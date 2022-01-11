@@ -1,0 +1,66 @@
+$gap: 3px;
+
+.graphOverview {
+  font-size: 10px;
+  white-space: nowrap;
+  color: rgb(140 140 140);
+
+  i {
+    font-style: normal;
+  }
+}
+
+.col {
+  margin-right: $gap;
+  position: relative;
+}
+
+.week {
+  height: 95px;
+
+  i {
+    height: 14px;
+    line-height: 14px;
+    transform: scale(0.7);
+  }
+}
+
+.monthAlias {
+  position: absolute;
+  left: 0;
+  bottom: -20px;
+}
+
+.square {
+  width: 11px;
+  height: 11px;
+  display: block;
+  border-radius: 2px;
+  margin-bottom: $gap;
+  background-color: #f5f5f5;
+  font-size: 0;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &[data-level="0"] {
+    background-color: #f5f5f5;
+  }
+
+  &[data-level="1"] {
+    background-color: #e1f2e2;
+  }
+
+  &[data-level="2"] {
+    background-color: #bee8c8;
+  }
+
+  &[data-level="3"] {
+    background-color: #6bb579;
+  }
+
+  &[data-level="4"] {
+    background-color: #397549;
+  }
+}

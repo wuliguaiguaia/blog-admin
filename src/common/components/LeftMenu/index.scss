@@ -1,0 +1,63 @@
+.header {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+}
+
+.collapsedIcon {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: rgb(249 249 249);
+  border-left: none;
+  border-radius: 3px;
+  transform: translateX(100%);
+  width: 30px;
+  height: 30px;
+}
+
+.leftMenu {
+  user-select: none;
+  position: relative;
+  height: 100vh;
+  background-color: rgb(249 249 249);
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.antMenu {
+  border: 0;
+  background: rgb(249 249 249);
+  height: calc(100vh - 50px);
+  width: $leftMenuWidth !important;
+}
+
+:global {
+  .ant-menu-sub.ant-menu-inline {
+    background: rgb(249 249 249);
+  }
+
+  .ant-menu-inline .ant-menu-item::after {
+    display: none;
+  }
+
+  .ant-menu.ant-menu-inline-collapsed {
+    width: $leftMenuMinWidth !important;
+  }
+
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    color: #fff;
+    background-color: #4ca9ff;
+  }
+
+  .ant-menu-item-selected a {
+    color: #fff;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
