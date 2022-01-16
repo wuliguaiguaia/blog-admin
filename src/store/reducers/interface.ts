@@ -1,5 +1,7 @@
-import { IInitialState as IEditorInitialState } from './editor'
+import { IInitialState as IEditorState } from './editor'
+import { IInitialState as ICommonState } from './common'
 
 export interface RootState {
-  editor: IEditorInitialState
+  editor: IEditorState
+  common: ICommonState
 }

@@ -1,15 +1,18 @@
-import { message } from 'antd'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
+import { message } from 'antd'
 import $http from '@/common/api'
 import { RootState } from '@/store/reducers/interface'
 import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
-import { IArticle, ICategory, EditWatchMode } from '@/common/interface'
+import {
+  IArticle, ICategory, EditWatchMode, EditType, SaveStatus, Response,
+} from '@/common/interface'
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
 import testImage from '@/assets/imgs/image.png'
+import { putLocalData } from '@/common/plugins/indexedDB'
 
 export interface IInitialState {
   docData: IArticle
@@ -24,6 +27,11 @@ export interface IInitialState {
   shortcutKey: IShortcutKey
   getDataLoading: boolean
   helperKeys: any
+  backupData: string
+  editType: EditType,
+  saveStatus: SaveStatus,
+  editorScrollTop: number,
+  isClickNav: boolean,
   editStatus: {
     outline: boolean,
     preview: boolean
@@ -43,16 +51,21 @@ export const initialState: IInitialState = {
     deleted: 0,
     published: 0,
   }, /* 文档数据 */
+  editType: EditType.add,
   categoryList: [], /* 所有分类 */
   getDataLoading: false,
   helperKeys: {},
-  editWatchMode: EditWatchMode.edit, /* 查看模式: 编辑 or 预览 */
+  backupData: '',
+  editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
   cursorIndex: {
     start: 0,
     end: 0,
   }, /* 光标位置 */
   transContentLength: 0, /* 内容长度 */
+  editorScrollTop: 0,
+  isClickNav: false,
   historyRecord: new HistoryRecord(),
+  saveStatus: SaveStatus.end, /* 保存状态 */
   shortcutKey: new ShortcutKey(),
   editStatus: {
     outline: true,
@@ -129,9 +142,12 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   const res = await $http.getarticle({ id })
   const { data } = res
   data.categories = data.categories?.map((item: ICategory) => item.id) || []
-  dispatch(updateEditorState({ docData: data }))
+  dispatch(updateEditorState({
+    docData: data,
+    getDataLoading: false,
+    backupData: data.content,
+  }))
   historyRecord.addFirst(data.content)
-  dispatch(updateEditorState({getDataLoading: false}))
 }
 
 export const picUpload = (file: any):
@@ -154,15 +170,43 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
-export const saveDocData = (data: any, cb?: () => void):
+export const saveDocData = (data: any, cb?: (response: any) => void, multiArr?: string[]):
 ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
   const { docData } = getState().editor
   const { id } = docData
-  const response = await $http.updatearticle({id, ...data})
-  if (response.errNo !== 0) {
-    message.error('修改失败')
+  if (multiArr) { /* 附加值保存 */
+    multiArr.forEach((key) => {
+      data[key] = docData[key]
+    })
   }
-  if (cb) cb()
+
+  let idata = {}
+
+  const setLocal = () => {
+    putLocalData({ id, ...data }).then(() => {
+      if (cb) cb(idata)
+    }).catch(() => {
+      message.error('本地保存依旧失败，打点已上传')
+    })
+    idata = {} /* 本地保存的不返回数据 */
+  }
+  try {
+    const response:Response = await $http.updatearticle({ id, ...data })
+    const { errNo } = response
+    idata = response.data
+    if (errNo !== 0) {
+      setLocal()
+    } else {
+      console.log(123)
+      dispatch(updateEditorState({
+        backupData: data.content, /* 重置 */
+      }))
+      if (cb) cb(idata)
+    }
+  } catch (err) {
+    message.warning('保存失败，将暂存到本地！')
+    setLocal()
+  }
 }
 
 export default reducer

@@ -1,0 +1,133 @@
+$outlineWidth: 280px;
+$editorContainerPadding: 30px;
+
+.container {
+  height: calc(100vh - $headerHeight - $toolbarHeight);
+  overflow-y: scroll;
+  position: sticky;
+  left: 0;
+  top: 100px;
+}
+
+.hasOutline {
+  width: calc(100% - $outlineWidth);
+}
+
+.editContent {
+  flex: 1;
+}
+
+.leftContent,
+.rightContent {
+  width: 50%;
+  padding: $editorContainerPadding;
+  box-sizing: border-box;
+  position: relative;
+  height: fit-content;
+  min-width: 200px;
+  scroll-behavior: smooth;
+}
+
+.divideLine {
+  width: 1px;
+  position: fixed;
+  background-color: #e6e6e6;
+  top: calc($editorContainerPadding + $headerHeight + $toolbarHeight);
+  height:
+    calc(
+      100vh - $headerHeight - $toolbarHeight - 2 * $editorContainerPadding
+    );
+}
+
+.preContent {
+  display: block;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word !important;
+  visibility: hidden;
+}
+
+.textAreaContent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  overflow-y: hidden;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: $editorContainerPadding;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+/* outline */
+
+.outline {
+  width: $outlineWidth;
+  font-size: 14px;
+  color: #595959;
+  position: fixed;
+  padding-right: 20px;
+  bottom: 0;
+  right: 0;
+  background: rgb(255 255 255 / 80%);
+  $top: calc($headerHeight + $toolbarHeight + 30px);
+
+  backdrop-filter: blur(30px);
+  max-height: calc(100vh - $top - 30px);
+  overflow: hidden;
+  top: $top;
+}
+
+.outlineInPreview {
+  $top: calc($headerHeight + 30px);
+
+  top: $top;
+  max-height: calc(100vh - $top - 30px);
+}
+
+/* preview */
+
+.previewContainer {
+  width: calc(100vw - $outlineWidth);
+  height: calc(100vh - $headerHeight);
+  overflow: hidden;
+  flex: 1;
+  position: sticky;
+  overflow-y: scroll;
+  top: 0;
+  // padding-bottom: 20px;
+  scroll-behavior: smooth;
+  padding: 0 $previewPadding;
+}
+
+.bigTitle {
+  word-break: break-word;
+  margin-bottom: 32px;
+  font-size: 36px;
+  line-height: 1.389;
+  margin-right: 0;
+  font-weight: 700;
+  color: #262626;
+}
+
+@media screen and (max-width: 770px) {
+  .outlineWithPadding {
+    display: none;
+  }
+
+  .previewContainer {
+    padding: 0 20px;
+    width: 100%;
+  }
+
+  .previewContent {
+  }
+
+  .bigTitle {
+    margin-left: 20px;
+  }
+}

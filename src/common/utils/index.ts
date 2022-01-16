@@ -6,7 +6,10 @@ export const getDate = (str: string) => {
   return `${year} 年 ${month} 月 ${day} 日`
 }
 
-export const getDateDetail = (updateTime: string) => updateTime.replace(/-/g, '/').replace('T', ' ').replace(/Z|T/, '').slice(0, -4)
+export const getDateDetail = (time: string) => {
+  const date = new Date(time)
+  return `${date.toLocaleDateString()}  ${date.toLocaleTimeString()}`
+}
 
 /*
   节流函数：

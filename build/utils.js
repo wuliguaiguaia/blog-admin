@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 /* 静态资源生成路径 */
 const assetsPath = (_path) => {
   const assetsPath = process.env.NODE_ENV === 'production'
-    ? config.prod.assetsPath
+    ? config.dev.assetsPath
     : config.prod.assetsPath
   return path.posix.join(assetsPath, _path)
 }

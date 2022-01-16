@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import cns from 'classnames'
 import { getDateCount } from '@/common/utils/index'
-import styles from './Index.scss'
+import styles from './index.scss'
 import { monthAlias } from '@/common/constants'
 import $http from '@/common/api'
 
