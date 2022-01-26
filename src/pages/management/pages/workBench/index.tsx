@@ -4,9 +4,9 @@ import styles from './index.scss'
 import CalendarGraph from '@/common/components/CalendarGraph'
 
 const { Option } = Select
-
+const defaultYear = new Date().getFullYear()
 const Workbench: FunctionComponent = () => {
-  const [year, setYear] = useState(2021)
+  const [year, setYear] = useState(defaultYear)
   const handleChange = (y:number) => setYear(y)
   return (
     <div className="workbench-wrapper">
@@ -15,7 +15,7 @@ const Workbench: FunctionComponent = () => {
       </div>
       <Select
         className="select-year"
-        defaultValue={2021}
+        defaultValue={defaultYear}
         style={{ width: 120 }}
         onChange={handleChange}
       >
