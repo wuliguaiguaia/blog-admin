@@ -9,12 +9,12 @@ const Workbench: FunctionComponent = () => {
   const [year, setYear] = useState(2021)
   const handleChange = (y:number) => setYear(y)
   return (
-    <div>
+    <div className="workbench-wrapper">
       <div className={styles.title}>
         <h1>创作指数</h1>
       </div>
       <Select
-        className={styles.select}
+        className="select-year"
         defaultValue={2021}
         style={{ width: 120 }}
         onChange={handleChange}

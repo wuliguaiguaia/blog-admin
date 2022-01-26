@@ -6,6 +6,10 @@
   }
 }
 
-.select {
-  margin-bottom: 10px;
+:global {
+  .workbench-wrapper {
+    .ant-select.select-year {
+      margin-bottom: 10px;
+    }
+  }
 }

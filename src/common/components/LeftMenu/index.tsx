@@ -124,13 +124,13 @@ const LeftMenu = () => {
       </div>
       <Menu
         mode="inline"
-        className={styles.antMenu}
         openKeys={openKeys}
         selectedKeys={selectedKeys}
         onOpenChange={onOpenChange}
         onSelect={handleSelect}
         style={{ width: 256 }}
         inlineCollapsed={collapsed}
+        className="menu-wrapper"
       >
         {
           data.map(({
@@ -138,7 +138,7 @@ const LeftMenu = () => {
           }) => {
             if (children.length) {
               return (
-                <SubMenu key={id} icon={icon} title={name} className={styles.antMenuSub}>
+                <SubMenu key={id} icon={icon} title={name}>
                   {
                     children.map((item) => (
                       <Menu.Item key={item.id} icon={item.icon}>

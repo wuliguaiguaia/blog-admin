@@ -28,16 +28,17 @@
   background-color: transparent;
 }
 
-.antMenu {
-  border: 0;
-  background: rgb(249 249 249);
-  height: calc(100vh - 50px);
-  width: $leftMenuWidth !important;
-}
-
 :global {
   .global-left-menu {
-    .ant-menu-sub.ant-menu-inline {
+    .ant-menu.menu-wrapper {
+      border: 0;
+      background: rgb(249 249 249);
+      height: calc(100vh - 50px);
+      width: $leftMenuWidth !important;
+    }
+
+    .ant-menu-submenu,
+    .ant-menu-submenu-inline {
       background: rgb(249 249 249);
     }
 
