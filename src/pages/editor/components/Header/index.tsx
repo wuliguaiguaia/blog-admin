@@ -189,7 +189,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
   }
 
   return (
-    <div className={cns([styles.header, 'jusBetween-alignCenter', editWatchMode === EditWatchMode.preview ? styles.preview : styles.edit])}>
+    <div className={cns([styles.header, 'edit-page-header', 'jusBetween-alignCenter', editWatchMode === EditWatchMode.preview ? styles.preview : styles.edit])}>
       {
         editWatchMode === EditWatchMode.edit ? (
           <div className="align-center">
