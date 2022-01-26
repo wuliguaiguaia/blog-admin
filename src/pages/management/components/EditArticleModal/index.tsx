@@ -113,6 +113,7 @@ const EditArticleModal: FunctionComponent<IProps> = ({
       visible={modalVisible}
       onOk={handleConfigSubmit}
       onCancel={handleConfigCancel}
+      className="edit-article-modal"
     >
       <div className={cns([styles.row])}>
         <span className={styles.label}>

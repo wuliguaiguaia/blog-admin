@@ -36,28 +36,30 @@
 }
 
 :global {
-  .ant-menu-sub.ant-menu-inline {
-    background: rgb(249 249 249);
-  }
+  .global-left-menu {
+    .ant-menu-sub.ant-menu-inline {
+      background: rgb(249 249 249);
+    }
 
-  .ant-menu-inline .ant-menu-item::after {
-    display: none;
-  }
+    .ant-menu-inline .ant-menu-item::after {
+      display: none;
+    }
 
-  .ant-menu.ant-menu-inline-collapsed {
-    width: $leftMenuMinWidth !important;
-  }
+    .ant-menu.ant-menu-inline-collapsed {
+      width: $leftMenuMinWidth !important;
+    }
 
-  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-    color: #fff;
-    background-color: #4ca9ff;
-  }
-
-  .ant-menu-item-selected a {
-    color: #fff;
-
-    &:hover {
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
       color: #fff;
+      background-color: #4ca9ff;
+    }
+
+    .ant-menu-item-selected a {
+      color: #fff;
+
+      &:hover {
+        color: #fff;
+      }
     }
   }
 }

@@ -78,6 +78,7 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
       visible={modalVisible}
       onOk={handleConfigSubmit}
       onCancel={handleConfigCancel}
+      className="edit-category-modal"
     >
       <div className={cns([styles.row])}>
         <span className={styles.label}>

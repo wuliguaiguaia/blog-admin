@@ -1,4 +1,4 @@
-.articlelist {
+.categorylist {
   margin-top: 10px;
 }
 
@@ -52,8 +52,10 @@ td.title {
 }
 
 :global {
-  .ant-table-tbody > tr > td,
-  .ant-table-thead > tr > th {
-    text-align: center;
+  .category-list-page {
+    .ant-table-tbody > tr > td,
+    .ant-table-thead > tr > th {
+      text-align: center;
+    }
   }
 }

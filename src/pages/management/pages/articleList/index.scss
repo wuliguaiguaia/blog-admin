@@ -54,8 +54,10 @@ td.title {
 }
 
 :global {
-  .ant-table-tbody > tr > td,
-  .ant-table-thead > tr > th {
-    text-align: center;
+  .article-list-page {
+    .ant-table-tbody > tr > td,
+    .ant-table-thead > tr > th {
+      text-align: center;
+    }
   }
 }

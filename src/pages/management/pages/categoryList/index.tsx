@@ -145,7 +145,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
 
   return (
     <>
-      <div className={cns([styles.articlelist])}>
+      <div className={cns([styles.categorylist, 'category-list-page '])}>
         <div className={styles.header}>
           <div>
             <Button type="primary" onClick={handleAddCategory}>

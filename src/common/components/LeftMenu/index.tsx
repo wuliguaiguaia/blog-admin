@@ -113,7 +113,7 @@ const LeftMenu = () => {
   }, [])
 
   return (
-    <div className={styles.leftMenu}>
+    <div className={cns([styles.leftMenu, 'global-left-menu'])}>
       <div
         className={cns(['jusCenter-alignCenter', styles.collapsedIcon])}
         onClick={handleCollapsed}

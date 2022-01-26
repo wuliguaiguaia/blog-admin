@@ -22,7 +22,9 @@
 }
 
 :global {
-  .ant-select-selection-placeholder {
-    font-size: 11px;
+  .edit-category-modal {
+    .ant-select-selection-placeholder {
+      font-size: 11px;
+    }
   }
 }
