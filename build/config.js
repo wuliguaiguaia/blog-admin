@@ -7,7 +7,7 @@ const config = {
     assetsPath: 'static',
     gzip: true,
     devtool: 'source-map',
-    publicPath: '/xx'
+    publicPath: 'https://admin.orangesolo.cn'
   }
 }
 
