@@ -4,7 +4,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const path = require('path')
 // const webpack = require('webpack')
 const utils = require('./utils')
-// const CompressionPlugin = require('compression-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -62,5 +62,12 @@ module.exports = merge(baseWebpackConfig, {
       inject: true,
       chunks: ['vendors', 'common', 'main']
     }),
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      test: /\.js$|\.html$|\.css$|\.svg$/,
+      threshold: 10240,  // 文件压缩阈值，对超过10k的进行压缩
+      deleteOriginalAssets: false,
+      minRatio: 0.8
+    })
   ].filter(Boolean)
 })
