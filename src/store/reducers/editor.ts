@@ -11,7 +11,6 @@ import {
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
-import testImage from '@/assets/imgs/image.png'
 import { putLocalData } from '@/common/plugins/indexedDB'
 
 export interface IInitialState {
@@ -166,7 +165,7 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     const { docData: { content }, cursorIndex } = editorState
     const left = content.substr(0, cursorIndex.start)
     const right = content.substr(cursorIndex.end)
-    dispatch(updateDocData({ content: `${left}<img src=${testImage} alt="" class="md-img"/>${right}`}))
+    dispatch(updateDocData({ content: `${left}<img src=${filePath} alt="" class="md-img"/>${right}`}))
   }
 }
 
