@@ -217,7 +217,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       }
       <div className="align-center">
         {editWatchMode === EditWatchMode.edit ? (
-          <Save />
+          <Save history={history} />
         ) : (
           <>
             <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle}>编辑</Button>

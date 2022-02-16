@@ -1,16 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux'
-import React, { useCallback, useEffect } from 'react'
+import React, { FunctionComponent, useCallback, useEffect } from 'react'
 import { Button, message } from 'antd'
 import { RootState } from '@/store/reducers/interface'
 import styles from './index.scss'
 import {
   saveDocData, updateDocData, updateEditingHelperKeys, updateEditorState,
 } from '@/store/reducers/editor'
-import { EditWatchMode, SaveStatus } from '@/common/interface'
+import { EditWatchMode, IEditWatchMode, SaveStatus } from '@/common/interface'
 import { getDateDetail } from '@/common/utils'
 import { getLocalData } from '@/common/plugins/indexedDB'
 
-const Save = () => {
+interface IProps {
+  history: any
+}
+
+const Save: FunctionComponent<IProps> = ({ history}) => {
   console.log('render')
   const {
     saveStatus,
@@ -57,7 +61,7 @@ const Save = () => {
     savehandler(callback)
   }, [backupData, content, saveStatus, savehandler])
 
-  const handleEditModeToogle = () => {
+  const handlePreview = () => {
     const cb = () => {
       const mode = editWatchMode === EditWatchMode.edit
         ? EditWatchMode.preview : EditWatchMode.edit
@@ -67,6 +71,8 @@ const Save = () => {
       if (mode === EditWatchMode.preview) {
         historyRecord.destroy()
       }
+      const {hash} = window.location
+      history.push(`/article/${id}/${IEditWatchMode[0]}${hash}`)
     }
     handleSave(null, cb) /* 保存后退出 */
   }
@@ -139,7 +145,7 @@ const Save = () => {
         {getDateDetail(updateTime)}
       </p>
       <Button loading={saveStatus === SaveStatus.loading} className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
-      <Button className={styles.btn} size="middle" type="default" onClick={handleEditModeToogle}>预览</Button>
+      <Button className={styles.btn} size="middle" type="default" onClick={handlePreview}>预览</Button>
     </>
   )
 }

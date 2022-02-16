@@ -33,6 +33,11 @@ export enum EditWatchMode {
   edit = 1,
 }
 
+export const IEditWatchMode = {
+  [EditWatchMode.preview]: 'preview',
+  [EditWatchMode.edit]: 'edit',
+}
+
 export enum SaveStatus {
   loading = 0,
   end = 1,

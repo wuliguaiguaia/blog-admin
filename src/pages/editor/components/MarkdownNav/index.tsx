@@ -4,7 +4,7 @@ import React, {
   useEffect,
 } from 'react'
 import cns from 'classnames'
-import { NavList } from '@/common/interface/index'
+import { EditWatchMode, IEditWatchMode, NavList } from '@/common/interface/index'
 import styles from './index.scss'
 
 interface IProps {
@@ -12,18 +12,19 @@ interface IProps {
   activeNav: string,
   setActiveNav: (nav: string) => void,
   id: number
-  history: any
+  history: any,
+  editWatchMode: EditWatchMode
 }
 
 const MarkdownNav:FunctionComponent<IProps> = ({
-  data = [], activeNav, setActiveNav, id, history,
+  data = [], activeNav, setActiveNav, id, history, editWatchMode,
 }) => {
   const titlesRef = createRef<HTMLDivElement>()
   const levels = data.map((item) => item.level)
   const maxLevel = Math.min(...levels)
   const handleClickNav = (text: string) => {
     setActiveNav(text)
-    history.push(`/editor/${id}#${text}`)
+    history.push(`/article/${id}/${IEditWatchMode[editWatchMode]}#${text}`)
   }
 
   useEffect(() => {

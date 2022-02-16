@@ -103,15 +103,26 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     初始 active nav 颜色有问题
     https:// www.cnblogs.com/xiaonian8/p/13764821.html
   */
+  const hashchange = () => {
+    if (!scrollEl?.current) return
+    const hash = decodeURIComponent(window.location.hash).slice(1)
+    const el = document.getElementById(hash)
+    if (!el) return
+    scrollEl.current.scrollTop = el.offsetTop
+    setActiveNav(hash)
+  }
+
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true)
   useEffect(() => {
-    const hashchange = () => {
-      if (!scrollEl?.current) return
-      const hash = decodeURIComponent(window.location.hash).slice(1)
-      const el = document.getElementById(hash)
-      if (!el) return
-      scrollEl.current.scrollTop = el.offsetTop
-      setActiveNav(hash)
+    const hash = decodeURIComponent(window.location.hash).slice(1)
+    const el = document.getElementById(hash)
+    if (isFirstRender && scrollEl?.current && el) {
+      hashchange()
+      setIsFirstRender(false)
     }
+  }, [isFirstRender, scrollEl])
+
+  useEffect(() => {
     const UNLISTEN = history.listen(hashchange)
     return () => {
       UNLISTEN()
@@ -161,6 +172,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         history={history}
+        editWatchMode={editWatchMode}
       />
     </div>
   ), [editWatchMode, activeNav, setActiveNav, navList])

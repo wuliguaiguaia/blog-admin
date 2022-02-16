@@ -31,7 +31,7 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
   } = useSelector((state: RootState) => state.editor)
 
   useEffect(() => {
-    dispatch(updateEditorState({editWatchMode: type === 'edit' ? EditWatchMode.edit : EditWatchMode.preview}))
+    dispatch(updateEditorState({ editWatchMode: EditWatchMode[type]}))
   }, [type])
   useEffect(() => {
     dispatch(getArticleData(+id))
