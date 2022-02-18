@@ -65,16 +65,17 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
   }, [historyRecord])
 
 
+  /* 生成导航 */
   useEffect(() => {
     /* 自定义marked render 修改输出内容 */
     let text = marked.parse(content)
     text = changeText(text)
     setTransContent(text)
     const list:NavList[] = []
-    renderer.heading = (txt: string, level) => {
+    renderer.heading = (txt: string, level: number) => {
       list.push({ text: txt, level })
       setNavList(list)
-      const markerContents = renderToString(<div id={txt} className={cns('md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
+      const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
       return markerContents
     }
   }, [content, id])
@@ -98,37 +99,21 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     }
   }, [leftContentEl])
 
-  /*
-    react 监听 hash 变化，原生 hashchange 无效？
-    初始 active nav 颜色有问题
-    https:// www.cnblogs.com/xiaonian8/p/13764821.html
-  */
-  const hashchange = () => {
-    if (!scrollEl?.current) return
-    const hash = decodeURIComponent(window.location.hash).slice(1)
-    const el = document.getElementById(hash)
-    if (!el) return
-    scrollEl.current.scrollTop = el.offsetTop
-    setActiveNav(hash)
-  }
-
+  /* 初次监听 */
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true)
   useEffect(() => {
+    if (!isFirstRender) return
+    if (!scrollEl?.current) return
     const hash = decodeURIComponent(window.location.hash).slice(1)
-    const el = document.getElementById(hash)
-    if (isFirstRender && scrollEl?.current && el) {
-      hashchange()
-      setIsFirstRender(false)
-    }
+    if (!hash) return
+    const target = document.getElementById(hash)
+    if (!target) return
+    scrollEl.current.scrollTop = target.offsetTop
+    setActiveNav(hash)
+    setIsFirstRender(false)
   }, [isFirstRender, scrollEl])
 
-  useEffect(() => {
-    const UNLISTEN = history.listen(hashchange)
-    return () => {
-      UNLISTEN()
-    }
-  }, [history, scrollEl])
-
+  /* 滚动监听 */
   /*
     每次点击目录跳转的过程中 scroll 事件触发会有抖动
     因为 scrollTop 的修改触发了 scroll 事件
@@ -136,24 +121,23 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
   */
   useEffect(() => {
     if (!scrollEl.current) return
-    const elArr = document.querySelectorAll('.md-title')
-    const offsetArr:number[] = []
-    elArr.forEach((el) => {
+    const titles = scrollEl.current.getElementsByClassName('_artilce-title') as HTMLCollectionOf<HTMLElement>
+    if (titles.length === 0) return
+    const offsetArr: number[] = []
+    console.log(offsetArr)
+    Array.from(titles).forEach((el) => {
       offsetArr.push(el.offsetTop)
     })
-
     const handleScroll = (e: any) => {
-      if (!offsetArr.length) return
-      let index = 0
+      let curIndex = 0
       const target = e.currentTarget
       const top: number = target.scrollTop
-
-      offsetArr.forEach((item, i) => {
-        if (Math.ceil(top) >= item) {
-          index = i
+      offsetArr.forEach((item, index) => {
+        if (top >= item) {
+          curIndex = index
         }
       })
-      setActiveNav(elArr[index].innerText)
+      setActiveNav(titles[curIndex].innerText)
     }
     scrollEl.current.addEventListener('wheel', handleScroll)
   }, [scrollEl])
@@ -207,7 +191,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
           )
           : (
             <div className={cns([styles.previewContainer])} ref={scrollEl}>
-              <div className={styles.previewContent}>
+              <div>
                 <h1 className={styles.bigTitle}>
                   {title}
                 </h1>
