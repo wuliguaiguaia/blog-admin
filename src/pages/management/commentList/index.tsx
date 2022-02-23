@@ -33,7 +33,7 @@ import { IMessage } from '@/common/interface'
 // - 查询文章id下评论
 // 增加后端接口
 // 前台操作性
-// - 标记已读
+// - 标记审核
 
 interface IProps {
 }
@@ -45,7 +45,7 @@ const CommentList: FunctionComponent<IProps> = () => {
   const [loading, setLoading] = useState(false)
   const [pagesize, setPagesize] = useState(20)
   const [total, setTotal] = useState(0)
-  const [isRead, setIsRead] = useState(undefined)
+  const [isCheck, setIsCheck] = useState<number | null>(null)
   const [columns, setColumns] = useState<any>([])
   const [sorter, setSorter] = useState({})
   const [searchArticleId, setSearchArticleId] = useState<string>('')
@@ -73,9 +73,8 @@ const CommentList: FunctionComponent<IProps> = () => {
   // 根据 query 设置当前tab
   const [curTab, setCurTab] = useState('comment')
   const handleClick = (e: { key: React.SetStateAction<string> }) => {
-    console.log(e.key)
     setCurTab(e.key)
-    setIsRead(undefined)
+    setIsCheck(null)
     setPage(1)
     setPagesize(defaultPerpage)
     setSorter({})
@@ -85,18 +84,18 @@ const CommentList: FunctionComponent<IProps> = () => {
     page: _page = page,
     prepage = pagesize,
     sorter: _sorter = sorter,
-    isRead: _isRead = isRead,
+    isCheck: _isCheck = isCheck,
   }: {
     page?: number,
     prepage?: number,
     sorter?: any,
-    isRead?: number
+    isCheck?: number | null
   }) => {
     setLoading(true)
     let params: any = {
       page: _page,
       prepage,
-      isRead: _isRead,
+      isCheck: _isCheck,
     }
     if (searchArticleId) {
       params = {...params, articleId: searchArticleId}
@@ -121,7 +120,7 @@ const CommentList: FunctionComponent<IProps> = () => {
       setList(ilist)
       setLoading(false)
     }
-  }, [curTab, searchArticleId, sorter, isRead])
+  }, [curTab, searchArticleId, sorter, isCheck])
 
   const handleInputEnter = () => {
     if (!searchArticleId) return
@@ -202,20 +201,20 @@ const CommentList: FunctionComponent<IProps> = () => {
         },
       },
       {
-        title: '是否已读',
-        dataIndex: 'isRead',
+        title: '是否审核',
+        dataIndex: 'isCheck',
         width: 100,
         filterMultiple: false,
         filters: [{
-          text: '已读',
+          text: '是',
           value: 1,
         },
         {
-          text: '未读',
+          text: '否',
           value: 0,
         }],
         render: (_, record: any) => {
-          const value = record.isRead
+          const value = record.isCheck
           return value === 1 ? '是' : '否'
         },
       },
@@ -232,28 +231,26 @@ const CommentList: FunctionComponent<IProps> = () => {
         width: 130,
         fixed: 'right',
         render: (_, record: any) => {
-          const handleRead = async () => {
-            const api = curTab === 'message' ? 'readmessage' : 'readcomment'
+          const handleCheck = async () => {
+            const api = curTab === 'message' ? 'checkmessage' : 'checkcomment'
             try {
-              const data = await $http[api]({ id: record.id })
+              const data = await $http[api]({ id: record.id, isCheck: 1})
               if (data.errNo === 0) {
-                message.success('已读成功！')
+                message.success('审核成功！')
                 fetchData({
                   page,
                   prepage: pagesize,
                   sorter,
                 })
               } else {
-                message.error('已读失败！')
+                message.error('审核失败！')
               }
             } catch (e) {
-              message.error('已读失败！')
+              message.error('审核失败！')
             }
           }
           const handleDelete = async () => {
             const api = curTab === 'message' ? 'deletemessage' : 'deletecomment'
-            console.log(curTab)
-
             try {
               const data = await $http[api]({ id: record.id })
               if (data.errNo === 0) {
@@ -274,14 +271,14 @@ const CommentList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              { !record.isRead ? (
+              { !record.isCheck ? (
                 <Popconfirm
-                  title="确认已读？"
-                  onConfirm={handleRead}
+                  title="确认审核通过？"
+                  onConfirm={handleCheck}
                   okText="是"
                   cancelText="否"
                 >
-                  <span className={styles.operate}>标记已读</span>
+                  <span className={styles.operate}>审核通过</span>
                 </Popconfirm>
               ) : null}
               <Popconfirm
@@ -298,8 +295,6 @@ const CommentList: FunctionComponent<IProps> = () => {
       },
     ]
     setColumns(() => {
-      console.log(curTab, 'fff')
-
       if (curTab === 'message') {
         return curcolumns
       }
@@ -353,9 +348,10 @@ const CommentList: FunctionComponent<IProps> = () => {
       page: pagination.current,
       prepage: pagination.pageSize,
       sorter: convertSorter,
-      isRead: filters.isRead ? filters.isRead[0] : undefined,
+      isCheck: filters.isCheck ? filters.isCheck[0] : null,
     })
-    setIsRead(filters.isRead ? filters.isRead[0] : undefined)
+
+    setIsCheck(filters.isCheck ? filters.isCheck[0] : null)
     setPage(pagination.current)
     setPagesize(pagination.pageSize)
     setSorter(convertSorter)

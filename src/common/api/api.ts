@@ -29,6 +29,8 @@ export const put = {
   updatecategory: `${apiPrefix}/category`,
   readcomment: `${apiPrefix}/comment/read`,
   readmessage: `${apiPrefix}/message/read`,
+  checkcomment: `${apiPrefix}/comment/check`,
+  checkmessage: `${apiPrefix}/message/check`,
 }
 
 export const patch = {}
