@@ -84,3 +84,23 @@ export interface Response {
   data: any
   errNo: number
 }
+
+
+export interface IUser {
+  username: string,
+  website: string,
+  email: string,
+}
+export interface IMessage extends IUser{
+  id?: number
+  content: string
+  createTime?: string;
+}
+
+export interface IComment extends IMessage{
+  id?: number,
+  articleId?: number
+  replyId?: number
+  replyToReplyId?: number
+  replyInfo?: IComment[]
+}

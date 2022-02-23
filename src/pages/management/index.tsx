@@ -9,6 +9,8 @@ import Analysis from './pages/analysis'
 import ArticleList from './pages/articleList'
 import CategoryList from './pages/categoryList'
 import Header from './components/Header'
+import MessageCenter from './pages/messageCenter'
+import CommentList from './commentList'
 
 const Management = () => (
   <>
@@ -20,6 +22,8 @@ const Management = () => (
         <Route path="/articlelist" component={ArticleList} />
         <Route path="/categorylist" component={CategoryList} />
         <Route path="/analysis" component={Analysis} />
+        <Route path="/commentlist" component={CommentList} />
+        <Route path="/messagecenter" component={MessageCenter} />
         <Route path="/userlist" component={UserList} />
       </div>
     </div>

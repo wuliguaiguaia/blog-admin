@@ -6,10 +6,11 @@ export const get = {
   getarticle: `${apiPrefix}/article`,
   getcommit: `${apiPrefix}/commit`,
   search: `${apiPrefix}/article/search`,
+  getcommentlist: `${apiPrefix}/comment/list/all`,
+  getmessagelist: `${apiPrefix}/message/list/all`,
 }
 
 export const post = {
-  comment: `${apiPrefix}/comment`,
   addarticle: `${apiPrefix}/article`,
   addcategory: `${apiPrefix}/category`,
 }
@@ -17,6 +18,8 @@ export const post = {
 export const remove = {
   forcedeletearticle: `${apiPrefix}/article`,
   deletecategory: `${apiPrefix}/category`,
+  deletecomment: `${apiPrefix}/comment`,
+  deletemessage: `${apiPrefix}/message`,
 }
 
 export const put = {
@@ -24,6 +27,8 @@ export const put = {
   deletearticle: `${apiPrefix}/article/delete`,
   updatearticle: `${apiPrefix}/article/update`,
   updatecategory: `${apiPrefix}/category`,
+  readcomment: `${apiPrefix}/comment/read`,
+  readmessage: `${apiPrefix}/message/read`,
 }
 
 export const patch = {}

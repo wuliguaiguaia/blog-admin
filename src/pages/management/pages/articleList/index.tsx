@@ -309,7 +309,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
 
   return (
     <>
-      <div className={cns([styles.articlelist, 'article-list-page'])}>
+      <div className={cns([styles.articlelist, 'table-list-page'])}>
         <div className={styles.header}>
           <Button type="primary" onClick={handleAddArticle}>
             <PlusOutlined />

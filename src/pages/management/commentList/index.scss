@@ -1,9 +1,41 @@
-.articlelist {
+.commentlist {
   margin-top: 10px;
+}
+
+.topheader {
+  position: relative;
+}
+
+.menu {
+  font-weight: bold;
+}
+
+.search {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  float: right;
+  display: flex;
+  align-items: center;
+}
+
+.oneLine {
+  cursor: pointer;
+  display: box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.searchInput {
+  height: 32px;
+  width: 200px;
 }
 
 .table {
   height: 80vh;
+  margin-top: 20px;
 }
 
 td.small {
@@ -38,9 +70,6 @@ td.title {
   &:last-of-type {
     margin-right: 0;
   }
-}
-
-.title {
 }
 
 .header {
