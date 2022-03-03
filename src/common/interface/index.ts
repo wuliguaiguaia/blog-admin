@@ -104,3 +104,16 @@ export interface IComment extends IMessage{
   replyToReplyId?: number
   replyInfo?: IComment[]
 }
+
+
+export enum UserStatus {
+  Login = 0,
+  Logout = -1,
+  Register = 1,
+  ForgetPassword = 2,
+}
+
+export interface IUserLogin {
+  username: string;
+  password: string
+}

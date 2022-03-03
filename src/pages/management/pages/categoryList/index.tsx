@@ -42,9 +42,18 @@ const CategoryList: FunctionComponent<IProps> = () => {
   const fetchData = useCallback(async () => {
     setLoading(true)
     const response: any = await $http.getcategorylist()
-    setList(response.data.list)
-    setTotal(response.data.total)
-    dispatch(updateEditorState({categoryList: response.data.list}))
+    console.log(response)
+    const { errNo, data, errStr } = response
+    if (errNo !== 0) {
+      message.error(errStr)
+      setList([])
+      setTotal(0)
+      dispatch(updateEditorState({categoryList: []}))
+    } else {
+      setList(data.list)
+      setTotal(data.total)
+      dispatch(updateEditorState({ categoryList: data.list }))
+    }
     setLoading(false)
   }, [])
 

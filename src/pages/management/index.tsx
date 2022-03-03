@@ -10,7 +10,7 @@ import ArticleList from './pages/articleList'
 import CategoryList from './pages/categoryList'
 import Header from './components/Header'
 import MessageCenter from './pages/messageCenter'
-import CommentList from './commentList'
+import CommentList from './pages/commentList'
 
 const Management = () => (
   <>

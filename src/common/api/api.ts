@@ -13,6 +13,8 @@ export const get = {
 export const post = {
   addarticle: `${apiPrefix}/article`,
   addcategory: `${apiPrefix}/category`,
+  login: `${apiPrefix}/login`,
+  register: `${apiPrefix}/register`,
 }
 
 export const remove = {
