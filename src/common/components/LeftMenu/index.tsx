@@ -12,6 +12,11 @@ import {
   TagsOutlined,
   CommentOutlined,
   SoundOutlined,
+  AreaChartOutlined,
+  EyeOutlined,
+  RiseOutlined,
+  WarningOutlined,
+  LineChartOutlined,
 } from '@ant-design/icons'
 import cns from 'classnames'
 import { Link } from 'react-router-dom'
@@ -50,6 +55,37 @@ const data = [
     ],
   },
   {
+    id: '3',
+    name: '数据分析',
+    icon: <AreaChartOutlined />,
+    children: [
+      {
+        id: '3.1',
+        name: '访问统计', /* 浏览数、评论数 */
+        href: '/analysis/pv',
+        icon: <EyeOutlined />,
+      },
+      {
+        id: '3.2',
+        name: '性能统计', /* 访问速度 性能打点 */
+        href: '/analysis/performance',
+        icon: <RiseOutlined />,
+      },
+      {
+        id: '3.3',
+        name: '错误统计', /* sentry 数据爬取列表，跳转到 sentry */
+        href: '/analysis/error',
+        icon: <WarningOutlined />,
+      },
+      {
+        id: '3.4',
+        name: '接口统计', /* 接口访问时长 */
+        href: '/analysis/interface',
+        icon: <LineChartOutlined />,
+      },
+    ],
+  },
+  {
     id: '4',
     name: '留言管理',
     href: '/commentlist',
@@ -67,6 +103,7 @@ const data = [
     href: '/userlist',
     icon: <UserOutlined />,
   },
+
 ]
 
 const LeftMenu = () => {

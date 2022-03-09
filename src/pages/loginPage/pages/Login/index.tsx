@@ -8,6 +8,9 @@ const Login = () => {
     console.log(values)
     const data = await $http.login(values)
     console.log(data)
+    const token = data.data.access_token
+    document.cookie = `lg_token=${token}`
+    console.log(token)
   }
   return <MyForm onFinish={onFinish} userStatus={UserStatus.Login} />
 }
