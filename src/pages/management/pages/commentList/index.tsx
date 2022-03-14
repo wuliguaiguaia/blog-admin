@@ -252,7 +252,7 @@ const CommentList: FunctionComponent<IProps> = () => {
           const handleDelete = async () => {
             const api = curTab === 'message' ? 'deletemessage' : 'deletecomment'
             try {
-              const data = await $http[api]({ id: record.id })
+              const data = await $http[api]({}, { data: { id: record.id } })
               if (data.errNo === 0) {
                 message.success('删除成功！')
                 setTimeout(() => {
