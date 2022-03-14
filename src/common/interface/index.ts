@@ -72,6 +72,10 @@ export interface IONumberAny {
 export interface IOString {
   [k: string]: string
 }
+export interface IONumberString {
+  find(arg0: (item: any) => boolean);
+  [k: number]: string
+}
 
 
 export enum EditType {
@@ -116,4 +120,10 @@ export enum UserStatus {
 export interface IUserLogin {
   username: string;
   password: string
+}
+
+
+export interface IUserInfo {
+  username: string;
+  role: number
 }

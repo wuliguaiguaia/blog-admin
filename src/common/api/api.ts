@@ -8,11 +8,15 @@ export const get = {
   search: `${apiPrefix}/article/search`,
   getcommentlist: `${apiPrefix}/comment/list/all`,
   getmessagelist: `${apiPrefix}/message/list/all`,
+  getuserinfo: `${apiPrefix}/user/profile`,
+  getuserlist: `${apiPrefix}/user/list`,
+  getuserrolelist: `${apiPrefix}/user/rolelist`,
 }
 
 export const post = {
   addarticle: `${apiPrefix}/article`,
   addcategory: `${apiPrefix}/category`,
+  adduser: `${apiPrefix}/user`,
   login: `${apiPrefix}/login`,
   register: `${apiPrefix}/register`,
 }
@@ -22,6 +26,8 @@ export const remove = {
   deletecategory: `${apiPrefix}/category`,
   deletecomment: `${apiPrefix}/comment`,
   deletemessage: `${apiPrefix}/message`,
+  deleteuser: `${apiPrefix}/user`,
+  logout: `${apiPrefix}/logout`,
 }
 
 export const put = {
@@ -29,6 +35,7 @@ export const put = {
   deletearticle: `${apiPrefix}/article/delete`,
   updatearticle: `${apiPrefix}/article/update`,
   updatecategory: `${apiPrefix}/category`,
+  updateuser: `${apiPrefix}/user`,
   readcomment: `${apiPrefix}/comment/read`,
   readmessage: `${apiPrefix}/message/read`,
   checkcomment: `${apiPrefix}/comment/check`,
