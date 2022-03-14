@@ -16,8 +16,7 @@ module.exports = merge(baseWebpackConfig, {
   },
   devtool: dev.devtool,
   devServer: {
-    historyApiFallback: true,
-    // progress: true,
+    historyApiFallback: true,/* 当使用HTML5的History API时，index.html页面可能会被用来代替任何404响应 */
     hot: true,
     compress: true,
     host: 'localhost',
@@ -27,15 +26,13 @@ module.exports = merge(baseWebpackConfig, {
       logging: 'info',
       overlay: false,
     },
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:3000',
-    //     pathRewrite: { '^/api': '' },
-    //   },
+    proxy: {
+      '/api': 'http://localhost:3009',
+    },
     // overlay: { warnings: false, errors: true },
     // publicPath: '/',
-    // // proxy: config.dev.proxyTable,
-    // // disableHostCheck: true,
+    // proxy: config.dev.proxyTable,
+    // disableHostCheck: true,
     // quiet: true, // necessary for FriendlyErrorsPlugin
     // watchOptions: {
     //   aggregateTimeout: 200,
@@ -43,17 +40,6 @@ module.exports = merge(baseWebpackConfig, {
     //   // ignored: /node_modules/,
     // },
   },
-  /*  optimization: {
-     splitChunks: {
-       cacheGroups: {
-         vendor: {
-           test: /[\\/]node_modules[\\/]/,
-           name: 'vendors',
-           chunks: 'all'
-         }
-       }
-     }
-   }, */
   plugins: [
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
