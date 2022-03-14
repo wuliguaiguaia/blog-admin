@@ -11,9 +11,12 @@ interface IProps {
   onFinish: (valus:IUserLogin) => void;
   userInfo?:IUserLogin;
   userStatus: UserStatus
+  type?: number
 }
 
-const MyForm:FunctionComponent<IProps> = ({onFinish, userInfo, userStatus}) => {
+const MyForm: FunctionComponent<IProps> = ({
+  onFinish, userInfo, userStatus, type,
+}) => {
   const onSubmit = (values: IUserLogin) => {
     console.log('Received values of form: ', values)
     onFinish(values)
@@ -43,7 +46,11 @@ const MyForm:FunctionComponent<IProps> = ({onFinish, userInfo, userStatus}) => {
             required: true,
             message: '请输入密码!',
           },
-        ]}
+          type === 0 && {
+            pattern: /^[a-z0-9]{8,}$/i,
+            message: '密码只能是数字或字母，且必须在八位以上',
+          },
+        ].filter((v) => v)}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
@@ -80,6 +87,7 @@ MyForm.defaultProps = {
     username: '',
     password: '',
   },
+  type: 0,
 }
 
 export default MyForm

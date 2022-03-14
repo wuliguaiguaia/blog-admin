@@ -127,3 +127,14 @@ export interface IUserInfo {
   username: string;
   role: number
 }
+
+export interface IRegisterUser {
+  id: number,
+  username: string,
+  role: number
+}
+
+export interface IRole {
+  value: number,
+  text: string
+}

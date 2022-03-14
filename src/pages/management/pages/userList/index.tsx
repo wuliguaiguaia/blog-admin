@@ -7,12 +7,10 @@ import React, {
 
 import cns from 'classnames'
 import {
-  Button,
   message,
   Popconfirm,
   Table, Tooltip,
 } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
@@ -21,6 +19,7 @@ import EditUserModal from '../../components/EditUserModal'
 import { updateEditorState } from '@/store/reducers/editor'
 import { getUserRoleList } from '@/store/reducers/common'
 import { RootState } from '@/store/reducers/interface'
+import { IRegisterUser } from '@/common/interface'
 
 const defaultPerpage = 20
 
@@ -33,8 +32,11 @@ const UserList: FunctionComponent<IProps> = () => {
   const [total, setTotal] = useState(0)
   const [columns, setColumns] = useState<any>([])
   const [editUserModalVisible, setEditUserModalVisible] = useState(false)
-  const [editUser, setEditUser] = useState({})
-  const [editUserType, setEditUserType] = useState(0)
+  const [editUser, setEditUser] = useState<IRegisterUser>({
+    id: 0,
+    username: '',
+    role: 0,
+  })
   const {userRoleList} = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
   const [curPage, setCurPage] = useState<number>(1)
@@ -48,8 +50,8 @@ const UserList: FunctionComponent<IProps> = () => {
    */
 
   const fetchData = useCallback(async ({
-    page,
-    prepage,
+    page = curPage,
+    prepage = curPageSize,
     role = [],
   }) => {
     setLoading(true)
@@ -152,9 +154,8 @@ const UserList: FunctionComponent<IProps> = () => {
             }
           }
           const handleEdit = async () => {
-            const { name, id } = record
-            setEditUserType(1)
-            setEditUser({ name, id })
+            const { username, id, role} = record
+            setEditUser({ username, id, role })
             setEditUserModalVisible(true)
           }
           return (
@@ -175,24 +176,9 @@ const UserList: FunctionComponent<IProps> = () => {
     ])
   }, [fetchData, userRoleList, curPage, curPageSize, curRole])
 
-
-  const handleAddUser = () => {
-    setEditUserType(0)
-    setEditUser({})
-    setEditUserModalVisible(true)
-  }
-
   return (
     <>
       <div className={cns([styles.userlist, 'user-list-page '])}>
-        <div className={styles.header}>
-          <div>
-            <Button type="primary" onClick={handleAddUser}>
-              <PlusOutlined />
-              <span className={styles.addBtn}>添加用户</span>
-            </Button>
-          </div>
-        </div>
         <Table
           className={styles.table}
           dataSource={list}
@@ -215,8 +201,8 @@ const UserList: FunctionComponent<IProps> = () => {
         modalVisible={editUserModalVisible}
         setModalVisible={setEditUserModalVisible}
         refresh={fetchData}
+        userRoleList={userRoleList}
         initialData={editUser}
-        type={editUserType}
       />
     </>
   )

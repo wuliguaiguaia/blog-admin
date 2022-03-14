@@ -28,7 +28,7 @@ const Login: FunctionComponent<IProps> = ({ history }) => {
       document.cookie = `lg_token=${token}`
     */
   }
-  return <MyForm onFinish={onFinish} userStatus={UserStatus.Login} />
+  return <MyForm onFinish={onFinish} userStatus={UserStatus.Login} type={1} />
 }
 
 

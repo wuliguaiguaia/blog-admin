@@ -1,4 +1,4 @@
-import { IONumberString, IUserInfo } from '../../common/interface/index'
+import { IRole, IONumberString, IUserInfo } from '../../common/interface/index'
 import { UpdateCommonState } from '../actionTypes'
 import $http from '@/common/api'
 import { localStorage } from '@/common/utils/storage'
@@ -7,7 +7,7 @@ export interface IInitialState {
   offline: boolean
   userInfo: IUserInfo | null,
   loginStatus: number,
-  userRoleList: IONumberString
+  userRoleList: IRole[]
 }
 
 const initialState:IInitialState = {
