@@ -38,7 +38,8 @@ module.exports = {
       'import/no-unresolved': [2, { ignore: ['^@'] }],
       'class-methods-use-this': 'off',
       'no-param-reassign': 'off',
-      'react-hooks/exhaustive-deps': 'off'
+      'react-hooks/exhaustive-deps': 'off',
+      'react-hooks/rules-of-hooks': 'off'
     }
   }]
 }

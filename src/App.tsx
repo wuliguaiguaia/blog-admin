@@ -8,7 +8,7 @@ import { localStorage } from './common/utils/storage'
 import Editor from './pages/editor'
 import LoginPage from './pages/loginPage'
 import Management from './pages/management'
-import { getUserInfo, updateCommonState } from './store/reducers/common'
+import { getUserInfo, getUserRoleList, updateCommonState } from './store/reducers/common'
 import { RootState } from './store/reducers/interface'
 
 const App: FunctionComponent = () => {
@@ -21,7 +21,15 @@ const App: FunctionComponent = () => {
     window.addEventListener('offline', offlineListener)
   }, [])
   useEffect(() => {
-    dispatch(getUserInfo())
+    dispatch(getUserRoleList())
+    async function fetchData() {
+      const data = await dispatch(getUserInfo())
+      const { href } = window.location
+      if (!href.includes('/u/') && data !== 1) {
+        message.error('未登录无法查看数据')
+      }
+    }
+    fetchData()
   }, [])
   useEffect(() => {
     const {href} = window.location

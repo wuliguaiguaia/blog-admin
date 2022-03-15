@@ -43,7 +43,8 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [published, setPublished] = useState<null | number>(null)
   const [editArticleModalVisible, setEditArticleModalVisible] = useState(false)
   const [editType, setEditType] = useState(0)
-  const [editData, setEditData] = useState({title: '', categories: [], id: 0})
+  const [editData, setEditData] = useState({ title: '', categories: [], id: 0 })
+  const { userRole, authConfig } = useSelector((state:RootState) => state.common)
   const dispatch = useDispatch()
 
   const fetchData = useCallback(async ({
@@ -230,26 +231,31 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate} onClick={handleEdit}>修改</span>
+              {authConfig?.[userRole]?.article?.editDesc
+                && <span className={styles.operate} onClick={handleEdit}>修改</span>}
               <span className={styles.operate}><Link to={`/article/${record.id}/preview`} target="_blank">查看</Link></span>
-              {!record.published ? (
+              {!record.published && authConfig?.[userRole]?.article?.publish && (
                 <Popconfirm
                   title="请再次确认是否发布？"
                   onConfirm={handlePublish}
                   okText="是"
                   cancelText="否"
+
                 >
                   <span className={styles.operate}>发布</span>
                 </Popconfirm>
-              ) : null}
-              <Popconfirm
-                title="请再次确认是否删除？"
-                onConfirm={handleDelete}
-                okText="是"
-                cancelText="否"
-              >
-                <span className={styles.operate}>删除</span>
-              </Popconfirm>
+              )}
+              {authConfig?.[userRole]?.article?.delete
+                && (
+                  <Popconfirm
+                    title="请再次确认是否删除？"
+                    onConfirm={handleDelete}
+                    okText="是"
+                    cancelText="否"
+                  >
+                    <span className={styles.operate}>删除</span>
+                  </Popconfirm>
+                )}
             </div>
           )
         },
@@ -302,7 +308,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const handleReset = () => window.location.reload()
 
   const handleAddArticle = () => {
-    setEditData({})
+    setEditData({ title: '', categories: [], id: 0 })
     setEditType(0)
     setEditArticleModalVisible(true)
   }
@@ -311,7 +317,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
     <>
       <div className={cns([styles.articlelist, 'table-list-page'])}>
         <div className={styles.header}>
-          <Button type="primary" onClick={handleAddArticle}>
+          <Button type="primary" onClick={handleAddArticle} disabled={!authConfig?.[userRole]?.article?.add}>
             <PlusOutlined />
             <span className={styles.addBtn}>添加文章</span>
           </Button>

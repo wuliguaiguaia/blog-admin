@@ -1,4 +1,3 @@
-
 import React, {
   ChangeEventHandler,
   FunctionComponent,
@@ -21,10 +20,13 @@ import {
 import {
   SearchOutlined,
 } from '@ant-design/icons'
+import { useSelector } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import { IMessage } from '@/common/interface'
+import { RootState } from '@/store/reducers/interface'
 
 
 // 后端接口 √
@@ -36,10 +38,16 @@ import { IMessage } from '@/common/interface'
 // - 标记审核
 
 interface IProps {
+  history: any
 }
 
 const defaultPerpage = 20
-const CommentList: FunctionComponent<IProps> = () => {
+const CommentList: FunctionComponent<IProps> = ({ history }) => {
+  const { userRole, authConfig } = useSelector((state: RootState) => state.common)
+  if (!authConfig?.[userRole]?.comment) {
+    history.replace('/')
+    return <></>
+  }
   const [list, setList] = useState([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -359,6 +367,7 @@ const CommentList: FunctionComponent<IProps> = () => {
 
   const handleReset = () => window.location.reload()
 
+
   return (
     <>
       <div className={cns([styles.commentlist, 'table-list-page'])}>
@@ -417,4 +426,4 @@ const CommentList: FunctionComponent<IProps> = () => {
   )
 }
 
-export default CommentList
+export default withRouter(CommentList)

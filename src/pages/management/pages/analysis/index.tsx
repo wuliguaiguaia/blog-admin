@@ -1,7 +1,14 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/reducers/interface'
 import styles from './index.scss'
+import NoAuth from '../../components/NoAuth'
 
 const Analysis = () => {
+  const { userRole, authConfig } = useSelector((state: RootState) => state.common)
+  if (!authConfig?.[userRole]?.analysis) {
+    return <NoAuth />
+  }
   const s = ''
   return (
     <div className={styles.analysis}>

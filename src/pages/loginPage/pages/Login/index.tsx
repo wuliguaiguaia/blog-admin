@@ -20,7 +20,9 @@ const Login: FunctionComponent<IProps> = ({ history }) => {
       localStorage.set('islogin', true)
       dispatch(updateCommonState({
         userInfo: response.data,
+        loginStatus: 1,
       }))
+
       history.push('/')
     }
     /* jwt 测试：

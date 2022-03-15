@@ -12,21 +12,28 @@ import {
   Table, Tooltip,
 } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import EditUserModal from '../../components/EditUserModal'
 import { updateEditorState } from '@/store/reducers/editor'
-import { getUserRoleList } from '@/store/reducers/common'
 import { RootState } from '@/store/reducers/interface'
 import { IRegisterUser } from '@/common/interface'
 
 const defaultPerpage = 20
 
 interface IProps {
+  history: any
 }
 
-const UserList: FunctionComponent<IProps> = () => {
+const UserList: FunctionComponent<IProps> = ({ history }) => {
+  const { userRole, authConfig } = useSelector((state: RootState) => state.common)
+  if (!authConfig?.[userRole]?.user) {
+    history.replace('/')
+    return <></>
+  }
+
   const [list, setList] = useState([])
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(0)
@@ -37,6 +44,7 @@ const UserList: FunctionComponent<IProps> = () => {
     username: '',
     role: 0,
   })
+
   const {userRoleList} = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
   const [curPage, setCurPage] = useState<number>(1)
@@ -88,7 +96,6 @@ const UserList: FunctionComponent<IProps> = () => {
   }
   useEffect(() => {
     fetchData({ page: 1, prepage: defaultPerpage })
-    dispatch(getUserRoleList())
   }, [])
 
   useEffect(() => {
@@ -208,5 +215,5 @@ const UserList: FunctionComponent<IProps> = () => {
   )
 }
 
-export default UserList
+export default withRouter(UserList)
 
