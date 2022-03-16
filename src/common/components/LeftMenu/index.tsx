@@ -171,8 +171,7 @@ const LeftMenu = () => {
                   {
                     children.map((item) => (
                       <Menu.Item key={item.id} icon={item.icon}>
-
-                        <Link to={item.href}>{item.name}</Link>
+                        {item.href && <Link to={item.href}>{item.name}</Link>}
                       </Menu.Item>
                     ))
                   }
@@ -186,7 +185,7 @@ const LeftMenu = () => {
                 </Menu.Item>
               )
             }
-            return <></>
+            return null
           })
         }
       </Menu>

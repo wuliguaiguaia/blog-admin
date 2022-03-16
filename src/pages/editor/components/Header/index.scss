@@ -42,50 +42,46 @@
   margin: 10px 0;
 }
 
-:global {
-  .edit-page-header {
-    .operateItem {
-      font-size: 14px;
-      padding: 6px 20px;
-    }
+.btn {
+  width: 60px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  padding: 0;
+  margin-left: 8px;
+  margin-right: 20px;
+}
 
-    .operateMenu {
-      padding-top: 10px;
-    }
+.operateItem {
+  font-size: 14px;
+  padding: 6px 20px;
+}
 
-    .details {
-      padding: 5px 20px;
-      font-size: 12px;
-      line-height: 22px;
-      color: #8c8c8c;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: break-spaces;
+.operateMenu {
+  padding-top: 10px;
+}
 
-      p {
-        margin-bottom: 3px;
-      }
-    }
+.details {
+  padding: 5px 20px;
+  font-size: 12px;
+  line-height: 22px;
+  color: #8c8c8c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: break-spaces;
 
-    .titleInput {
-      width: 300px;
-    }
-
-    .lockIcon,
-    .editIcon {
-      margin-left: 8px;
-      color: #8c8c8c;
-      cursor: pointer;
-    }
-
-    .btn {
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      font-size: 12px;
-      padding: 0;
-      margin-left: 8px;
-      margin-right: 20px;
-    }
+  p {
+    margin-bottom: 3px;
   }
+}
+
+.titleInput {
+  width: 300px;
+}
+
+.lockIcon,
+.editIcon {
+  margin-left: 8px;
+  color: #8c8c8c;
+  cursor: pointer;
 }

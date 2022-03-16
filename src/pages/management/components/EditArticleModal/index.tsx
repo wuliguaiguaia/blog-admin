@@ -81,7 +81,7 @@ const EditArticleModal: FunctionComponent<IProps> = ({
         refresh({})
         if (type === 0) {
           const {origin} = window.location
-          window.open(`${origin}/article/${res.data.id}/edit`)
+          window.open(`${origin}/article/${res.data.id}`)
         }
       }
     }, 200)

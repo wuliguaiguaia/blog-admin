@@ -58,7 +58,7 @@ const App: FunctionComponent = () => {
       <Router>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
-          <Route path="/article/:id/:type" component={Editor} />
+          <Route path="/article/:id" component={Editor} />
           <Route path="/u" component={LoginPage} />
           <Route path="/" component={Management} />
         </Switch>

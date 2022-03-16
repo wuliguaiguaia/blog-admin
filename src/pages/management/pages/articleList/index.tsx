@@ -1,4 +1,3 @@
-
 import React, {
   ChangeEventHandler,
   FunctionComponent,
@@ -23,7 +22,7 @@ import { getDateDetail } from '@/common/utils'
 import EditArticleModal from '../../components/EditArticleModal'
 import { RootState } from '@/store/reducers/interface'
 import { getCategoryList } from '@/store/reducers/editor'
-import { ICategory } from '@/common/interface'
+import { IArticle, ICategory } from '@/common/interface'
 
 interface IProps {
 }
@@ -99,6 +98,12 @@ const ArticleList: FunctionComponent<IProps> = () => {
     }
   }, [searchValue])
 
+  const handleRowClick = (record:IArticle) => {
+    window.open(`/article/${record.id}`)
+  }
+  const handleClickStop = (e:any) => {
+    e.stopPropagation()
+  }
   const { categoryList } = useSelector((state: RootState) => state.editor)
   useEffect(() => {
     dispatch(getCategoryList())
@@ -146,7 +151,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
               const color = 'green'
               return (
                 <Tag color={color} key={index} className={styles.categories}>
-                  {item.name.toUpperCase()}
+                  {item.name[0].toUpperCase() + item.name.slice(1)}
                 </Tag>
               )
             })}
@@ -222,7 +227,6 @@ const ArticleList: FunctionComponent<IProps> = () => {
               message.error('删除失败！')
             }
           }
-
           const handleEdit = () => {
             const { id, title, categories } = record
             setEditData({ id, title, categories: categories.map((item: ICategory) => item.id) })
@@ -233,7 +237,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
             <div className={styles.operateContent}>
               {authConfig.article?.edit?.includes(userRole)
                 && <span className={styles.operate} onClick={handleEdit}>修改</span>}
-              <span className={styles.operate}><Link to={`/article/${record.id}/preview`} target="_blank">查看</Link></span>
+              <span className={styles.operate} onClick={handleClickStop}><Link to={`/article/${record.id}`} target="_blank">查看</Link></span>
               {!record.published && authConfig.article?.publish?.includes(userRole) && (
                 <Popconfirm
                   title="请再次确认是否发布？"
@@ -341,6 +345,9 @@ const ArticleList: FunctionComponent<IProps> = () => {
           scroll={{ y: '70vh' }}
           rowKey="id"
           onChange={handleTableChange}
+          onRow={(record) => ({
+            onClick: handleRowClick.bind(undefined, record),
+          })}
           pagination={{
             position: ['bottomRight'],
             total,
