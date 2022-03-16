@@ -44,7 +44,7 @@ interface IProps {
 const defaultPerpage = 20
 const CommentList: FunctionComponent<IProps> = ({ history }) => {
   const { userRole, authConfig } = useSelector((state: RootState) => state.common)
-  if (!authConfig?.[userRole]?.comment) {
+  if (!authConfig.comment?.includes(userRole)) {
     history.replace('/')
     return <></>
   }

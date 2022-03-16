@@ -29,7 +29,7 @@ interface IProps {
 
 const UserList: FunctionComponent<IProps> = ({ history }) => {
   const { userRole, authConfig } = useSelector((state: RootState) => state.common)
-  if (!authConfig?.[userRole]?.user) {
+  if (!authConfig.user?.includes(userRole)) {
     history.replace('/')
     return <></>
   }

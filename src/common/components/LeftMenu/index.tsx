@@ -112,21 +112,21 @@ const LeftMenu = () => {
         name: '留言管理',
         href: '/commentlist',
         icon: <CommentOutlined />,
-        disabled: !authConfig?.[userRole]?.comment,
+        disabled: !authConfig.comment?.includes(userRole),
       },
       {
         id: '5',
         name: '消息中心',
         href: '/messagecenter',
         icon: <SoundOutlined />,
-        disabled: !authConfig?.[userRole]?.message,
+        disabled: !authConfig.message?.includes(userRole),
       },
       {
         id: '6',
         name: '用户管理',
         href: '/userlist',
         icon: <UserOutlined />,
-        disabled: !authConfig?.[userRole]?.user,
+        disabled: !authConfig.user?.includes(userRole),
       },
     ]
     setList(data)

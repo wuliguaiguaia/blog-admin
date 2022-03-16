@@ -9,7 +9,7 @@ interface IProps {
 const MessageCenter: FunctionComponent<IProps> = ({ history }) => {
   const a = 'messgaecenter'
   const { userRole, authConfig } = useSelector((state: RootState) => state.common)
-  if (!authConfig?.[userRole]?.message) {
+  if (!authConfig.message?.includes(userRole)) {
     history.replace('/')
     return <></>
   }

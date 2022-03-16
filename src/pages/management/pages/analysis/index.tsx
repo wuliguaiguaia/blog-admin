@@ -6,7 +6,7 @@ import NoAuth from '../../components/NoAuth'
 
 const Analysis = () => {
   const { userRole, authConfig } = useSelector((state: RootState) => state.common)
-  if (!authConfig?.[userRole]?.analysis) {
+  if (!authConfig.analysis?.includes(userRole)) {
     return <NoAuth />
   }
   const s = ''

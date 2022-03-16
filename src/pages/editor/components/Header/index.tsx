@@ -145,7 +145,7 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
       <Menu.Item
         className={styles.operateItem}
         icon={<SendOutlined />}
-        disabled={!!published || !authConfig?.[userRole]?.article?.publish}
+        disabled={!!published || !authConfig.article?.publish?.includes(userRole)}
         onClick={handlePublish}
         key="publish"
       >
@@ -154,7 +154,7 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
       <Menu.Item
         className={styles.operateItem}
         icon={<DeleteOutlined />}
-        disabled={!!deleted || !authConfig?.[userRole]?.article?.delete}
+        disabled={!!deleted || !authConfig.article?.delete?.includes(userRole)}
         key="delete"
         onClick={handleDelete}
       >
@@ -226,7 +226,7 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
           <Save history={history} />
         ) : (
           <>
-            <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle} disabled={!authConfig?.[userRole]?.article?.edit}>编辑</Button>
+            <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle} disabled={!authConfig.article?.edit?.includes(userRole)}>编辑</Button>
           </>
         )}
         <Dropdown

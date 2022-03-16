@@ -231,10 +231,10 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              {authConfig?.[userRole]?.article?.editDesc
+              {authConfig.article?.edit?.includes(userRole)
                 && <span className={styles.operate} onClick={handleEdit}>修改</span>}
               <span className={styles.operate}><Link to={`/article/${record.id}/preview`} target="_blank">查看</Link></span>
-              {!record.published && authConfig?.[userRole]?.article?.publish && (
+              {!record.published && authConfig.article?.publish?.includes(userRole) && (
                 <Popconfirm
                   title="请再次确认是否发布？"
                   onConfirm={handlePublish}
@@ -245,7 +245,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
                   <span className={styles.operate}>发布</span>
                 </Popconfirm>
               )}
-              {authConfig?.[userRole]?.article?.delete
+              {authConfig.article?.delete?.includes(userRole)
                 && (
                   <Popconfirm
                     title="请再次确认是否删除？"
@@ -317,7 +317,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
     <>
       <div className={cns([styles.articlelist, 'table-list-page'])}>
         <div className={styles.header}>
-          <Button type="primary" onClick={handleAddArticle} disabled={!authConfig?.[userRole]?.article?.add}>
+          <Button type="primary" onClick={handleAddArticle} disabled={!authConfig.article?.add?.includes(userRole)}>
             <PlusOutlined />
             <span className={styles.addBtn}>添加文章</span>
           </Button>

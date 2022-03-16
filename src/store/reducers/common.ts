@@ -1,3 +1,4 @@
+import { IOStringAny } from '@/common/interface'
 import { IONumberString, IRole, IUserInfo } from '../../common/interface/index'
 import { UpdateCommonState } from '../actionTypes'
 import $http from '@/common/api'
@@ -9,7 +10,7 @@ export interface IInitialState {
   userRole: number
   loginStatus: number
   userRoleList: IRole[],
-  authConfig: any[]
+  authConfig: IOStringAny
 }
 
 const initialState:IInitialState = {
@@ -18,7 +19,7 @@ const initialState:IInitialState = {
   userRole: 0,
   loginStatus: -100,
   userRoleList: [],
-  authConfig: [],
+  authConfig: {},
 }
 
 const reducer = (state = initialState, action: { type: any; data: any }) => {

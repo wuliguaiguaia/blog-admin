@@ -133,9 +133,9 @@ const CategoryList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              {authConfig?.[userRole]?.category?.edit
+              {authConfig.category?.edit?.includes(userRole)
                 && <span className={styles.operate} onClick={handleEdit}>修改</span>}
-              {authConfig?.[userRole]?.category?.delete && (
+              {authConfig.category?.delete?.includes(userRole) && (
                 <Popconfirm
                   title="请再次确认是否删除？"
                   onConfirm={handleDelete}
@@ -164,7 +164,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
       <div className={cns([styles.categorylist, 'category-list-page '])}>
         <div className={styles.header}>
           <div>
-            <Button type="primary" onClick={handleAddCategory} disabled={!authConfig?.[userRole]?.category?.add}>
+            <Button type="primary" onClick={handleAddCategory} disabled={!authConfig.category?.add?.includes(userRole)}>
               <PlusOutlined />
               <span className={styles.addBtn}>添加分类</span>
             </Button>
