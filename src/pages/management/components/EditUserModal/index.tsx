@@ -1,28 +1,19 @@
 import cns from 'classnames'
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import {
   Select, Modal, Input, message,
 } from 'antd'
-import { EditType, ICategory } from '@/common/interface'
-import {
-  getCategoryList,
-} from '@/store/reducers/editor'
+import { IRegisterUser, IRole } from '@/common/interface'
 import styles from './index.scss'
 import $http from '@/common/api'
 
 const { Option } = Select
-interface IAddArticle {
-  title: string,
-  categories: number[],
-  id?: 0,
-  content?: string
-}
+
 interface IProps {
   modalVisible: boolean,
   setModalVisible: (visible: boolean) => void
-  type: EditType
-  initialData: IAddArticle
+  userRoleList: IRole[],
+  initialData: IRegisterUser
   refresh: ({
     page, prepage, categories, sorter, published,
   }: {
@@ -32,35 +23,23 @@ interface IProps {
   }) => Promise<void>,
 }
 
-
-const EditArticleModal: FunctionComponent<IProps> = ({
+const EditUserModal: FunctionComponent<IProps> = ({
   modalVisible,
   setModalVisible,
-  type,
+  userRoleList,
   initialData,
   refresh,
 }) => {
-  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const { categoryList } = useSelector((state: any) => state.editor)
-  const defaultData = {
-    title: '',
-    categories: [],
-    content: '',
-  }
-  const [data, setData] = useState<IAddArticle>(defaultData)
+  const [data, setData] = useState<IRegisterUser>(initialData)
 
   useEffect(() => {
-    setData(type === 0 ? defaultData : initialData)
-  }, [type, initialData])
+    setData(initialData)
+  }, [initialData])
 
   const checkForm = () => {
-    if (data.title.trim() === '') {
-      message.error('文档名必填')
-      return false
-    }
-    if (data.categories.length === 0) {
-      message.error('分类必选')
+    if (data.username.trim() === '') {
+      message.error('用户名必填')
       return false
     }
     return true
@@ -70,7 +49,7 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     const cansubmit = checkForm()
     if (!cansubmit) return
     setLoading(true)
-    const api = type === 0 ? 'addarticle' : 'updatearticle'
+    const api = 'updateuser'
     const res = await $http[api]({...data})
     setTimeout(() => {
       setLoading(false)
@@ -79,72 +58,61 @@ const EditArticleModal: FunctionComponent<IProps> = ({
       } else {
         setModalVisible(false)
         refresh({})
-        if (type === 0) {
-          const {origin} = window.location
-          window.open(`${origin}/article/${res.data.id}`)
-        }
       }
     }, 200)
   }
 
 
   const handleConfigCancel = () => {
-    setData(defaultData)
     setModalVisible(false)
     setLoading(false)
   }
-  const handleSelectedCatesChange = (value: number[]) => {
-    setData({...data, categories: value})
+  const handleSelectedRoleChange = (value: number) => {
+    setData({...data, role: value})
   }
 
-  const handleTitleChange = (e) => {
-    setData({ ...data, title: e.target.value })
+  const handleNameChange = (e: { target: { value: any } }) => {
+    setData({ ...data, username: e.target.value })
   }
-  useEffect(() => {
-    dispatch(getCategoryList())
-  }, [])
-
   return (
     <Modal
-      title={type === 0 ? '添加文章' : '修改文章'}
+      title="修改用户"
       okText="确定"
       cancelText="取消"
       confirmLoading={loading}
       visible={modalVisible}
       onOk={handleConfigSubmit}
       onCancel={handleConfigCancel}
-      className="edit-article-modal"
+      className="edit-user-modal"
     >
       <div className={cns([styles.row])}>
         <span className={styles.label}>
           <span className={styles.must}>*</span>
-          文档名:
+          用户名:
         </span>
         <Input
           className={styles.formItem}
           placeholder="请输入"
-          value={data.title}
+          value={data.username}
           maxLength={100}
-          onChange={handleTitleChange}
+          onChange={handleNameChange}
         />
       </div>
       <div className={cns([styles.row])}>
         <span className={styles.label}>
           <span className={styles.must}>*</span>
-          分类:
+          角色:
         </span>
         <Select
           className={styles.formItem}
-          mode="multiple"
-          allowClear
           placeholder="请选择"
-          value={data.categories}
-          onChange={handleSelectedCatesChange}
+          value={data.role}
+          onChange={handleSelectedRoleChange}
         >
           {
-            categoryList.map((item: ICategory) => (
-              <Option key={item.id} value={item.id}>
-                {item.name}
+            userRoleList.map((item: IRole) => (
+              <Option key={item.value} value={item.value}>
+                {item.text}
               </Option>
             ))
           }
@@ -153,4 +121,5 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     </Modal>
   )
 }
-export default EditArticleModal
+
+export default EditUserModal

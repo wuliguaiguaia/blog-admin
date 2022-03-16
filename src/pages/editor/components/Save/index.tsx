@@ -6,7 +6,7 @@ import styles from './index.scss'
 import {
   saveDocData, updateDocData, updateEditingHelperKeys, updateEditorState,
 } from '@/store/reducers/editor'
-import { EditWatchMode, IEditWatchMode, SaveStatus } from '@/common/interface'
+import { EditWatchMode, SaveStatus } from '@/common/interface'
 import { getDateDetail } from '@/common/utils'
 import { getLocalData } from '@/common/plugins/indexedDB'
 
@@ -71,8 +71,7 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
       if (mode === EditWatchMode.preview) {
         historyRecord.destroy()
       }
-      const {hash} = window.location
-      history.push(`/article/${id}/${IEditWatchMode[0]}${hash}`)
+      history.push(`/article/${id}`)
     }
     handleSave(null, cb) /* 保存后退出 */
   }

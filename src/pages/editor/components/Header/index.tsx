@@ -24,16 +24,22 @@ interface IProps {
   history: any
 }
 
-const Header: FunctionComponent<IProps> = ({ history}) => {
+const Header: FunctionComponent<IProps> = ({ history }) => {
   const [isEditTitle, setEditTitle] = useState(false)
   const inputEl = createRef<Input>()
   const {
-    transContentLength,
-    docData: {
-      createTime, updateTime, title, deleted, published, id,
+    editor: {
+      transContentLength,
+      docData: {
+        createTime, updateTime, title, deleted, published, id,
+      },
+      editWatchMode,
     },
-    editWatchMode,
-  } = useSelector((state: RootState) => state.editor)
+    common: {
+      userRole,
+      authConfig,
+    },
+  } = useSelector((state: RootState) => state)
   const [curTitle, setCurTitle] = useState(title)
   const dispatch = useDispatch()
 
@@ -139,7 +145,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       <Menu.Item
         className={styles.operateItem}
         icon={<SendOutlined />}
-        disabled={!!published}
+        disabled={!!published || !authConfig.article?.publish?.includes(userRole)}
         onClick={handlePublish}
         key="publish"
       >
@@ -148,7 +154,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
       <Menu.Item
         className={styles.operateItem}
         icon={<DeleteOutlined />}
-        disabled={!!deleted}
+        disabled={!!deleted || !authConfig.article?.delete?.includes(userRole)}
         key="delete"
         onClick={handleDelete}
       >
@@ -220,7 +226,7 @@ const Header: FunctionComponent<IProps> = ({ history}) => {
           <Save history={history} />
         ) : (
           <>
-            <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle}>编辑</Button>
+            <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle} disabled={!authConfig.article?.edit?.includes(userRole)}>编辑</Button>
           </>
         )}
         <Dropdown

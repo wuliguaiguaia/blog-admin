@@ -1,4 +1,3 @@
-
 import React, {
   ChangeEventHandler,
   FunctionComponent,
@@ -23,7 +22,7 @@ import { getDateDetail } from '@/common/utils'
 import EditArticleModal from '../../components/EditArticleModal'
 import { RootState } from '@/store/reducers/interface'
 import { getCategoryList } from '@/store/reducers/editor'
-import { ICategory } from '@/common/interface'
+import { IArticle, ICategory } from '@/common/interface'
 
 interface IProps {
 }
@@ -43,7 +42,8 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [published, setPublished] = useState<null | number>(null)
   const [editArticleModalVisible, setEditArticleModalVisible] = useState(false)
   const [editType, setEditType] = useState(0)
-  const [editData, setEditData] = useState({title: '', categories: [], id: 0})
+  const [editData, setEditData] = useState({ title: '', categories: [], id: 0 })
+  const { userRole, authConfig } = useSelector((state:RootState) => state.common)
   const dispatch = useDispatch()
 
   const fetchData = useCallback(async ({
@@ -98,6 +98,12 @@ const ArticleList: FunctionComponent<IProps> = () => {
     }
   }, [searchValue])
 
+  const handleRowClick = (record:IArticle) => {
+    window.open(`/article/${record.id}`)
+  }
+  const handleClickStop = (e:any) => {
+    e.stopPropagation()
+  }
   const { categoryList } = useSelector((state: RootState) => state.editor)
   useEffect(() => {
     dispatch(getCategoryList())
@@ -145,7 +151,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
               const color = 'green'
               return (
                 <Tag color={color} key={index} className={styles.categories}>
-                  {item.name.toUpperCase()}
+                  {item.name[0].toUpperCase() + item.name.slice(1)}
                 </Tag>
               )
             })}
@@ -221,7 +227,6 @@ const ArticleList: FunctionComponent<IProps> = () => {
               message.error('删除失败！')
             }
           }
-
           const handleEdit = () => {
             const { id, title, categories } = record
             setEditData({ id, title, categories: categories.map((item: ICategory) => item.id) })
@@ -230,26 +235,31 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate} onClick={handleEdit}>修改</span>
-              <span className={styles.operate}><Link to={`/article/${record.id}/preview`} target="_blank">查看</Link></span>
-              {!record.published ? (
+              {authConfig.article?.edit?.includes(userRole)
+                && <span className={styles.operate} onClick={handleEdit}>修改</span>}
+              <span className={styles.operate} onClick={handleClickStop}><Link to={`/article/${record.id}`} target="_blank">查看</Link></span>
+              {!record.published && authConfig.article?.publish?.includes(userRole) && (
                 <Popconfirm
                   title="请再次确认是否发布？"
                   onConfirm={handlePublish}
                   okText="是"
                   cancelText="否"
+
                 >
                   <span className={styles.operate}>发布</span>
                 </Popconfirm>
-              ) : null}
-              <Popconfirm
-                title="请再次确认是否删除？"
-                onConfirm={handleDelete}
-                okText="是"
-                cancelText="否"
-              >
-                <span className={styles.operate}>删除</span>
-              </Popconfirm>
+              )}
+              {authConfig.article?.delete?.includes(userRole)
+                && (
+                  <Popconfirm
+                    title="请再次确认是否删除？"
+                    onConfirm={handleDelete}
+                    okText="是"
+                    cancelText="否"
+                  >
+                    <span className={styles.operate}>删除</span>
+                  </Popconfirm>
+                )}
             </div>
           )
         },
@@ -302,7 +312,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const handleReset = () => window.location.reload()
 
   const handleAddArticle = () => {
-    setEditData({})
+    setEditData({ title: '', categories: [], id: 0 })
     setEditType(0)
     setEditArticleModalVisible(true)
   }
@@ -311,7 +321,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
     <>
       <div className={cns([styles.articlelist, 'table-list-page'])}>
         <div className={styles.header}>
-          <Button type="primary" onClick={handleAddArticle}>
+          <Button type="primary" onClick={handleAddArticle} disabled={!authConfig.article?.add?.includes(userRole)}>
             <PlusOutlined />
             <span className={styles.addBtn}>添加文章</span>
           </Button>
@@ -335,6 +345,9 @@ const ArticleList: FunctionComponent<IProps> = () => {
           scroll={{ y: '70vh' }}
           rowKey="id"
           onChange={handleTableChange}
+          onRow={(record) => ({
+            onClick: handleRowClick.bind(undefined, record),
+          })}
           pagination={{
             position: ['bottomRight'],
             total,

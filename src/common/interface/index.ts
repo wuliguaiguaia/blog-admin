@@ -72,6 +72,10 @@ export interface IONumberAny {
 export interface IOString {
   [k: string]: string
 }
+export interface IONumberString {
+  find(arg0: (item: any) => boolean);
+  [k: number]: string
+}
 
 
 export enum EditType {
@@ -103,4 +107,34 @@ export interface IComment extends IMessage{
   replyId?: number
   replyToReplyId?: number
   replyInfo?: IComment[]
+}
+
+
+export enum UserStatus {
+  Login = 0,
+  Logout = -1,
+  Register = 1,
+  ForgetPassword = 2,
+}
+
+export interface IUserLogin {
+  username: string;
+  password: string
+}
+
+
+export interface IUserInfo {
+  username: string;
+  role: number
+}
+
+export interface IRegisterUser {
+  id: number,
+  username: string,
+  role: number
+}
+
+export interface IRole {
+  value: number,
+  text: string
 }

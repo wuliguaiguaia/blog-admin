@@ -1,7 +1,18 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
+import { useSelector } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { RootState } from '@/store/reducers/interface'
 
-const MessageCenter = () => {
+interface IProps {
+  history: any
+}
+const MessageCenter: FunctionComponent<IProps> = ({ history }) => {
   const a = 'messgaecenter'
+  const { userRole, authConfig } = useSelector((state: RootState) => state.common)
+  if (!authConfig.message?.includes(userRole)) {
+    history.replace('/')
+    return <></>
+  }
   return (
     <div>
       { a}
@@ -10,4 +21,4 @@ const MessageCenter = () => {
   )
 }
 
-export default MessageCenter
+export default withRouter(MessageCenter)

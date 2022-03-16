@@ -2111,7 +2111,7 @@
   dependencies:
     "mime-db" ">= 1.43.0 < 2"
 
-"compression-webpack-plugin@^9.0.1":
+"compression-webpack-plugin@^9.1.2":
   "integrity" "sha512-mRVfU0G9tlZhCN/DUQm4Kcq0QdZOYd6E2FeJUvKM9hTUUYtBffHNnfkGvUuZXfv/zPlVau4v7goMUkuDL/noBg=="
   "resolved" "https://registry.npmmirror.com/compression-webpack-plugin/download/compression-webpack-plugin-9.1.2.tgz"
   "version" "9.1.2"

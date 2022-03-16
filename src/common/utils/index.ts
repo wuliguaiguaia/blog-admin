@@ -34,3 +34,12 @@ export const getDateCount = (year: number, month: number) => {
   const date = new Date(year, month - 1, 0)
   return date.getDate()
 }
+
+
+export const parseCookie = (str: string) => {
+  const obj = {}
+  str.replace(/([^=]+)=([^;]+);?/g, (_, key, val) => {
+    obj[key] = val
+  })
+  return obj
+}

@@ -13,12 +13,13 @@ import {
   Table, Tooltip,
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
 import { getDateDetail } from '@/common/utils'
 import EditCategoryModal from '../../components/EditCategoryModal'
 import { updateEditorState } from '@/store/reducers/editor'
+import { RootState } from '@/store/reducers/interface'
 
 interface IProps {
 }
@@ -31,6 +32,9 @@ const CategoryList: FunctionComponent<IProps> = () => {
   const [editCategoryModalVisible, setEditCategoryModalVisible] = useState(false)
   const [editCate, setEditCate] = useState({name: '', id: 0})
   const [editCateType, setEditCateType] = useState(0)
+  const {
+    common: { userRole, authConfig },
+  } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
   /*
     Maximum update depth exceeded.
@@ -42,9 +46,18 @@ const CategoryList: FunctionComponent<IProps> = () => {
   const fetchData = useCallback(async () => {
     setLoading(true)
     const response: any = await $http.getcategorylist()
-    setList(response.data.list)
-    setTotal(response.data.total)
-    dispatch(updateEditorState({categoryList: response.data.list}))
+    console.log(response)
+    const { errNo, data, errStr } = response
+    if (errNo !== 0) {
+      message.error(errStr)
+      setList([])
+      setTotal(0)
+      dispatch(updateEditorState({categoryList: []}))
+    } else {
+      setList(data.list)
+      setTotal(data.total)
+      dispatch(updateEditorState({ categoryList: data.list }))
+    }
     setLoading(false)
   }, [])
 
@@ -120,15 +133,18 @@ const CategoryList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              <span className={styles.operate} onClick={handleEdit}>修改</span>
-              <Popconfirm
-                title="请再次确认是否删除？"
-                onConfirm={handleDelete}
-                okText="是"
-                cancelText="否"
-              >
-                <span className={styles.operate}>删除</span>
-              </Popconfirm>
+              {authConfig.category?.edit?.includes(userRole)
+                && <span className={styles.operate} onClick={handleEdit}>修改</span>}
+              {authConfig.category?.delete?.includes(userRole) && (
+                <Popconfirm
+                  title="请再次确认是否删除？"
+                  onConfirm={handleDelete}
+                  okText="是"
+                  cancelText="否"
+                >
+                  <span className={styles.operate}>删除</span>
+                </Popconfirm>
+              )}
             </div>
           )
         },
@@ -148,7 +164,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
       <div className={cns([styles.categorylist, 'category-list-page '])}>
         <div className={styles.header}>
           <div>
-            <Button type="primary" onClick={handleAddCategory}>
+            <Button type="primary" onClick={handleAddCategory} disabled={!authConfig.category?.add?.includes(userRole)}>
               <PlusOutlined />
               <span className={styles.addBtn}>添加分类</span>
             </Button>
