@@ -1,6 +1,6 @@
 const path = require('path')
 const utils = require('./utils')
-
+const webpack = require('webpack')
 const resolve = (_path) => path.resolve(__dirname, '..', _path)
 
 module.exports = {
@@ -111,7 +111,15 @@ module.exports = {
     extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
       '@': resolve('src')
-    }
+    },
+    fallback: { crypto: false }
   },
-  plugins: [].filter(Boolean),
+  plugins: [
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          WEBHOOK_SECRET: JSON.stringify(process.env.WEBHOOK_SECRET)
+        }
+    }
+  })].filter(Boolean),
 }

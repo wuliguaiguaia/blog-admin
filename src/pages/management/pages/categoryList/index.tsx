@@ -30,7 +30,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
   const [total, setTotal] = useState(0)
   const [columns, setColumns] = useState<any>([])
   const [editCategoryModalVisible, setEditCategoryModalVisible] = useState(false)
-  const [editCate, setEditCate] = useState({name: '', id: 0})
+  const [editCate, setEditCate] = useState({ name: '', id: 0 })
   const [editCateType, setEditCateType] = useState(0)
   const {
     common: { userRole, authConfig },
@@ -52,7 +52,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
       message.error(errStr)
       setList([])
       setTotal(0)
-      dispatch(updateEditorState({categoryList: []}))
+      dispatch(updateEditorState({ categoryList: [] }))
     } else {
       setList(data.list)
       setTotal(data.total)
@@ -83,7 +83,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
         }),
         render: (title: string) => (
           <Tooltip title={title}>
-            <div className={cns([styles.title, 'text-ellipsis'])} style={{ width: 200 }}>
+            <div className={cns([styles.title, 'text-ellipsis'])}>
               {title}
             </div>
           </Tooltip>
@@ -126,9 +126,9 @@ const CategoryList: FunctionComponent<IProps> = () => {
             }
           }
           const handleEdit = async () => {
-            const {name, id} = record
+            const { name, id } = record
             setEditCateType(1)
-            setEditCate({name, id})
+            setEditCate({ name, id })
             setEditCategoryModalVisible(true)
           }
           return (
@@ -155,7 +155,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
 
   const handleAddCategory = () => {
     setEditCateType(0)
-    setEditCate({ name: '', id: 0})
+    setEditCate({ name: '', id: 0 })
     setEditCategoryModalVisible(true)
   }
 
