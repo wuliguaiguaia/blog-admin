@@ -26,6 +26,10 @@ const Workbench: FunctionComponent = () => {
   return (
     <div className={styles.wrapper}>
       <div>
+        跳转至
+        <a href="https://orangesolo.cn" target="_blank" rel="noreferrer">前台</a>
+      </div>
+      <div>
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>创作指数</h3>
           {/*  <Select
