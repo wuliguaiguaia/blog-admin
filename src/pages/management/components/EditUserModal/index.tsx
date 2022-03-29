@@ -38,7 +38,7 @@ const EditUserModal: FunctionComponent<IProps> = ({
   }, [initialData])
 
   const checkForm = () => {
-    if (data.username.trim() === '') {
+    if (!data.username) {
       message.error('用户名必填')
       return false
     }
@@ -72,7 +72,7 @@ const EditUserModal: FunctionComponent<IProps> = ({
   }
 
   const handleNameChange = (e: { target: { value: any } }) => {
-    setData({ ...data, username: e.target.value })
+    setData({ ...data, username: e.target.value.trim() })
   }
   return (
     <Modal

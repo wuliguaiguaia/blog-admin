@@ -6,7 +6,7 @@ import { RootState } from '@/store/reducers/interface'
 import ShortcutKey, { IShortcutKey } from '@/common/plugins/shortcutKey'
 import HistoryRecord, { IHistoryRecord } from '@/common/plugins/historyRecord'
 import {
-  IArticle, ICategory, EditWatchMode, EditType, SaveStatus, Response,
+  IArticle, ICategory, EditWatchMode, EditType, SaveStatus,
 } from '@/common/interface'
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
@@ -190,13 +190,13 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     idata = {} /* 本地保存的不返回数据 */
   }
   try {
-    const response:Response = await $http.updatearticle({ id, ...data })
-    const { errNo } = response
+    const response = await $http.updatearticle({ id, ...data })
+    const { errNo, errStr } = response
     idata = response.data
     if (errNo !== 0) {
       setLocal()
+      message.error(errStr)
     } else {
-      console.log(123)
       dispatch(updateEditorState({
         backupData: data.content, /* 重置 */
       }))

@@ -17,6 +17,7 @@ import { RootState } from '@/store/reducers/interface'
 import $http from '@/common/api'
 import { EditWatchMode } from '@/common/interface'
 import Save from '../Save'
+import { formatDate } from '@/common/utils'
 
 const { confirm } = Modal
 
@@ -176,11 +177,11 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
         </p>
         <p>
           创建于：
-          {new Date(createTime).toLocaleDateString()}
+          {formatDate(+createTime)}
         </p>
         <p>
           最后编辑于：
-          {new Date(updateTime).toLocaleDateString()}
+          {formatDate(+updateTime)}
         </p>
         <p>
           编辑者：柠檬精
@@ -226,7 +227,15 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
           <Save history={history} />
         ) : (
           <>
-            <Button className={styles.btn} size="middle" type="primary" onClick={handleEditModeToogle} disabled={!authConfig.article?.edit?.includes(userRole)}>编辑</Button>
+            <Button
+              className={styles.btn}
+              size="middle"
+              type="primary"
+              onClick={handleEditModeToogle}
+              disabled={!authConfig.article?.edit?.includes(userRole) || published === 1}
+            >
+              编辑
+            </Button>
           </>
         )}
         <Dropdown

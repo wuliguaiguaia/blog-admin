@@ -7,7 +7,7 @@ import {
   saveDocData, updateDocData, updateEditingHelperKeys, updateEditorState,
 } from '@/store/reducers/editor'
 import { EditWatchMode, SaveStatus } from '@/common/interface'
-import { getDateDetail } from '@/common/utils'
+import { formatDate } from '@/common/utils'
 import { getLocalData } from '@/common/plugins/indexedDB'
 
 interface IProps {
@@ -34,7 +34,6 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
     const cb = (res: any) => {
       const { updateTime: iupdateTime } = res
       if (iupdateTime) {
-        console.log('222')
         dispatch(updateDocData({
           updateTime: iupdateTime,
         }))
@@ -130,6 +129,7 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
   useEffect(() => {
     if (!id) return
     getLocalData({ id }).then((res) => {
+      if (!res) return
       const { updatedAt } = res
       const curTime = new Date(updateTime).getTime()
       if (Number(updatedAt) <= curTime) return
@@ -141,7 +141,7 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
     <>
       <p className={styles.updateTime}>
         最后更新于
-        {getDateDetail(updateTime)}
+        {formatDate(+updateTime)}
       </p>
       <Button loading={saveStatus === SaveStatus.loading} className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
       <Button className={styles.btn} size="middle" type="default" onClick={handlePreview}>预览</Button>

@@ -55,7 +55,7 @@ const EditArticleModal: FunctionComponent<IProps> = ({
   }, [type, initialData])
 
   const checkForm = () => {
-    if (data.title.trim() === '') {
+    if (!data.title) {
       message.error('文档名必填')
       return false
     }
@@ -97,8 +97,8 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     setData({...data, categories: value})
   }
 
-  const handleTitleChange = (e) => {
-    setData({ ...data, title: e.target.value })
+  const handleTitleChange = (e: { target: { value: string } }) => {
+    setData({ ...data, title: e.target.value.trim() })
   }
   useEffect(() => {
     dispatch(getCategoryList())

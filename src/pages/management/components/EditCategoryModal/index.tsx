@@ -34,7 +34,7 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
   }, [initialData, type])
 
   const checkForm = () => {
-    if (data.name.trim() === '') {
+    if (!data.name) {
       message.error('名称必填')
       return false
     }
@@ -66,7 +66,7 @@ const EditCategoryModal: FunctionComponent<IProps> = ({
   }
 
   const handleTitleChange = (e: { target: { value: any } }) => {
-    setData({ ...data, name: e.target.value })
+    setData({ ...data, name: e.target.value.trim() })
   }
 
   return (

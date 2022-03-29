@@ -18,11 +18,11 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
-import { getDateDetail } from '@/common/utils'
 import EditArticleModal from '../../components/EditArticleModal'
 import { RootState } from '@/store/reducers/interface'
 import { getCategoryList } from '@/store/reducers/editor'
-import { IArticle, ICategory } from '@/common/interface'
+import { ICategory } from '@/common/interface'
+import { formatDate } from '@/common/utils'
 
 interface IProps {
 }
@@ -43,7 +43,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [editArticleModalVisible, setEditArticleModalVisible] = useState(false)
   const [editType, setEditType] = useState(0)
   const [editData, setEditData] = useState({ title: '', categories: [], id: 0 })
-  const { userRole, authConfig } = useSelector((state:RootState) => state.common)
+  const { userRole, authConfig } = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
 
   const fetchData = useCallback(async ({
@@ -79,7 +79,7 @@ const ArticleList: FunctionComponent<IProps> = () => {
       ilist = data.list
       itotal = data.total
     } else {
-      response = await $http.search({...params, words: searchValue, columns: ['title']})
+      response = await $http.search({ ...params, words: searchValue, columns: ['title'] })
       data = response.data
       // eslint-disable-next-line no-underscore-dangle
       ilist = data.list.map((item: { _source: any }) => item._source)
@@ -98,12 +98,6 @@ const ArticleList: FunctionComponent<IProps> = () => {
     }
   }, [searchValue])
 
-  const handleRowClick = (record:IArticle) => {
-    window.open(`/article/${record.id}`)
-  }
-  const handleClickStop = (e:any) => {
-    e.stopPropagation()
-  }
   const { categoryList } = useSelector((state: RootState) => state.editor)
   useEffect(() => {
     dispatch(getCategoryList())
@@ -182,18 +176,20 @@ const ArticleList: FunctionComponent<IProps> = () => {
         className: styles.small,
         width: 150,
         sorter: (a, b) => a - b,
-        render: (updateTime: string) => getDateDetail(updateTime),
+        render: (updateTime: string) => formatDate(+updateTime),
       },
       {
         title: '操作',
         width: 160,
         fixed: 'right',
         render: (_, record: any) => {
-          const handlePublish = async () => {
+          const handlePublish = async (e: any) => {
+            e.stopPropagation()
+            const value = record.published === 0 ? 1 : 0
             try {
-              const data = await $http.publisharticle({ id: record.id })
+              const data = await $http.publisharticle({ id: record.id, published: value })
               if (data.errNo === 0) {
-                message.success('发布成功！')
+                message.success('操作成功！')
                 fetchData({
                   page,
                   prepage: pagesize,
@@ -202,13 +198,15 @@ const ArticleList: FunctionComponent<IProps> = () => {
                   published,
                 })
               } else {
-                message.error('发布失败！')
+                message.error(data.errStr)
               }
-            } catch (e) {
-              message.error('发布失败！')
+            } catch (err) {
+              message.error('操作失败！')
+              console.log(err)
             }
           }
-          const handleDelete = async () => {
+          const handleDelete = async (e: any) => {
+            e.stopPropagation()
             try {
               const data = await $http.deletearticle({ id: record.id })
               if (data.errNo === 0) {
@@ -223,11 +221,13 @@ const ArticleList: FunctionComponent<IProps> = () => {
               } else {
                 message.error('删除失败！')
               }
-            } catch (e) {
+            } catch (err) {
               message.error('删除失败！')
+              console.log(err)
             }
           }
-          const handleEdit = () => {
+          const handleEdit = (e: any) => {
+            e.stopPropagation()
             const { id, title, categories } = record
             setEditData({ id, title, categories: categories.map((item: ICategory) => item.id) })
             setEditType(1)
@@ -235,18 +235,20 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }
           return (
             <div className={styles.operateContent}>
-              {authConfig.article?.edit?.includes(userRole)
+              {authConfig.article?.edit?.includes(userRole) && record.published === 0
                 && <span className={styles.operate} onClick={handleEdit}>修改</span>}
-              <span className={styles.operate} onClick={handleClickStop}><Link to={`/article/${record.id}`} target="_blank">查看</Link></span>
-              {!record.published && authConfig.article?.publish?.includes(userRole) && (
+              <span className={styles.operate}><Link to={`/article/${record.id}`} target="_blank">查看</Link></span>
+              {authConfig.article?.publish?.includes(userRole) && (
                 <Popconfirm
-                  title="请再次确认是否发布？"
+                  title={`请再次确认是否${record.published === 1 ? '取消' : ''}发布？`}
                   onConfirm={handlePublish}
                   okText="是"
                   cancelText="否"
-
                 >
-                  <span className={styles.operate}>发布</span>
+                  <span className={styles.operate}>
+                    {record.published === 1 ? '取消' : ''}
+                    发布
+                  </span>
                 </Popconfirm>
               )}
               {authConfig.article?.delete?.includes(userRole)
@@ -272,13 +274,13 @@ const ArticleList: FunctionComponent<IProps> = () => {
     fetchData({
       page: 1, prepage: defaultPerpage, categories: [], sorter: null, published: null,
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleTableChange = (
     pagination: any,
     filters: any,
-    { field, order }: {field: string, order: null | 'string'},
+    { field, order }: { field: string, order: null | 'string' },
   ) => {
     const convertSorter = field ? { [field]: { order: order?.slice(0, -3) } } : {}
     fetchData({
@@ -345,9 +347,9 @@ const ArticleList: FunctionComponent<IProps> = () => {
           scroll={{ y: '70vh' }}
           rowKey="id"
           onChange={handleTableChange}
-          onRow={(record) => ({
-            onClick: handleRowClick.bind(undefined, record),
-          })}
+          // onRow={(record) => ({
+          //   onClick: handleRowClick.bind(undefined, record),
+          // })}
           pagination={{
             position: ['bottomRight'],
             total,

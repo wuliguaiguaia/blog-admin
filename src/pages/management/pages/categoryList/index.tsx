@@ -16,7 +16,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import $http from '@/common/api'
-import { getDateDetail } from '@/common/utils'
+import { formatDate } from '@/common/utils'
 import EditCategoryModal from '../../components/EditCategoryModal'
 import { updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
@@ -105,7 +105,7 @@ const CategoryList: FunctionComponent<IProps> = () => {
         sorter: (a: any, b: any) => new Date(a.updateTime).getTime()
           - new Date(b.updateTime).getTime(),
         defaultSortOrder: 'descend',
-        render: (updateTime: string) => getDateDetail(updateTime),
+        render: (updateTime: string) => formatDate(+updateTime),
       },
       {
         title: '操作',
@@ -137,7 +137,8 @@ const CategoryList: FunctionComponent<IProps> = () => {
                 && <span className={styles.operate} onClick={handleEdit}>修改</span>}
               {authConfig.category?.delete?.includes(userRole) && (
                 <Popconfirm
-                  title="请再次确认是否删除？"
+                  style={{width: '300px'}}
+                  title="删除后其下文章将被永久删除，继续删除？"
                   onConfirm={handleDelete}
                   okText="是"
                   cancelText="否"

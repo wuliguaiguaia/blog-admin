@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import styles from './index.scss'
 import $http from '@/common/api'
-import { getDateDetail } from '@/common/utils'
+import { formatDate } from '@/common/utils'
 import EditUserModal from '../../components/EditUserModal'
 import { updateEditorState } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
@@ -137,10 +137,9 @@ const UserList: FunctionComponent<IProps> = ({ history }) => {
         dataIndex: 'updateTime',
         className: styles.small,
         width: 150,
-        sorter: (a: any, b: any) => new Date(a.updateTime).getTime()
-          - new Date(b.updateTime).getTime(),
+        sorter: (a: any, b: any) => a - b,
         defaultSortOrder: 'descend',
-        render: (updateTime: string) => getDateDetail(updateTime),
+        render: (updateTime: string) => formatDate(+updateTime),
       },
       {
         title: '操作',

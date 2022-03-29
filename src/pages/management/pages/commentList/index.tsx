@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import styles from './index.scss'
 import $http from '@/common/api'
-import { getDateDetail } from '@/common/utils'
+import { formatDate } from '@/common/utils'
 import { IMessage } from '@/common/interface'
 import { RootState } from '@/store/reducers/interface'
 
@@ -232,7 +232,7 @@ const CommentList: FunctionComponent<IProps> = ({ history }) => {
         className: styles.small,
         width: 150,
         sorter: (a, b) => a - b,
-        render: (createTime: string) => getDateDetail(createTime),
+        render: (createTime: string) => formatDate(+createTime),
       },
       {
         title: '操作',
