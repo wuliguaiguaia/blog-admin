@@ -11,12 +11,14 @@ import {
 import styles from './index.scss'
 import $http from '@/common/api'
 
+const {TextArea} = Input
 const { Option } = Select
 interface IAddArticle {
   title: string,
   categories: number[],
   id?: 0,
   content?: string
+  desc: string
 }
 interface IProps {
   modalVisible: boolean,
@@ -43,10 +45,12 @@ const EditArticleModal: FunctionComponent<IProps> = ({
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const { categoryList } = useSelector((state: any) => state.editor)
+
   const defaultData = {
     title: '',
     categories: [],
     content: '',
+    desc: '',
   }
   const [data, setData] = useState<IAddArticle>(defaultData)
 
@@ -61,6 +65,10 @@ const EditArticleModal: FunctionComponent<IProps> = ({
     }
     if (data.categories.length === 0) {
       message.error('分类必选')
+      return false
+    }
+    if (!data.desc) {
+      message.error('简介必填')
       return false
     }
     return true
@@ -96,9 +104,11 @@ const EditArticleModal: FunctionComponent<IProps> = ({
   const handleSelectedCatesChange = (value: number[]) => {
     setData({...data, categories: value})
   }
-
   const handleTitleChange = (e: { target: { value: string } }) => {
     setData({ ...data, title: e.target.value.trim() })
+  }
+  const handleDescChange = (e: { target: { value: string } }) => {
+    setData({ ...data, desc: e.target.value.trim() })
   }
   useEffect(() => {
     dispatch(getCategoryList())
@@ -149,6 +159,19 @@ const EditArticleModal: FunctionComponent<IProps> = ({
             ))
           }
         </Select>
+      </div>
+      <div className={cns([styles.row, styles.descRow])}>
+        <span className={styles.label}>
+          <span className={styles.must}>*</span>
+          简介:
+        </span>
+        <TextArea
+          className={styles.formItem}
+          rows={2}
+          placeholder="请输入"
+          value={data.desc}
+          onChange={handleDescChange}
+        />
       </div>
     </Modal>
   )

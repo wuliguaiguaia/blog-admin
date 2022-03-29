@@ -1,7 +1,9 @@
 import cns from 'classnames'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Select, Modal, message } from 'antd'
+import {
+  Select, Modal, message, Input,
+} from 'antd'
 import styles from './index.scss'
 import { ICategory } from '@/common/interface'
 import {
@@ -10,6 +12,7 @@ import {
 import { RootState } from '@/store/reducers/interface'
 
 const { Option } = Select
+const { TextArea } = Input
 
 interface IProps {}
 
@@ -19,46 +22,58 @@ const ConfigModal: FunctionComponent<IProps> = () => {
     editStatus: { configModalVisible },
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
-  const { categories } = docData
+  const { categories, desc } = docData
   const [loading, setLoading] = useState(false)
   const { categoryList } = useSelector((state: any) => state.editor)
-  const [selectedCates, setSelectedCates] = useState<number[]>(categories)
+  const [data, setData] = useState({
+    categories,
+    desc,
+  })
 
   const checkForm = () => {
     /* 1 检查是否有变化 */
-    if (JSON.stringify(selectedCates) === JSON.stringify(categories)) return false
+    if (JSON.stringify(data.categories) === JSON.stringify(categories)
+      && data.desc === desc) {
+      message.info('无内容变化')
+      return false
+    }
     /* 2 是否符合条件 */
-    if (selectedCates.length === 0) {
+    if (data.categories.length === 0) {
       message.error('分类必选')
+      return false
+    }
+    if (data.desc === '') {
+      message.error('简介必填')
       return false
     }
     return true
   }
 
+  const handleConfigCancel = () => dispatch(updateEditingStatus({ configModalVisible: false }))
+
   const handleConfigSubmit = () => {
     if (!checkForm()) {
-      dispatch(updateEditingStatus({ configModalVisible: false }))
       return
     }
     setLoading(true)
     setTimeout(() => {
       function cb() {
         setLoading(false)
-        dispatch(updateDocData({ categories: selectedCates }))
-        dispatch(updateEditingStatus({ configModalVisible: false }))
-        message.success('修改成功')
+        dispatch(updateDocData(data))
+        handleConfigCancel()
       }
-      dispatch(saveDocData({
-        categories: selectedCates,
-      }, cb))
+      dispatch(saveDocData(data, cb))
     }, 200)
   }
 
-  const handleConfigCancel = () => dispatch(updateEditingStatus({ configModalVisible: false }))
+
   const handleSelectedCatesChange = (value: number[]) => {
-    setSelectedCates(value)
+    setData({ ...data, categories: value })
   }
 
+  const handleDescChange = (e: { target: { value: string } }) => {
+    setData({ ...data, desc: e.target.value.trim() })
+  }
   useEffect(() => {
     dispatch(getCategoryList())
   }, [])
@@ -73,15 +88,17 @@ const ConfigModal: FunctionComponent<IProps> = () => {
       onOk={handleConfigSubmit}
       onCancel={handleConfigCancel}
     >
-      <div className={cns(['align-center', styles.catesWrapper])}>
-        <span className={styles.catesLabel}>分类:</span>
+      <div className={styles.row}>
+        <span className={styles.label}>
+          <span className={styles.must}>*</span>
+          分类:
+        </span>
         <Select
-          className={styles.catesSelect}
+          className={styles.formItem}
           mode="multiple"
           allowClear
-          style={{ width: '70%' }}
           placeholder="Please select"
-          value={selectedCates}
+          value={data.categories}
           onChange={handleSelectedCatesChange}
         >
           {
@@ -92,6 +109,19 @@ const ConfigModal: FunctionComponent<IProps> = () => {
             ))
           }
         </Select>
+      </div>
+      <div className={cns([styles.row, styles.descRow])}>
+        <span className={styles.label}>
+          <span className={styles.must}>*</span>
+          简介:
+        </span>
+        <TextArea
+          className={styles.formItem}
+          rows={2}
+          placeholder="请输入"
+          value={data.desc}
+          onChange={handleDescChange}
+        />
       </div>
     </Modal>
   )

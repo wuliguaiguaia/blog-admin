@@ -21,7 +21,6 @@ import $http from '@/common/api'
 import EditArticleModal from '../../components/EditArticleModal'
 import { RootState } from '@/store/reducers/interface'
 import { getCategoryList } from '@/store/reducers/editor'
-import { ICategory } from '@/common/interface'
 import { formatDate } from '@/common/utils'
 
 interface IProps {
@@ -42,7 +41,9 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const [published, setPublished] = useState<null | number>(null)
   const [editArticleModalVisible, setEditArticleModalVisible] = useState(false)
   const [editType, setEditType] = useState(0)
-  const [editData, setEditData] = useState({ title: '', categories: [], id: 0 })
+  const [editData, setEditData] = useState({
+    title: '', categories: [], id: 0, desc: '',
+  })
   const { userRole, authConfig } = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
 
@@ -143,9 +144,10 @@ const ArticleList: FunctionComponent<IProps> = () => {
           <span>
             {categories.map((item, index) => {
               const color = 'green'
+              const name = categoryList.find((i) => i.id === item)?.name as string
               return (
                 <Tag color={color} key={index} className={styles.categories}>
-                  {item.name[0].toUpperCase() + item.name.slice(1)}
+                  {name[0].toUpperCase() + name.slice(1)}
                 </Tag>
               )
             })}
@@ -228,8 +230,12 @@ const ArticleList: FunctionComponent<IProps> = () => {
           }
           const handleEdit = (e: any) => {
             e.stopPropagation()
-            const { id, title, categories } = record
-            setEditData({ id, title, categories: categories.map((item: ICategory) => item.id) })
+            const {
+              id, title, categories, desc,
+            } = record
+            setEditData({
+              id, title, categories, desc,
+            })
             setEditType(1)
             setEditArticleModalVisible(true)
           }
@@ -314,7 +320,9 @@ const ArticleList: FunctionComponent<IProps> = () => {
   const handleReset = () => window.location.reload()
 
   const handleAddArticle = () => {
-    setEditData({ title: '', categories: [], id: 0 })
+    setEditData({
+      title: '', categories: [], id: 0, desc: '',
+    })
     setEditType(0)
     setEditArticleModalVisible(true)
   }
@@ -332,7 +340,12 @@ const ArticleList: FunctionComponent<IProps> = () => {
               placeholder="请输入..."
               value={searchValue}
               onChange={handleValueChange}
-              suffix={<SearchOutlined style={{ cursor: 'pointer' }} onClick={handleInputEnter} />}
+              suffix={(
+                <SearchOutlined
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleInputEnter}
+                />
+              )}
               onPressEnter={handleInputEnter}
             />
             <Button className={styles.resetBtn} type="primary" onClick={handleReset} size="middle">重置</Button>

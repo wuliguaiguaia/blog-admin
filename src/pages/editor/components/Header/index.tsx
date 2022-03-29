@@ -113,7 +113,8 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
       cancelText: '取消',
       onOk() {
         return new Promise((resolve) => {
-          $http.publisharticle({ id }).then((res: any) => {
+          const value = published === 0 ? 1 : 0
+          $http.publisharticle({ id, published: value}).then((res: any) => {
             if (res.errNo === 0) {
               if (editWatchMode === EditWatchMode.edit) {
                 message.success('发布成功，将在1s后跳回预览状态', 1)
@@ -123,6 +124,10 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
                   }))
                 }, 1000)
               }
+              dispatch(updateDocData({
+                published: value,
+              }))
+              message.success('发布成功')
               resolve(true)
             } else {
               message.error('发布失败')

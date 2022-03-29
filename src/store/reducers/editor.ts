@@ -159,7 +159,6 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     },
   })
   const { data: { filePath } } = response
-  console.log(filePath)
   if (file.type.includes('image/')) {
     const editorState = getState().editor
     const { docData: { content }, cursorIndex } = editorState
@@ -194,7 +193,6 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     const { errNo, errStr } = response
     idata = response.data
     if (errNo !== 0) {
-      setLocal()
       message.error(errStr)
     } else {
       dispatch(updateEditorState({

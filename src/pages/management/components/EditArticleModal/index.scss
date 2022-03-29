@@ -18,7 +18,11 @@
 
 .formItem {
   flex: 1;
-  max-width: 60%;
+  max-width: 60% !important;
+}
+
+.descRow {
+  align-items: baseline;
 }
 
 :global {
