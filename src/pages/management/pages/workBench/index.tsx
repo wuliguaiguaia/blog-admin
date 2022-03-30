@@ -15,10 +15,16 @@ const Workbench: FunctionComponent = () => {
   // const handleChange = (y: number) => setYear(y)
   const handleDeploy = async () => {
     try {
+      console.time('ww')
+      console.log(111)
       await $http.webhook({
         secret: await encodePass(secret),
         name: 'blog',
+      }, {
+        timeout: 600000,
       })
+      message.success('部署成功')
+      console.timeEnd('ww')
     } catch (e) {
       message.error('部署失败')
       console.log('部署失败', e)
