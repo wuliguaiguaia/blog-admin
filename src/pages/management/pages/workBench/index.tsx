@@ -26,6 +26,7 @@ const Workbench: FunctionComponent = () => {
       message.success('部署成功')
       console.timeEnd('ww')
     } catch (e) {
+      console.timeEnd('ww')
       message.error('部署失败')
       console.log('部署失败', e)
     }
