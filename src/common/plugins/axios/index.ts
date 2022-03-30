@@ -6,8 +6,9 @@ import { parseCookie } from '@/common/utils'
 /*
   请求封装
 */
-axios.defaults.withCredentials = true
-axios.interceptors.request.use((config) => {
+const myAxios = axios.create()
+myAxios.defaults.withCredentials = true
+myAxios.interceptors.request.use((config) => {
   if (!config.headers) {
     config.headers = {}
   }
@@ -18,7 +19,7 @@ axios.interceptors.request.use((config) => {
   // config.headers.Authorization = `Bearer ${cookies.lg_token}`
   return config
 })
-axios.interceptors.response.use((response) => response, (error) => {
+myAxios.interceptors.response.use((response) => response, (error) => {
   const { data } = error.response
   if (data?.errStr) {
     message.error(data.errStr)
@@ -29,4 +30,4 @@ axios.interceptors.response.use((response) => response, (error) => {
 })
 
 
-export default axios
+export default myAxios
