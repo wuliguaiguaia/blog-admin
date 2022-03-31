@@ -13,24 +13,39 @@ const defaultYear = new Date().getFullYear()
 const Workbench: FunctionComponent = () => {
   const [year] = useState(defaultYear)
   // const handleChange = (y: number) => setYear(y)
+  const [canDeploy, setCanDeploy] = useState(true)
+
+  const genUseTime = (curTime: number) => {
+    let diffTime = (Date.now() - curTime) / 1000
+    diffTime = Number(diffTime.toFixed(0))
+    console.log('部署时间：', diffTime)
+    const seconds = diffTime % 60
+    const minutes = diffTime / 60
+    return `${minutes.toFixed(0)} 分 ${seconds} 秒`
+  }
+
   const handleDeploy = async () => {
+    const curTime = Date.now()
+    setCanDeploy(false)
     try {
-      console.time('ww')
-      console.log(111)
+      message.info('正在启动部署，需要大约3到5分钟，具体还得看当前网络状况')
       await $http.webhook({
         secret: await encodePass(secret),
         name: 'blog',
       }, {
         timeout: 600000,
       })
-      message.success('部署成功')
-      console.timeEnd('ww')
+      const useTime = genUseTime(curTime)
+      message.success(`部署成功，用时 ${useTime}`)
+      setCanDeploy(true)
     } catch (e) {
-      console.timeEnd('ww')
-      message.error('部署失败')
+      const useTime = genUseTime(curTime)
+      message.error(`部署失败， 用时 ${useTime}`)
       console.log('部署失败', e)
+      setCanDeploy(true)
     }
   }
+
   return (
     <div className={styles.wrapper}>
       <div>
@@ -56,9 +71,17 @@ const Workbench: FunctionComponent = () => {
         <div className={cns([styles.card, styles.operate])}>
           <h3 className={styles.cardTitle}>前台部署</h3>
           <div className={styles.cardDesc}>
-            前台为服务端渲染，采用SSG静态生成，仅在仓库push时自动化部署。所以当内容修改时，需要手动触发 rebuild，使修改内容生效。
+            前台为服务端渲染，采用SSG静态生成，仅在仓库push时自动化部署，所以当文章等内容修改时并不会及时更新，需要手动触发 rebuild，使修改内容生效。
           </div>
-          <Button className={styles.cardBtn} type="primary" size="small" onClick={handleDeploy}>一键部署</Button>
+          <Button
+            className={cns([styles.cardBtn, styles.deployBtn])}
+            type="primary"
+            size="small"
+            onClick={handleDeploy}
+            loading={!canDeploy}
+          >
+            一键部署
+          </Button>
         </div>
       </div>
     </div>

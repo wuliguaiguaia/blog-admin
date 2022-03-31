@@ -28,10 +28,7 @@ module.exports = merge(baseWebpackConfig, {
     },
     proxy: {
       '/api': 'http://localhost:3009',
-      '/webhook': {
-        target: 'http://localhost:9999',
-        timeout: 30 * 60 * 1000,
-      }
+      '/webhook':  'http://localhost:9999',
     },
     // overlay: { warnings: false, errors: true },
     // publicPath: '/',
