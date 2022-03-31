@@ -164,7 +164,7 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     const { docData: { content }, cursorIndex } = editorState
     const left = content.substr(0, cursorIndex.start)
     const right = content.substr(cursorIndex.end)
-    dispatch(updateDocData({ content: `${left}<img src="${filePath}" alt="" class="md-img" target="_blank"/>${right}`}))
+    dispatch(updateDocData({ content: `${left}<img src="${filePath}" alt="" class="md-img"/>${right}`}))
   }
 }
 
