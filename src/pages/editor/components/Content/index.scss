@@ -9,12 +9,11 @@ $editorContainerPadding: 30px;
   top: 100px;
 }
 
-.hasOutline {
-  width: calc(100% - $outlineWidth);
-}
-
 .editContent {
-  flex: 1;
+  width: 100vw;
+  &.hasOutline{
+    width: calc(100% - $outlineWidth);
+  }
 }
 
 .leftContent,

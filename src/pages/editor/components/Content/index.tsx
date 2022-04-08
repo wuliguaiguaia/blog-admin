@@ -166,8 +166,8 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
       {
         editWatchMode === EditWatchMode.edit
           ? (
-            <div className={cns([styles.container, 'flex', outline ? styles.hasOutline : ''])} ref={scrollEl}>
-              <div className={cns([styles.editContent, 'flex'])}>
+            <div className={cns([styles.container, 'flex'])} ref={scrollEl}>
+              <div className={cns([styles.editContent, 'flex', outline ? styles.hasOutline : ''])}>
                 <div className={styles.leftContent} ref={leftContentEl}>
                   <pre className={styles.preContent}>{content}</pre>
                   <textarea
