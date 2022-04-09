@@ -11,7 +11,8 @@ $editorContainerPadding: 30px;
 
 .editContent {
   width: 100vw;
-  &.hasOutline{
+
+  &.hasOutline {
     width: calc(100% - $outlineWidth);
   }
 }

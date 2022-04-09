@@ -173,6 +173,14 @@ const ArticleList: FunctionComponent<IProps> = () => {
         render: (_published: number | undefined) => (_published ? '是' : '否'),
       },
       {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        className: styles.small,
+        width: 150,
+        sorter: (a, b) => a - b,
+        render: (createTime: string) => formatDate(+createTime),
+      },
+      {
         title: '更新时间',
         dataIndex: 'updateTime',
         className: styles.small,
