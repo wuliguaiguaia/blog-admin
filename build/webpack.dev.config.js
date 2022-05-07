@@ -20,7 +20,7 @@ module.exports = merge(baseWebpackConfig, {
     hot: true,
     compress: true,
     host: 'localhost',
-    port: 8080,
+    port: 8887,
     open: true,
     client: {
       logging: 'info',
