@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  # Triggers the workflow on push or pull r       equest events but only for the master branch
+  # Triggers the workflow on push or pull r        eq   est events but only for the master branch
   push:
     branches: [ test-1 ]
   pull_request:
