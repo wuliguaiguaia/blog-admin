@@ -7,7 +7,7 @@ on: # workflow 触发条件
 
   push: # 比如push时触发
 
-    branches: [ test-1 ] # 指定分支，只有 test-1 分支发生push事件才触发
+    branches: [ test-actions ] # 指定分支，只有 test-1 分支发生push事件才触发
 
 jobs: # 一个 workflow 由一个或多个 jobs 构成，表示有多个任务
 
