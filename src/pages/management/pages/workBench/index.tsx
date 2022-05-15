@@ -49,7 +49,7 @@ const Workbench: FunctionComponent = () => {
   return (
     <div className={styles.wrapper}>
       <div>
-        跳转至 1111
+        跳转至 234
         <a href="https://orangesolo.cn" target="_blank" rel="noreferrer">前台</a>
       </div>
       <div>
