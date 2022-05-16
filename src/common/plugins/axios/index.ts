@@ -5,6 +5,7 @@ import { message } from 'antd'
   请求封装
 */
 const myAxios = axios.create()
+myAxios.defaults.timeout = 30000
 myAxios.defaults.withCredentials = true
 myAxios.interceptors.request.use((config) => {
   if (!config.headers) {

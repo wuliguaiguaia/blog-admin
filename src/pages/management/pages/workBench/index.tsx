@@ -35,7 +35,7 @@ const Workbench: FunctionComponent = () => {
         },
         secret: await encodePass(secret),
       }, {
-        // timeout: 600000,
+        timeout: 600000,
       })
       const useTime = genUseTime(curTime)
       message.success(`部署成功，用时 ${useTime}`)
