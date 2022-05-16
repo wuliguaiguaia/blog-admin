@@ -30,8 +30,10 @@ const Workbench: FunctionComponent = () => {
     try {
       message.info('正在启动部署，需要大约3到5分钟，具体还得看当前网络状况')
       await $http.webhook({
+        repository: {
+          name: 'blog',
+        },
         secret: await encodePass(secret),
-        name: 'blog',
       }, {
         timeout: 600000,
       })

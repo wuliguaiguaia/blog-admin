@@ -19,7 +19,7 @@ export const post = {
   adduser: `${apiPrefix}/user`,
   login: `${apiPrefix}/login`,
   register: `${apiPrefix}/register`,
-  webhook: '/webhook/manual?name=blog-admin',
+  webhook: '/webhook/manual?name=blog',
 }
 
 export const remove = {
