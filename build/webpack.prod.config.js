@@ -8,10 +8,12 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const SpeedMeasureWebpack = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasureWebpack();
 
 const reportMemory = process.argv[2] === '--report'
 
-module.exports = merge(baseWebpackConfig, {
+let webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   output: {
     path: path.resolve(__dirname, "../dist"),
@@ -50,10 +52,10 @@ module.exports = merge(baseWebpackConfig, {
     },
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      // 注意这里使用的是contenthash，否则任意的js改动，打包时都会导致css的文件名也跟着变动。
-      filename: utils.assetsPath('css/[name]_[contenthash].css')
-    }),
+    // new MiniCssExtractPlugin(/* {
+    //   // 注意这里使用的是contenthash，否则任意的js改动，打包时都会导致css的文件名也跟着变动。
+    //   // filename: utils.assetsPath('css/[name]_[contenthash].css')
+    // } */),
     reportMemory && new BundleAnalyzerPlugin({ analyzerPort: 8887 }),
     // prod.gzip && new CompressionPlugin({ })
     new HtmlWebpackPlugin({
@@ -71,3 +73,13 @@ module.exports = merge(baseWebpackConfig, {
     })
   ].filter(Boolean)
 })
+
+
+webpackConfig = reportMemory ? smp.wrap(webpackConfig) : webpackConfig
+
+// MiniCssExtractPlugin 遇 smp 报错！
+webpackConfig.plugins.push(new MiniCssExtractPlugin({
+  filename: utils.assetsPath('css/[name]_[contenthash].css')
+}))
+
+module.exports = webpackConfig
