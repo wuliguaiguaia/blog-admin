@@ -3,7 +3,7 @@ module.exports = {
   plugins: [
     "stylelint-scss"
   ],
-  "ignoreFiles": [
+  ignoreFiles: [
     "dist/**/*.css"
   ],
   customSyntax: "postcss-scss",

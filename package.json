@@ -14,6 +14,10 @@
     "stylelint": "stylelint **/*.{css,scss}",
     "stylelint_fix": "stylelint **/*.{css,scss} --fix"
   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": "npm run lint_fix",
+    "src/**/*.{css,scss}": "npm run stylelint_fix"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -75,6 +79,7 @@
     "husky": "^7.0.4",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
+    "lint-staged": "^12.4.1",
     "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.40.0",
     "sass-loader": "^12.1.0",

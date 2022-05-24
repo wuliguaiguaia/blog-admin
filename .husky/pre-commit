@@ -1,5 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run lint_fix 
-npm run stylelint_fix
+npx lint-staged
+
