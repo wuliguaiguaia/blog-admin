@@ -1,5 +1,5 @@
 const { merge } = require('webpack-merge')
-const { prod } = require('./config')
+const { prod, dllPath } = require('./config')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const path = require('path')
 // const webpack = require('webpack')
@@ -13,6 +13,9 @@ const smp = new SpeedMeasureWebpack();
 
 const reportMemory = process.argv[2] === '--report'
 
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
+
 let webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   output: {
@@ -24,46 +27,13 @@ let webpackConfig = merge(baseWebpackConfig, {
 
   },
   devtool: prod.devtool,
-  optimization: {
-    // deterministic 选项有益于长期缓存
-    moduleIds: 'deterministic', // 固定
-    runtimeChunk: {
-      name: 'runtime'
-    },
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          priority: 10,
-          minSize: 0, /* 如果不写 0，由于 React 文件尺寸太小，会直接跳过 */
-          test: /[\\/]node_modules[\\/]/, // 为了匹配 /node_modules/ 或 \node_modules\
-          name: 'vendors', // 文件名
-          chunks: 'all',  // all 表示同步加载和异步加载，async 表示异步加载，initial 表示同步加载
-          // 这三行的整体意思就是把两种加载方式的来自 node_modules 目录的文件打包为 vendors.xxx.js
-          // 其中 vendors 是第三方的意思
-        },
-        common: {
-          priority: 5,
-          minSize: 0,
-          minChunks: 2, //同一个文件至少被多少个入口引用了
-          chunks: 'all',
-          name: 'common'
-        }
-      },
-    },
-  },
   plugins: [
     // new MiniCssExtractPlugin(/* {
     //   // 注意这里使用的是contenthash，否则任意的js改动，打包时都会导致css的文件名也跟着变动。
     //   // filename: utils.assetsPath('css/[name]_[contenthash].css')
     // } */),
-    reportMemory && new BundleAnalyzerPlugin({ analyzerPort: 8887 }),
-    // prod.gzip && new CompressionPlugin({ })
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: 'index.html',
-      inject: true,
-      chunks: ['vendors', 'common', 'main']
-    }),
+    reportMemory && new BundleAnalyzerPlugin({ analyzerPort: 9999 }),
+
     new CompressionPlugin({
       algorithm: 'gzip',
       test: /\.js$|\.html$|\.css$|\.svg$/,

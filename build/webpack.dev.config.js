@@ -28,11 +28,12 @@ module.exports = merge(baseWebpackConfig, {
     },
     proxy: {
       "/api": {
-        target: 'https://admin.orangesolo.cn',
-        secure: false, // 或使用 changeOrigin: true 不保留主机来源 或 用 http
+        target: 'https://orangesolo.cn',
+        changeOrigin: true, // changeOrigin默认是false：请求头中host仍然是浏览器发送过来的host
       },
       "/webhook": {
-        target: 'http://admin.orangesolo.cn',
+        target: 'https://orangesolo.cn',
+        changeOrigin: true,
       },
       // '/api': 'http://localhost:3009',
       // '/webhook':  'http://localhost:9999',
