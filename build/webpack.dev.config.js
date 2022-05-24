@@ -27,8 +27,15 @@ module.exports = merge(baseWebpackConfig, {
       overlay: false,
     },
     proxy: {
-      '/api': 'http://localhost:3009',
-      '/webhook':  'http://localhost:9999',
+      "/api": {
+        target: 'https://admin.orangesolo.cn',
+        secure: false, // 或使用 changeOrigin: true 不保留主机来源 或 用 http
+      },
+      "/webhook": {
+        target: 'http://admin.orangesolo.cn',
+      },
+      // '/api': 'http://localhost:3009',
+      // '/webhook':  'http://localhost:9999',
     },
     // overlay: { warnings: false, errors: true },
     // publicPath: '/',
