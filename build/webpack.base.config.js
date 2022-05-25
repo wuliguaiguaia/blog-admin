@@ -3,16 +3,21 @@ const utils = require('./utils')
 const webpack = require('webpack')
 const resolve = (_path) => path.resolve(__dirname, '..', _path)
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { dev, prod, dllPath } = require('./config')
-const manifestCommon = require("../public/static/dll/vendor-manifest.json");
-console.log(path.join(process.cwd(), 'public', dllPath, 'vendor-manifest.json'));
-const env = process.env.NODE_ENV === 'development' ? dev : prod
+const { bundleReport } = require('./config')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const SpeedMeasureWebpack = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasureWebpack();
 
-module.exports = {
+let webpackConfig = {
   context: path.resolve(__dirname, '../'),
   entry: './src/index.tsx',
   module: {
+    noParse: (content) => {
+      if (/highlight/.test(content)) {
+        // console.log(content);
+      }
+      return /classnames/.test(content)
+    },
     rules: [
       {
         test: /\.[tj]sx?$/,
@@ -53,12 +58,6 @@ module.exports = {
           },
         })
       },
-      /* {
-        test: /\.less$/i,
-        use: utils.cssLoaders({
-          loader: "less-loader",
-        })
-      }, */
       //针对antd不启用模块化css
       {
         test: /\.css$/,
@@ -118,34 +117,35 @@ module.exports = {
     alias: {
       '@': resolve('src')
     },
-    fallback: { crypto: false }
+    fallback: { crypto: false },
+    modules: [resolve('node_modules')]
   },
   optimization: {
     // deterministic 选项有益于长期缓存
     moduleIds: 'deterministic', // 固定
-    // runtimeChunk: {
-    //   name: 'runtime'
-    // },
-    // splitChunks: {
-    //   cacheGroups: {
-    //     // vendor: {
-    //     //   priority: 10,
-    //     //   minSize: 0, /* 如果不写 0，由于 React 文件尺寸太小，会直接跳过 */
-    //     //   test: new RegExp(),   // 为了匹配 /node_modules/ 或 \node_modules\
-    //     //   name: 'vendors', // 文件名
-    //     //   chunks: 'all',  // all 表示同步加载和异步加载，async 表示异步加载，initial 表示同步加载
-    //     //   // 这三行的整体意思就是把两种加载方式的来自 node_modules 目录的文件打包为 vendors.xxx.js
-    //     //   // 其中 vendors 是第三方的意思
-    //     // },
-    //     common: {
-    //       priority: 5,
-    //       minSize: 0,
-    //       minChunks: 2, //同一个文件至少被多少个入口引用了
-    //       chunks: 'all',
-    //       name: 'common'
-    //     }
-    //   },
-    // },
+    runtimeChunk: {
+      name: 'runtime'
+    },
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          priority: 10,
+          minSize: 0, /* 如果不写 0，由于 React 文件尺寸太小，会直接跳过 */
+          test: /node_modules\/(?!highlight\.js)/,   // 为了匹配 /node_modules/ 或 \node_modules\
+          name: 'vendors', // 文件名
+          chunks: 'all',  // all 表示同步加载和异步加载，async 表示异步加载，initial 表示同步加载
+          // 这三行的整体意思就是把两种加载方式的来自 node_modules 目录的文件打包为 vendors.xxx.js
+          // 其中 vendors 是第三方的意思
+        },
+        common: {
+          priority: 5,
+          minSize: 0,
+          minChunks: 2, //同一个文件至少被多少个入口引用了
+          chunks: 'all',
+          name: 'common'
+        }
+      },
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -155,23 +155,16 @@ module.exports = {
         }
       },
     }),
-    new webpack.DllReferencePlugin({ // 动态链接
-      manifest: path.join(process.cwd(), 'public', dllPath, 'vendor-manifest.json')
-    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
       inject: true,
       chunks: ['vendors', 'common', 'main'],
-      dllPath: path.join(env.publicPath, dllPath)
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(process.cwd(), "public", dllPath),
-          to: path.resolve('dist', dllPath),
-        }]
-    }),
-
+    bundleReport && new BundleAnalyzerPlugin({ analyzerPort: 9999 }),
   ].filter(Boolean),
 }
+
+webpackConfig = bundleReport ? smp.wrap(webpackConfig) : webpackConfig
+
+module.exports  = webpackConfig

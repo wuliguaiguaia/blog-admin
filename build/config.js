@@ -2,7 +2,7 @@ const config = {
   dev: {
     assetsPath: 'static',
     devtool: 'cheap-module-source-map',
-    publicPath: './'
+    publicPath: './',
   },
   prod: {
     assetsPath: 'static',
@@ -10,6 +10,7 @@ const config = {
     devtool: 'source-map',
     publicPath: 'https://admin.orangesolo.cn'
   },
+  bundleReport: true,
   dllPath: 'static/dll/',
   dllNames: [
     "react",

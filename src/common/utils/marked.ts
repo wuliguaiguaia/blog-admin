@@ -1,6 +1,4 @@
 import { marked } from 'marked'
-import hljs from 'highlight.js'
-
 
 export const renderer = new marked.Renderer()
 export const Marked = () => {
@@ -13,7 +11,7 @@ export const Marked = () => {
     smartLists: true,
     smartypants: false,
     highlight(code: string) {
-      return hljs.highlightAuto(code).value
+      return window.highlight.highlightAuto(code).value
     },
   })
 
