@@ -60,7 +60,7 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
       <Spin size="large" spinning={getDataLoading} tip="为您加载最新数据中..." className={cns(['absolute-center', styles.loading])} />
       <Header />
       { editWatchMode === EditWatchMode.preview ? null : <ToolBar /> }
-      {showContent ? <Content history={history} /> : null }
+      { showContent ? <Content history={history} /> : null }
       { configModalVisible ? <ConfigModal /> : null }
     </div>
   )

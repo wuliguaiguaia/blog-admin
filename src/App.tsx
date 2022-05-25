@@ -1,15 +1,21 @@
 import { message } from 'antd'
-import React, { FunctionComponent, useEffect } from 'react'
+import React, {
+  FunctionComponent, lazy, Suspense, useEffect,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   BrowserRouter as Router, Route, Redirect, Switch,
 } from 'react-router-dom'
 import { localStorage } from './common/utils/storage'
-import Editor from './pages/editor'
-import LoginPage from './pages/loginPage'
-import Management from './pages/management'
+// import Editor from './pages/editor'
+// import LoginPage from './pages/loginPage'
+// import Management from './pages/management'
 import { getUserInfo, getUserRoleList, updateCommonState } from './store/reducers/common'
 import { RootState } from './store/reducers/interface'
+
+const Editor = lazy(() => import(/* webpackChunkName: "editor" */'./pages/editor'))
+const LoginPage = lazy(() => import(/* webpackChunkName: "loginPage" */'./pages/loginPage'))
+const Management = lazy(() => import(/* webpackChunkName: "management" */'./pages/management'))
 
 const App: FunctionComponent = () => {
   const dispatch = useDispatch()
@@ -56,12 +62,14 @@ const App: FunctionComponent = () => {
   return (
     <div>
       <Router>
-        <Switch>
-          <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
-          <Route path="/article/:id" component={Editor} />
-          <Route path="/u" component={LoginPage} />
-          <Route path="/" component={Management} />
-        </Switch>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/workbench" push />} />
+            <Route path="/article/:id" component={Editor} />
+            <Route path="/u" component={LoginPage} />
+            <Route path="/" component={Management} />
+          </Switch>
+        </Suspense>
       </Router>
     </div>
   )
