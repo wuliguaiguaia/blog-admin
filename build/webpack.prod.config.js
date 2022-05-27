@@ -1,6 +1,5 @@
 const { merge } = require('webpack-merge')
-const { prod, dllPath } = require('./config')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { prod } = require('./config')
 const path = require('path')
 // const webpack = require('webpack')
 const utils = require('./utils')
@@ -8,13 +7,6 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const SpeedMeasureWebpack = require("speed-measure-webpack-plugin");
-const smp = new SpeedMeasureWebpack();
-
-const reportMemory = process.argv[2] === '--report'
-
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-
 
 let webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -27,13 +19,30 @@ let webpackConfig = merge(baseWebpackConfig, {
 
   },
   devtool: prod.devtool,
+  optimization: {
+    // deterministic 选项有益于长期缓存
+    moduleIds: 'deterministic', // 固定
+    runtimeChunk: {
+      name: 'runtime'
+    },
+    splitChunks: {
+      cacheGroups: {
+        vendorReact: {
+          priority: -10,
+          test: /node_modules\/(react|react-dom|redux|react-redux|react-thunk|react-router-dom)/,
+          name: 'vendorReact', // 文件名
+          chunks: 'all', // all 表示同步加载和异步加载，async 表示异步加载，initial 表示同步加载
+        },
+        vendorEditor: {
+          priority: -10,
+          test: /node_modules\/(highlight\.js|marked)/,
+          name: 'vendorEditor',
+          chunks: 'all',
+        },
+      },
+    },
+  },
   plugins: [
-    // new MiniCssExtractPlugin(/* {
-    //   // 注意这里使用的是contenthash，否则任意的js改动，打包时都会导致css的文件名也跟着变动。
-    //   // filename: utils.assetsPath('css/[name]_[contenthash].css')
-    // } */),
-    reportMemory && new BundleAnalyzerPlugin({ analyzerPort: 9999 }),
-
     new CompressionPlugin({
       algorithm: 'gzip',
       test: /\.js$|\.html$|\.css$|\.svg$/,
@@ -43,9 +52,6 @@ let webpackConfig = merge(baseWebpackConfig, {
     })
   ].filter(Boolean)
 })
-
-
-webpackConfig = reportMemory ? smp.wrap(webpackConfig) : webpackConfig
 
 // MiniCssExtractPlugin 遇 smp 报错！
 webpackConfig.plugins.push(new MiniCssExtractPlugin({

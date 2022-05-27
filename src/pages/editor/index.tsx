@@ -1,5 +1,5 @@
 import React, {
-  FunctionComponent, useEffect, useState,
+  FunctionComponent, useEffect,
 } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spin } from 'antd'
@@ -22,8 +22,6 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
   match: {params }, history,
 }) => {
   const { id, type = 'preview' } = params
-  const [showContent, setShowContent] = useState(false)
-
   const dispatch = useDispatch()
   const {
     editStatus: {
@@ -46,21 +44,12 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
     }
   }, [id, editWatchMode])
 
-  useEffect(() => {
-    function fetch() {
-      import(/* webpackChunkName: "highlightjs" */ 'highlight.js').then((hightlight) => {
-        window.highlight = hightlight.default
-        setShowContent(true)
-      })
-    }
-    fetch()
-  }, [])
   return (
     <div className={styles.wrapper}>
       <Spin size="large" spinning={getDataLoading} tip="为您加载最新数据中..." className={cns(['absolute-center', styles.loading])} />
       <Header />
       { editWatchMode === EditWatchMode.preview ? null : <ToolBar /> }
-      { showContent ? <Content history={history} /> : null }
+      <Content history={history} />
       { configModalVisible ? <ConfigModal /> : null }
     </div>
   )
