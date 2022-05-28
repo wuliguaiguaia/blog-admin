@@ -1,22 +1,25 @@
 const path = require("path");
 const webpack = require("webpack");
-const { dllNames, dllPath } = require('./config')
+const { dllPath } = require('./config')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = {
   mode: 'production',
   entry: {
-    vendor: dllNames
+    common: ['react', 'react-dom', 'react-dom/server', 'react-router-dom', 'redux', 'react-redux', 'redux-thunk', 'axios', 'classnames'],
   },
   output: {
     path: path.join(process.cwd(), "public", dllPath),
     filename: "[name].dll.js",
-    library: "[name]_library" // 和 DllPlugin的name保持一致
+    library: "[name]_library"
   },
   plugins: [
+    new BundleAnalyzerPlugin({ analyzerPort: 8787 }),
     new webpack.DllPlugin({
-      path: path.resolve(process.cwd(), "public", dllPath, "[name]-manifest.json"),
+      path: path.join(process.cwd(), "public", dllPath, "[name]-manifest.json"),
       name: "[name]_library",
-      context: __dirname // 必填
+      context: __dirname,
+      format: true
     })
   ]
 };

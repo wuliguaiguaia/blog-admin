@@ -7,15 +7,15 @@ const { bundleReport } = require('./config')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const SpeedMeasureWebpack = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasureWebpack();
+const { dev, prod, dllPath } = require('./config')
+console.log(path.join(process.cwd(), 'public', dllPath, 'vendor-manifest.json'));
+const env = process.env.NODE_ENV === 'development' ? dev : prod
 
 let webpackConfig = {
   context: path.resolve(__dirname, '../'),
   entry: './src/index.tsx',
   module: {
     noParse: (content) => {
-      if (/highlight/.test(content)) {
-        // console.log(content);
-      }
       return /classnames/.test(content)
     },
     rules: [
@@ -127,15 +127,21 @@ let webpackConfig = {
           WEBHOOK_SECRET: JSON.stringify(process.env.WEBHOOK_SECRET)
         }
       },
+    }) ,
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: path.join(process.cwd(), 'public', dllPath, 'common-manifest.json')
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
       inject: true,
-      chunks: ['vendors', 'common', 'main'],
+      chunks: ['main'],
+      dllPath: env.publicPath + dllPath
     }),
     bundleReport && new BundleAnalyzerPlugin({ analyzerPort: 9999 }),
   ].filter(Boolean),
+
 }
 
 webpackConfig = bundleReport ? smp.wrap(webpackConfig) : webpackConfig

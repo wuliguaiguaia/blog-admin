@@ -1,5 +1,5 @@
 {
-  "name": "vendor_library",
+  "name": "common_library",
   "content": {
     "../node_modules/react-router-dom/esm/react-router-dom.js": {
       "id": 219,
@@ -25,18 +25,6 @@
         "useParams",
         "useRouteMatch",
         "withRouter"
-      ]
-    },
-    "../node_modules/highlight.js/es/index.js": {
-      "id": 637,
-      "buildMeta": {
-        "exportsType": "namespace",
-        "strictHarmonyModule": true,
-        "sideEffectFree": true
-      },
-      "exports": [
-        "HighlightJS",
-        "default"
       ]
     },
     "../node_modules/redux-thunk/es/index.js": {
@@ -86,10 +74,6 @@
         "createStore"
       ]
     },
-    "../node_modules/lodash/lodash.js": {
-      "id": 6486,
-      "buildMeta": {}
-    },
     "../node_modules/react/index.js": {
       "id": 7294,
       "buildMeta": {
@@ -124,6 +108,20 @@
         "useReducer",
         "useRef",
         "useState",
+        "version"
+      ]
+    },
+    "../node_modules/react-dom/server.browser.js": {
+      "id": 7762,
+      "buildMeta": {
+        "exportsType": "dynamic",
+        "defaultObject": "redirect"
+      },
+      "exports": [
+        "renderToNodeStream",
+        "renderToStaticMarkup",
+        "renderToStaticNodeStream",
+        "renderToString",
         "version"
       ]
     },

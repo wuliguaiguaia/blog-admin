@@ -38,28 +38,12 @@ module.exports = merge(baseWebpackConfig, {
       // '/api': 'http://localhost:3009',
       // '/webhook':  'http://localhost:9999',
     },
-    // overlay: { warnings: false, errors: true },
-    // publicPath: '/',
-    // proxy: config.dev.proxyTable,
-    // disableHostCheck: true,
-    // quiet: true, // necessary for FriendlyErrorsPlugin
-    // watchOptions: {
-    //   aggregateTimeout: 200,
-    //   // poll: false,
-    //   // ignored: /node_modules/,
-    // },
   },
   plugins: [
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       failOnError: false,
       fix: true
-    }),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: 'index.html',
-      inject: true,
-      chunks: ['vendors', 'main']
     }),
   ].filter(Boolean)
 })
