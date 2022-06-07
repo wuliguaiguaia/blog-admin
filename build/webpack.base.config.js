@@ -26,7 +26,11 @@ let webpackConfig = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env'],
+              ['@babel/preset-env',
+                {
+                  "modules": false
+                }
+              ],
               ['@babel/preset-react',
                 {
                   runtime: 'classic'  //使用经典版
@@ -46,6 +50,7 @@ let webpackConfig = {
       },
       {
         test: /\.s[ac]ss$/i,
+        sideEffects: true,
         use: utils.cssLoaders({
           loader: "sass-loader",
           options: {
@@ -62,6 +67,7 @@ let webpackConfig = {
       {
         test: /\.css$/,
         include: /node_modules|antd\.css/,
+        sideEffects: true,
         use: [
           {
             loader: "style-loader"
