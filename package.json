@@ -7,6 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack server --config build/webpack.dev.config.js",
+    "start:watch": "cross-env NODE_ENV=development node build/dev-build.js",
     "build": "cross-env NODE_ENV=production node build/build.js",
     "dll": "webpack --config build/webpack.dll.conf.js",
     "build:report": "cross-env NODE_ENV=production node build/build.js --report",

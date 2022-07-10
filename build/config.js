@@ -1,17 +1,17 @@
 const config = {
   dev: {
     assetsPath: 'static',
-    devtool: 'cheap-module-source-map',
+    devtool: 'cheap-module-eval-source-map',
     publicPath: '/',
   },
   prod: {
     assetsPath: 'static',
     gzip: true,
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     publicPath: 'https://admin.orangesolo.cn/',
   },
   dllPath: 'static/dll/',
-  bundleReport: true,
+  bundleReport: false,
 }
 
 module.exports = config
