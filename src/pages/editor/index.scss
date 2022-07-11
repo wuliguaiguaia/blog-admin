@@ -5,6 +5,18 @@
 }
 
 .loading {
+  background-color: #fff;
   position: absolute !important;
   z-index: $loadingZIndex;
+}
+
+.offline {
+  text-align: center;
+  border: 1px solid red;
+  background-color: #ffd0d0;
+  color: #383838;
+
+  .icon {
+    margin-right: 10px;
+  }
 }

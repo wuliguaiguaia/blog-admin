@@ -21,6 +21,7 @@ export interface IArticle extends IOStringAny{
   content: string;
   keywords?: string;
   createTime: string;
+  desc: string;
   updateTime: string;
   viewCount: number;
   categories: number[];

@@ -11,7 +11,7 @@ import {
 import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
-import { putLocalData } from '@/common/plugins/indexedDB'
+import { openDB, putLocalData } from '@/common/plugins/indexedDB'
 
 export interface IInitialState {
   docData: IArticle
@@ -48,11 +48,12 @@ export const initialState: IInitialState = {
     updateTime: '',
     categories: [],
     deleted: 0,
+    desc: '',
     published: 0,
   }, /* 文档数据 */
   editType: EditType.add,
   categoryList: [], /* 所有分类 */
-  getDataLoading: false,
+  getDataLoading: true,
   helperKeys: {},
   backupData: '',
   editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
@@ -168,26 +169,16 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
-export const saveDocData = (data: any, cb?: (response: any) => void, multiArr?: string[]):
+export const saveDocData = (data: any, cb?: (response?: any) => void):
 ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  dispatch(updateEditorState({
+    saveStatus: SaveStatus.loading,
+  }))
   const { docData } = getState().editor
   const { id } = docData
-  if (multiArr) { /* 附加值保存 */
-    multiArr.forEach((key) => {
-      data[key] = docData[key]
-    })
-  }
 
-  let idata = {}
+  let idata: { updateTime?: number } = {}
 
-  const setLocal = () => {
-    putLocalData({ id, ...data }).then(() => {
-      if (cb) cb(idata)
-    }).catch(() => {
-      message.error('本地保存依旧失败，打点已上传')
-    })
-    idata = {} /* 本地保存的不返回数据 */
-  }
   try {
     const response = await $http.updatearticle({ id, ...data })
     const { errNo, errStr } = response
@@ -195,13 +186,38 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     if (errNo !== 0) {
       message.error(errStr)
     } else {
+      if ('content' in data) { // 只有当保存内容时
+        dispatch(updateEditorState({
+          backupData: data.content,
+        }))
+      }
       dispatch(updateEditorState({
-        backupData: data.content, /* 重置 */
+        saveStatus: SaveStatus.end,
+      }))
+      dispatch(updateDocData({
+        updateTime: idata.updateTime,
       }))
       if (cb) cb(idata)
     }
   } catch (err) {
-    message.warning('保存失败，将暂存到本地！')
+    message.warning('保存失败，正在暂存到本地...')
+    const setLocal = () => {
+      // 本地保存完整数据
+      ['title', 'desc', 'categories', 'content'].forEach((key) => {
+        data[key] = docData[key]
+      })
+      openDB().then(() => {
+        putLocalData({ id, ...data }).then(() => {
+          dispatch(updateEditorState({
+            backupData: data.content,
+            saveStatus: SaveStatus.end,
+          }))
+          if (cb) cb()
+        }).catch(() => {
+          message.error('本地保存依旧失败，打点已上传')
+        })
+      })
+    }
     setLocal()
   }
 }

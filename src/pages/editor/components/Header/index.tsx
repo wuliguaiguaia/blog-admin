@@ -69,7 +69,7 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
       title: value,
     }))
     dispatch(updateDocData({
-      title: e.target.value,
+      title: value,
     }))
   }
 

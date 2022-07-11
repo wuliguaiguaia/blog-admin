@@ -59,10 +59,10 @@ const ConfigModal: FunctionComponent<IProps> = () => {
     setTimeout(() => {
       function cb() {
         setLoading(false)
-        dispatch(updateDocData(data))
         handleConfigCancel()
       }
       dispatch(saveDocData(data, cb))
+      dispatch(updateDocData(data))
     }, 200)
   }
 

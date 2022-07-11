@@ -10,14 +10,8 @@
 
 import { IOStringAny } from '@/common/interface'
 
-/*
- * 问题：
- * 1、连续读写会多次打开数据库
- * 2、DB 类似 util， DBStore 才是类
- */
-
-export class DB {
-  open = (name: string, version: number, {
+export const DBUtil = {
+  open: (name: string, version: number, {
     upgrade, success, error, blocked,
   }: IOStringAny) => new Promise((resolve, reject) => {
     const request = window.indexedDB.open(name, version)
@@ -25,7 +19,6 @@ export class DB {
       const { newVersion, oldVersion, target } = event
       const { result, transaction } = target as any
       upgrade?.(result, oldVersion, newVersion, transaction)
-      resolve(true)
       console.log('onupgradeneeded')
     }
 
@@ -46,9 +39,9 @@ export class DB {
       blocked?.(event)
       reject()
     }
-  })
+  }),
 
-  remove = (name: string, { success, error }: IOStringAny) => new Promise((resolve, reject) => {
+  remove: (name: string, { success, error }: IOStringAny) => new Promise((resolve, reject) => {
     const request = window.indexedDB.deleteDatabase(name)
     request.onsuccess = (event) => {
       success?.(event)
@@ -59,6 +52,6 @@ export class DB {
       error?.(event)
       reject()
     }
-  })
+  }),
 }
 

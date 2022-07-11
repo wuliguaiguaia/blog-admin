@@ -58,7 +58,7 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     }))
   }
   // https://zh.javascript.info/selection-range#biao-dan-kong-jian-zhong-de-xuan-ze
-  const onTextChange = useCallback((e) => {
+  const onTextChange = useCallback((e) => { // TODO: 这里消耗性能,导致输入卡顿
     const text = e.target.value
     dispatch(updateDocData({ content: text }))
     historyRecord.add(text)
@@ -140,6 +140,12 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
       setActiveNav(titles[curIndex].innerText)
     }
     scrollEl.current.addEventListener('wheel', handleScroll)
+    // eslint-disable-next-line consistent-return
+    return () => {
+      if (scrollEl.current) {
+        scrollEl.current.removeEventListener('wheel', handleScroll)
+      }
+    }
   }, [scrollEl])
 
 

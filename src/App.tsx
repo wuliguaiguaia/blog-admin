@@ -19,6 +19,10 @@ const App: FunctionComponent = () => {
     const offlineListener = () => dispatch(updateCommonState({offline: true}))
     window.addEventListener('online', onlineListener)
     window.addEventListener('offline', offlineListener)
+    return () => {
+      window.removeEventListener('online', onlineListener)
+      window.removeEventListener('offline', offlineListener)
+    }
   }, [])
   useEffect(() => {
     dispatch(getUserRoleList())

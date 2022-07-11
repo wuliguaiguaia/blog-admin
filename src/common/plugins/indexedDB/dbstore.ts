@@ -2,7 +2,7 @@ import { IOStringAny} from '../../interface/index'
 /* ** 数据表操作 ** */
 export class DBStore {
   db: {
-    objectStoreNames: any,
+    objectStoreNames: string[],
     createObjectStore: any,
     transaction: any
   }
@@ -32,10 +32,19 @@ export class DBStore {
   }
 
   createIndex(indexes: any[]) {
+    const names:string[] = []
+    // 增加
     indexes.forEach((index) => {
       const { name, attr, options } = index
+      names.push(name)
       if (!this.indexNames.contains(name)) {
         this.store.createIndex(name, attr, options)
+      }
+    })
+    // 删除
+    Array.from(this.indexNames).forEach((name) => {
+      if (!names.includes(name)) {
+        this.store.deleteIndex(name)
       }
     })
     return this
@@ -50,7 +59,6 @@ export class DBStore {
 
   readStore(method?: string | undefined) {
     // 默认 readonly
-    console.log(']]]]')
     return this.db.transaction([this.name], method).objectStore(this.name)
   }
 
@@ -66,10 +74,6 @@ export class DBStore {
         error?.(event)
         reject()
       }
-
-      this.getData({id: 1}).then((res) => {
-        console.log(res)
-      })
     })
   }
 
@@ -82,7 +86,6 @@ export class DBStore {
         success?.(event)
         resolve(true)
       }
-
       request.onerror = (event:any) => {
         error?.(event)
         reject()
@@ -90,16 +93,19 @@ export class DBStore {
     })
   }
 
-  getData({ id, success, error }: IOStringAny) {
+  getData({
+    id, index, success, error,
+  }: IOStringAny) {
     return new Promise((resolve, reject) => {
-      const store = this.readStore()
-      console.log(432423)
-      const request = store.get(id)
+      let store = this.readStore()
+      if (index) {
+        store = store.index(index)
+      }
+      const request = store.get(Number(id))
       request.onsuccess = (event: any) => {
         success?.(event)
         resolve(event.target.result)
       }
-
       request.onerror = (event: any) => {
         error?.(event)
         reject(event)
@@ -110,12 +116,11 @@ export class DBStore {
   deleteData({ id, success, error }: IOStringAny) {
     return new Promise((resolve, reject) => {
       const request = this.readStore('readwrite')
-        .delete(id)
+        .delete(Number(id))
       request.onsuccess = (event:any) => {
         success?.(event)
         resolve(true)
       }
-
       request.onerror = (event:any) => {
         error?.(event)
         reject()
@@ -180,7 +185,6 @@ export class DBStore {
         success?.(event)
         resolve(true)
       }
-
       request.onerror = (event:any) => {
         error?.(event)
         reject()
@@ -195,7 +199,6 @@ export class DBStore {
         success?.(event)
         resolve(true)
       }
-
       request.onerror = (event:any) => {
         error?.(event)
         reject()
