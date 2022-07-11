@@ -97,15 +97,20 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
       )}
       <Header />
       {
-        getDataLoading && (
+        getDataLoading ? (
           <div className={styles.loading}>
             <Spin size="large" className={styles.spin} spinning tip="为您加载最新数据中..." />
           </div>
         )
+          : (
+            <>
+              {editWatchMode === EditWatchMode.preview ? null : <ToolBar />}
+              <Content />
+              {configModalVisible ? <ConfigModal /> : null}
+            </>
+          )
       }
-      {editWatchMode === EditWatchMode.preview ? null : <ToolBar />}
-      <Content />
-      {configModalVisible ? <ConfigModal /> : null}
+
     </div>
   )
 }

@@ -65,35 +65,35 @@ const Content: FunctionComponent<IProps> = () => {
   }, [historyRecord])
 
 
-  useEffect(() => {
+  const list: NavList[] = []
+  renderer.heading = (txt: string, level: number) => {
+    list.push({ text: txt, level })
+    setTimeout(() => {
+      setNavList(list)
+    })
+    const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
+    return markerContents
+  }
+
+  const transFn = () => {
     /* md转化，生成导航 */
-    const transFn = () => {
-      let text = marked.parse(content)
-      text = changeText(text)
-      setTransContent(text)
-      const list: NavList[] = []
-      if (!text) {
-        setNavList(list)
-        return
-      }
-      renderer.heading = (txt: string, level: number) => {
-        list.push({ text: txt, level })
-        setTimeout(() => {
-          setNavList(list)
-        })
-        const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
-        return markerContents
-      }
-    }
+    let text = marked.parse(content)
+    text = changeText(text)
+    setTransContent(text)
+  }
+  useEffect(() => {
+    transFn()
+  }, [id])
+
+  useEffect(() => {
     if (editWatchMode === EditWatchMode.preview) {
-      transFn()
       return
     }
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
       transFn()
     }, 2000)
-  }, [content, id])
+  }, [content])
 
   useEffect(() => {
     if (transEl.current) {
