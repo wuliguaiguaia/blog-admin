@@ -80,6 +80,9 @@ const Content: FunctionComponent<IProps> = () => {
     let text = marked.parse(content)
     text = changeText(text)
     setTransContent(text)
+    if (!text) {
+      setNavList([])
+    }
   }
   useEffect(() => {
     transFn()
