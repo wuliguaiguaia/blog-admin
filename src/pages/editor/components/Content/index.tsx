@@ -23,6 +23,7 @@ const marked = Marked()
 interface IProps {
 }
 
+let timer: NodeJS.Timeout | null = null
 const Content: FunctionComponent<IProps> = () => {
   const transEl = createRef<HTMLDivElement>()
   const scrollEl = createRef<HTMLDivElement>()
@@ -57,26 +58,41 @@ const Content: FunctionComponent<IProps> = () => {
     }))
   }
   // https://zh.javascript.info/selection-range#biao-dan-kong-jian-zhong-de-xuan-ze
-  const onTextChange = useCallback((e) => { // TODO: 这里消耗性能,导致输入卡顿
+  const onTextChange = useCallback((e) => {
     const text = e.target.value
     dispatch(updateDocData({ content: text }))
     historyRecord.add(text)
   }, [historyRecord])
 
 
-  /* 生成导航 */
   useEffect(() => {
-    /* 自定义marked render 修改输出内容 */
-    let text = marked.parse(content)
-    text = changeText(text)
-    setTransContent(text)
-    const list:NavList[] = []
-    renderer.heading = (txt: string, level: number) => {
-      list.push({ text: txt, level })
-      setNavList(list)
-      const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
-      return markerContents
+    /* md转化，生成导航 */
+    const transFn = () => {
+      let text = marked.parse(content)
+      text = changeText(text)
+      setTransContent(text)
+      const list: NavList[] = []
+      if (!text) {
+        setNavList(list)
+        return
+      }
+      renderer.heading = (txt: string, level: number) => {
+        list.push({ text: txt, level })
+        setTimeout(() => {
+          setNavList(list)
+        })
+        const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
+        return markerContents
+      }
     }
+    if (editWatchMode === EditWatchMode.preview) {
+      transFn()
+      return
+    }
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      transFn()
+    }, 2000)
   }, [content, id])
 
   useEffect(() => {
@@ -86,11 +102,7 @@ const Content: FunctionComponent<IProps> = () => {
       }))
     }
   }, [transContent])
-  useEffect(() => {
-    if (textAreaEl.current) {
-      textAreaEl.current.value = content
-    }
-  }, [content, textAreaEl])
+
   useEffect(() => {
     const el = leftContentEl.current
     if (el) {
@@ -136,9 +148,11 @@ const Content: FunctionComponent<IProps> = () => {
           curIndex = index
         }
       })
-      setActiveNav(titles[curIndex].innerText)
+      if (titles[curIndex]) {
+        setActiveNav(titles[curIndex].innerText)
+      }
     }
-    scrollEl.current.addEventListener('wheel', handleScroll)
+    scrollEl.current.addEventListener('wheel', handleScroll, { passive: true })
     // eslint-disable-next-line consistent-return
     return () => {
       if (scrollEl.current) {
@@ -161,7 +175,7 @@ const Content: FunctionComponent<IProps> = () => {
         setActiveNav={setActiveNav}
       />
     </div>
-  ), [editWatchMode, activeNav, setActiveNav, navList])
+  ), [editWatchMode, activeNav, navList])
 
   return (
     <>
@@ -174,6 +188,7 @@ const Content: FunctionComponent<IProps> = () => {
                   <pre className={styles.preContent}>{content}</pre>
                   <textarea
                     ref={textAreaEl}
+                    value={content}
                     className={styles.textAreaContent}
                     onChange={onTextChange}
                     onPaste={handlePaste}
