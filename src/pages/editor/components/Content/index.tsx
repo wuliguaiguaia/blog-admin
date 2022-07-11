@@ -21,10 +21,9 @@ import MarkdownNav from '../MarkdownNav'
 const marked = Marked()
 
 interface IProps {
-  history: any
 }
 
-const Content: FunctionComponent<IProps> = ({ history }) => {
+const Content: FunctionComponent<IProps> = () => {
   const transEl = createRef<HTMLDivElement>()
   const scrollEl = createRef<HTMLDivElement>()
   const textAreaEl = createRef<HTMLTextAreaElement>()
@@ -158,11 +157,8 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     >
       <MarkdownNav
         data={navList}
-        id={id}
         activeNav={activeNav}
         setActiveNav={setActiveNav}
-        history={history}
-        editWatchMode={editWatchMode}
       />
     </div>
   ), [editWatchMode, activeNav, setActiveNav, navList])

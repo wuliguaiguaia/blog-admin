@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { message, Spin } from 'antd'
-import cns from 'classnames'
 import { RouteComponentProps } from 'react-router-dom'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import styles from './index.scss'
@@ -21,7 +20,7 @@ interface IRouteParams {
   type: 'edit' | 'preview'
 }
 const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
-  match: {params }, history,
+  match: {params },
 }) => {
   const { id, type = 'preview' } = params
   const dispatch = useDispatch()
@@ -98,16 +97,15 @@ const Editor: FunctionComponent<RouteComponentProps<IRouteParams>> = ({
       )}
       <Header />
       {
-        getDataLoading
-          ? <Spin size="large" spinning tip="为您加载最新数据中..." className={cns(['absolute-center', styles.loading])} />
-          : (
-            <>
-              {editWatchMode === EditWatchMode.preview ? null : <ToolBar />}
-              <Content history={history} />
-              {configModalVisible ? <ConfigModal /> : null}
-            </>
-          )
+        getDataLoading && (
+          <div className={styles.loading}>
+            <Spin size="large" className={styles.spin} spinning tip="为您加载最新数据中..." />
+          </div>
+        )
       }
+      {editWatchMode === EditWatchMode.preview ? null : <ToolBar />}
+      <Content />
+      {configModalVisible ? <ConfigModal /> : null}
     </div>
   )
 }
