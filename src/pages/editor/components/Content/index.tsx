@@ -28,10 +28,11 @@ const Content: FunctionComponent<IProps> = () => {
   const transEl = createRef<HTMLDivElement>()
   const scrollEl = createRef<HTMLDivElement>()
   const textAreaEl = createRef<HTMLTextAreaElement>()
-  const leftContentEl = createRef<HTMLDivElement>()
   const [transContent, setTransContent] = useState('')
   const [divideLineLeft, setDivideLineLeft] = useState(0)
   const [activeNav, setActiveNav] = useState('')
+  const [containerHeight, setContainerHeight] = useState(0)
+
   const [navList, setNavList] = useState<NavList[]>([])
   const {
     historyRecord,
@@ -107,11 +108,13 @@ const Content: FunctionComponent<IProps> = () => {
   }, [transContent])
 
   useEffect(() => {
-    const el = leftContentEl.current
+    const el = textAreaEl.current
     if (el) {
       setDivideLineLeft(el.offsetWidth)
+      setContainerHeight(Math.max(textAreaEl.current?.scrollHeight || 0,
+        transEl.current?.scrollHeight || 0))
     }
-  }, [leftContentEl])
+  }, [textAreaEl])
 
   /* 初次监听 */
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true)
@@ -186,18 +189,18 @@ const Content: FunctionComponent<IProps> = () => {
         editWatchMode === EditWatchMode.edit
           ? (
             <div className={cns([styles.container, 'flex'])} ref={scrollEl}>
-              <div className={cns([styles.editContent, 'flex', outline ? styles.hasOutline : ''])}>
-                <div className={styles.leftContent} ref={leftContentEl}>
-                  <pre className={styles.preContent}>{content}</pre>
-                  <textarea
-                    ref={textAreaEl}
-                    value={content}
-                    className={styles.textAreaContent}
-                    onChange={onTextChange}
-                    onPaste={handlePaste}
-                    onSelect={handleSelect}
-                  />
-                </div>
+              <div
+                className={cns([styles.editContent, 'flex', outline ? styles.hasOutline : ''])}
+                style={{height: `${containerHeight}px`}}
+              >
+                <textarea
+                  ref={textAreaEl}
+                  value={content}
+                  className={cns([styles.textAreaContent, styles.leftContent])}
+                  onChange={onTextChange}
+                  onPaste={handlePaste}
+                  onSelect={handleSelect}
+                />
                 <div className={styles.divideLine} style={{ left: `${divideLineLeft}px` }} />
                 <div
                   ref={transEl}
