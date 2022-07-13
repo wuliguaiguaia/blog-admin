@@ -35,10 +35,10 @@ const Content: FunctionComponent<IProps> = () => {
 
   const [navList, setNavList] = useState<NavList[]>([])
   const {
-    historyRecord,
     docData: { id, content, title },
     editStatus: { outline },
     editWatchMode,
+    isRestore,
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
   const handlePaste = async (e: any) => {
@@ -62,8 +62,7 @@ const Content: FunctionComponent<IProps> = () => {
   const onTextChange = useCallback((e) => {
     const text = e.target.value
     dispatch(updateDocData({ content: text }))
-    historyRecord.add(text)
-  }, [historyRecord])
+  }, [])
 
 
   const list: NavList[] = []
@@ -87,7 +86,7 @@ const Content: FunctionComponent<IProps> = () => {
   }
   useEffect(() => {
     transFn()
-  }, [id])
+  }, [id, isRestore])
 
   useEffect(() => {
     if (editWatchMode === EditWatchMode.preview) {

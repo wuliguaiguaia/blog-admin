@@ -61,8 +61,8 @@ const ConfigModal: FunctionComponent<IProps> = () => {
         setLoading(false)
         handleConfigCancel()
       }
-      dispatch(saveDocData(data, cb))
       dispatch(updateDocData(data))
+      dispatch(saveDocData(Object.keys(data), cb))
     }, 200)
   }
 

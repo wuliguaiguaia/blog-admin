@@ -3,6 +3,8 @@ import React, {
   FunctionComponent, useCallback, useEffect, useState,
 } from 'react'
 import { Button, message } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import cns from 'classnames'
 import { RootState } from '@/store/reducers/interface'
 import styles from './index.scss'
 import {
@@ -10,6 +12,7 @@ import {
 } from '@/store/reducers/editor'
 import { EditWatchMode, SaveStatus } from '@/common/interface'
 import { formatDate } from '@/common/utils'
+import { autoSaveTime } from '@/common/constants'
 
 interface IProps {
   history: any
@@ -21,32 +24,18 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
     docData: { content, updateTime, id },
     backupData,
     editWatchMode,
-    historyRecord,
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
 
   const { offline } = useSelector((state: RootState) => state.common)
   const dispatch = useDispatch()
 
-  const savehandler = useCallback((callback?: any) => {
-    const cb = () => {
-      if (callback) callback()
-    }
-    dispatch(saveDocData({
-      content,
-    }, cb))
-  }, [content, dispatch])
 
   const handleSave = useCallback((_e?: any, callback?: any) => {
-    const notChange = backupData === content
-    if (notChange) {
-      if (callback) callback()
-      return
-    }
-    // if (saveStatus === SaveStatus.loading) {
-    // }
-    savehandler(callback)
-  }, [backupData, content, saveStatus, savehandler])
+    console.log(1111)
+
+    dispatch(saveDocData(['content'], callback))
+  }, [content])
 
   const handlePreview = () => {
     const cb = () => {
@@ -59,22 +48,24 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
       dispatch(updateEditorState({
         editWatchMode: mode,
       }))
-      if (mode === EditWatchMode.preview) {
-        historyRecord.destroy()
-      }
       history.push(`/article/${id}`)
     }
     handleSave(null, cb) /* 保存后退出 */
   }
 
-  const [timer, setTimer] = useState<null | NodeJS.Timeout>(null)
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
-    // 变化了 5s 后保存
-    if (timer) clearTimeout(timer)
-    setTimer(setTimeout(() => {
+    setTimer(() => {
+      if (timer) { clearTimeout(timer) }
+      return null
+    })
+    handleSave()
+    setTimer(setTimeout(function fn() {
       handleSave()
-    }, 5000))
-  }, [content])
+      setTimer(setTimeout(fn, autoSaveTime))
+    }, autoSaveTime))
+  }, [offline])
 
   useEffect(() => {
     shortcutKey.subscribe({ keys: ['ctrl', 's'], cb: handleSave })
@@ -109,7 +100,14 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
         最后更新于
         {formatDate(+updateTime)}
       </p>
-      <Button loading={saveStatus === SaveStatus.loading} className={styles.btn} size="middle" type="primary" onClick={handleSave}>保存</Button>
+      <Button
+        className={cns([styles.btn, saveStatus === SaveStatus.loading && styles.disabled])}
+        size="middle"
+        type="primary"
+        onClick={handleSave}
+      >
+        {saveStatus === SaveStatus.loading ? <LoadingOutlined /> : '保存'}
+      </Button>
       <Button className={styles.btn} size="middle" type="default" onClick={handlePreview}>预览</Button>
     </>
   )

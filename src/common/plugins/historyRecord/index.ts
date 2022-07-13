@@ -12,6 +12,7 @@ export interface IHistoryRecord {
   redo: (cb :(data: any)=> void) => void
   undo: (cb: (data: any) => void) => void
   destroy: () => void,
+  setEnable: (val: boolean) => void,
   readonly canUndo: boolean
   readonly canRedo: boolean
   readonly length: number
@@ -20,7 +21,7 @@ export interface IHistoryRecord {
 const MAX_COUNT = 100
 const RECORD_TIME = 1000
 
-class HistoryRecord {
+class HistoryRecord implements IHistoryRecord {
   maxCount = 0
 
   recordTime = 0
@@ -41,6 +42,7 @@ class HistoryRecord {
   }
 
   addFirst(data: any) {
+    if (!this.canRecord) return
     this.historyArr.push(data)
     this.curIndex += 1
     this.lastTime = Date.now()
@@ -92,10 +94,15 @@ class HistoryRecord {
     return this.curIndex >= 0 && this.curIndex < this.length - 1
   }
 
+  setEnable(val: boolean) {
+    this.canRecord = val
+  }
+
   destroy() {
     this.historyArr = []
-    this.curIndex = 0
+    this.curIndex = -1
     this.canRecord = false
+    this.lastTime = 0
   }
 }
 

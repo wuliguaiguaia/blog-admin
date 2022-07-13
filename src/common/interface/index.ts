@@ -139,3 +139,17 @@ export interface IRole {
   value: number,
   text: string
 }
+
+
+export interface IDBIndexConfig {
+  name: string
+  attr: string
+  options: IDBIndexParameters
+
+}
+export interface IDBCacheConfig {
+  name: string
+  options: IDBObjectStoreParameters
+  indexes: IDBIndexConfig[]
+  overtime: number
+}

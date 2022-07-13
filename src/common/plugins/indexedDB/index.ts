@@ -5,22 +5,16 @@
 import { DBUtil } from './db'
 import { DBStore } from './dbstore'
 import { IOStringAny } from '@/common/interface'
-import { DBConfig, DocCacheConfig } from './constants'
-
-let store: any = null
+import { DBConfig, DBCacheConfig } from './constants'
 
 export const openDB = () => DBUtil.open(
   DBConfig.name,
   DBConfig.version,
   {
-    upgrade(db: any, oldVersion: any, newVersion: any, transaction: any) {
-      // 新建/修改表与索引
-      new DBStore(db, transaction, DocCacheConfig.name)
-        .createStore(DocCacheConfig.options)
-        .createIndex(DocCacheConfig.indexes)
+    upgrade(request: IDBOpenDBRequest) {
+      DBUtil.upgradeDB(request, DBCacheConfig)
     },
-    success(db:any) {
-      store = new DBStore(db, null, DocCacheConfig.name)
+    success() {
       console.log('打开数据库')
     },
     error() {
@@ -32,7 +26,7 @@ export const openDB = () => DBUtil.open(
   },
 )
 
-export const setLocalData = (data: { id: number }) => store.addData({
+export const setLocalData = (store: DBStore, data: any) => store.addData({
   data: { ...data, updatedAt: Date.now() },
   success() {
     console.log('数据写入成功')
@@ -42,7 +36,7 @@ export const setLocalData = (data: { id: number }) => store.addData({
   },
 })
 
-export const putLocalData = (data: any) => store.putData({
+export const putLocalData = (store: DBStore, data: any) => store.putData({
   data: { ...data, updatedAt: Date.now() },
   success() {
     console.log('数据更新成功')
@@ -52,7 +46,7 @@ export const putLocalData = (data: any) => store.putData({
   },
 })
 
-export const getLocalData = ({ id, index }:IOStringAny) => store.getData({
+export const getLocalData = (store: DBStore, { id, index }:IOStringAny) => store.getData({
   id,
   index,
   success() {
@@ -63,13 +57,12 @@ export const getLocalData = ({ id, index }:IOStringAny) => store.getData({
   },
 })
 
-export const getAllLocalData = ({
-  index, query, count, key,
+export const getAllLocalData = (store: DBStore, {
+  index, query, count,
 }: IOStringAny) => store.getAllData({
   index,
   query,
   count,
-  key,
   success() {
     console.log('数据读取成功')
   },
@@ -78,7 +71,7 @@ export const getAllLocalData = ({
   },
 })
 
-export const getAllLocalDataKeys = ({
+export const getAllLocalDataKeys = (store: DBStore, {
   index, query, count, key,
 }:IOStringAny) => store.getAllKeys({
   index,
@@ -93,7 +86,7 @@ export const getAllLocalDataKeys = ({
   },
 })
 
-export const deleteLocalData = ({ id }: any) => store.deleteData({
+export const deleteLocalData = (store: DBStore, { id }: any) => store.deleteData({
   id,
   success() {
     console.log('数据删除成功')

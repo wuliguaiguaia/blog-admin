@@ -12,6 +12,7 @@ import {
   UpdateDocData, UpdateEditorState, UpdateEditingStatus, UpdateEditingHelperKeys,
 } from '../actionTypes'
 import { openDB, putLocalData } from '@/common/plugins/indexedDB'
+import { DBStore } from '@/common/plugins/indexedDB/dbstore'
 
 export interface IInitialState {
   docData: IArticle
@@ -25,6 +26,7 @@ export interface IInitialState {
   historyRecord: IHistoryRecord
   shortcutKey: IShortcutKey
   getDataLoading: boolean
+  isRestore: boolean
   helperKeys: any
   backupData: string
   editType: EditType,
@@ -54,6 +56,7 @@ export const initialState: IInitialState = {
   editType: EditType.add,
   categoryList: [], /* 所有分类 */
   getDataLoading: true,
+  isRestore: false,
   helperKeys: {},
   backupData: '',
   editWatchMode: EditWatchMode.preview, /* 查看模式: 编辑 or 预览 */
@@ -136,9 +139,9 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
 }
 
 export const getArticleData = (id: number):
-ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
   dispatch(updateEditorState({ getDataLoading: true }))
-  const { historyRecord } = getState().editor
+  // const { historyRecord } = getState().editor
   const res = await $http.getarticle({ id })
   const { data } = res
   data.categories = data.categories?.map((item: ICategory) => item.id) || []
@@ -147,7 +150,7 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     getDataLoading: false,
     backupData: data.content,
   }))
-  historyRecord.addFirst(data.content)
+  // historyRecord.addFirst(data.content)
 }
 
 export const picUpload = (file: any):
@@ -169,26 +172,56 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
   }
 }
 
-export const saveDocData = (data: any, cb?: (response?: any) => void):
+
+export const saveDocData2Local = (cb?: (response?: any) => void):
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  dispatch(updateEditorState({
+    saveStatus: SaveStatus.loading,
+  }))
+  // 本地保存完整数据
+  const { docData } = getState().editor
+  const { id } = docData
+  const saveData: any = {}
+  const arr = ['title', 'desc', 'categories', 'content']
+  arr.forEach((key: string) => {
+    saveData[key] = docData[key]
+  })
+  openDB().then((db: IDBDatabase) => {
+    const transction = db.transaction(['ArticleCache'], 'readwrite')
+    const sotre = new DBStore('ArticleCache', transction)
+    putLocalData(sotre, { id, ...saveData }).then(() => {
+      dispatch(updateEditorState({
+        saveStatus: SaveStatus.end,
+      }))
+      if (cb) cb()
+    }).catch(() => {
+      message.error('本地保存依旧失败，打点已上传')
+    })
+  })
+}
+
+export const saveDocData2Server = (data: any, cb?: (response?: any) => void):
 ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
   dispatch(updateEditorState({
     saveStatus: SaveStatus.loading,
   }))
   const { docData } = getState().editor
   const { id } = docData
-
+  const saveData:any = {}
+  data.forEach((key: string) => {
+    saveData[key] = docData[key]
+  })
   let idata: { updateTime?: number } = {}
-
   try {
-    const response = await $http.updatearticle({ id, ...data })
+    const response = await $http.updatearticle({ id, ...saveData })
     const { errNo, errStr } = response
     idata = response.data
     if (errNo !== 0) {
       message.error(errStr)
     } else {
-      if ('content' in data) { // 只有当保存内容时
+      if (data.includes('content')) { // 只有当保存内容时
         dispatch(updateEditorState({
-          backupData: data.content,
+          backupData: saveData.content,
         }))
       }
       dispatch(updateEditorState({
@@ -201,24 +234,34 @@ ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) =
     }
   } catch (err) {
     message.warning('保存失败，正在暂存到本地...')
-    const setLocal = () => {
-      // 本地保存完整数据
-      ['title', 'desc', 'categories', 'content'].forEach((key) => {
-        data[key] = docData[key]
-      })
-      openDB().then(() => {
-        putLocalData({ id, ...data }).then(() => {
-          dispatch(updateEditorState({
-            backupData: data.content,
-            saveStatus: SaveStatus.end,
-          }))
-          if (cb) cb()
-        }).catch(() => {
-          message.error('本地保存依旧失败，打点已上传')
-        })
-      })
+    dispatch(saveDocData2Local(cb))
+  }
+}
+
+export const saveDocData = (data: string[], cb?: (response?: any) => void):
+ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch, getState) => {
+  const { offline } = getState().common
+  const {
+    backupData,
+    docData: { content },
+    saveStatus,
+  } = getState().editor
+  if (saveStatus === SaveStatus.loading && !offline) return
+  let isChanged = backupData !== content
+  const arr = ['title', 'categories', 'desc']
+  arr.forEach((item) => {
+    if (data.includes(item)) {
+      isChanged = true
     }
-    setLocal()
+  })
+  if (!isChanged) {
+    if (cb) cb()
+    return
+  }
+  if (offline) {
+    dispatch(saveDocData2Local(cb))
+  } else {
+    dispatch(saveDocData2Server(data, cb))
   }
 }
 

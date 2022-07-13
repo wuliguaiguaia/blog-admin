@@ -4,7 +4,7 @@ import React, {
 import { Tooltip, Switch, Popover } from 'antd'
 import {
   PictureOutlined,
-  RollbackOutlined,
+  // RollbackOutlined,
   SettingOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons'
@@ -12,7 +12,7 @@ import cns from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.scss'
 import {
-  picUpload, updateDocData, updateEditingHelperKeys, updateEditingStatus,
+  picUpload, updateEditingHelperKeys, updateEditingStatus,
 } from '@/store/reducers/editor'
 import { RootState } from '@/store/reducers/interface'
 import { IHelperKeys, IHelperKeysValid, IOString } from '@/common/interface'
@@ -50,7 +50,6 @@ const ToolBar: FunctionComponent<IProps> = () => {
   const helpPopoverEl = createRef<HTMLDivElement>()
   const {
     editStatus: { outline, configModalVisible },
-    historyRecord,
     shortcutKey,
   } = useSelector((state: RootState) => state.editor)
   const [helpPopoverVisible, setHelpPopoverVisible] = useState(false)
@@ -72,7 +71,7 @@ const ToolBar: FunctionComponent<IProps> = () => {
     dispatch(picUpload(file))
   }, [])
 
-  const handleUndo = useCallback(() => {
+  /*  const handleUndo = useCallback(() => {
     historyRecord.undo((data: string) => {
       dispatch(updateDocData({
         content: data,
@@ -85,12 +84,13 @@ const ToolBar: FunctionComponent<IProps> = () => {
         content: data,
       }))
     })
-  }, [historyRecord])
+  }, [historyRecord]) */
   const handleConfigClick = useCallback(() => {
     const status = !configModalVisible
     dispatch(updateEditingStatus({
       configModalVisible: status,
     }))
+    if (helpPopoverVisible) setHelpPopoverVisible(false)
   }, [configModalVisible])
   const handleClickHelp = useCallback(() => {
     setHelpPopoverVisible(!helpPopoverVisible)
@@ -108,8 +108,8 @@ const ToolBar: FunctionComponent<IProps> = () => {
   useEffect(() => {
     const utils: any = {
       handleConfigClick,
-      handleUndo,
-      handleRedo,
+      // handleUndo,
+      // handleRedo,
       handleClickPic,
       handleOutlineChange,
       handleClickHelp,
@@ -129,7 +129,7 @@ const ToolBar: FunctionComponent<IProps> = () => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleClickHelp, handleClickPic,
-    handleConfigClick, handleOutlineChange, handleRedo, handleUndo])
+    handleConfigClick, handleOutlineChange/*  handleRedo, handleUndo */])
 
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const ToolBar: FunctionComponent<IProps> = () => {
         <div className={styles.toolarDivider} />
       </div>
       <div className={cns([styles.toolbarItem, styles.toolbarCenter])}>
-        <Tooltip placement="bottom" title="撤销">
+        {/* <Tooltip placement="bottom" title="撤销">
           <RollbackOutlined
             className={cns([styles.undo, !historyRecord.canUndo && styles.disabled])}
             onClick={handleUndo}
@@ -176,8 +176,8 @@ const ToolBar: FunctionComponent<IProps> = () => {
             className={cns([styles.redo, !historyRecord.canRedo && styles.disabled])}
             onClick={handleRedo}
           />
-        </Tooltip>
-        <div className={styles.toolarDivider} />
+        </Tooltip> */}
+        {/* <div className={styles.toolarDivider} /> */}
         <Tooltip placement="bottom" title="图片">
           <PictureOutlined onClick={handleClickPic} />
           <input
