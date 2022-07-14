@@ -1,7 +1,7 @@
 const { merge } = require('webpack-merge')
 const ESLintPlugin = require('eslint-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.config')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { dev } = require('./config')
 // const utils = require('./utils')
 const path = require('path')

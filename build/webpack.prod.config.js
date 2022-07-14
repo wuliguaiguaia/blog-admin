@@ -6,7 +6,7 @@ const utils = require('./utils')
 const CompressionPlugin = require('compression-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 let webpackConfig = merge(baseWebpackConfig, {
