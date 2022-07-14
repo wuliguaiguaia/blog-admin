@@ -20,14 +20,9 @@ myAxios.interceptors.request.use((config) => {
   return config
 })
 myAxios.interceptors.response.use((response) => response, (error) => {
-  const { data } = error.response
-  if (data?.errStr) {
-    message.error(data.errStr)
-  } else {
-    message.error(error.response.errorText)
-  }
+  console.log(error)
+  message.error(error.message)
   return Promise.reject(error)
 })
-
 
 export default myAxios

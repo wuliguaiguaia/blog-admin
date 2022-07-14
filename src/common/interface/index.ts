@@ -21,6 +21,7 @@ export interface IArticle extends IOStringAny{
   content: string;
   keywords?: string;
   createTime: string;
+  desc: string;
   updateTime: string;
   viewCount: number;
   categories: number[];
@@ -137,4 +138,18 @@ export interface IRegisterUser {
 export interface IRole {
   value: number,
   text: string
+}
+
+
+export interface IDBIndexConfig {
+  name: string
+  attr: string
+  options: IDBIndexParameters
+
+}
+export interface IDBCacheConfig {
+  name: string
+  options: IDBObjectStoreParameters
+  indexes: IDBIndexConfig[]
+  overtime: number
 }

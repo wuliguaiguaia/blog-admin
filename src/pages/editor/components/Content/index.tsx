@@ -21,23 +21,24 @@ import MarkdownNav from '../MarkdownNav'
 const marked = Marked()
 
 interface IProps {
-  history: any
 }
 
-const Content: FunctionComponent<IProps> = ({ history }) => {
+let timer: NodeJS.Timeout | null = null
+const Content: FunctionComponent<IProps> = () => {
   const transEl = createRef<HTMLDivElement>()
   const scrollEl = createRef<HTMLDivElement>()
   const textAreaEl = createRef<HTMLTextAreaElement>()
-  const leftContentEl = createRef<HTMLDivElement>()
   const [transContent, setTransContent] = useState('')
   const [divideLineLeft, setDivideLineLeft] = useState(0)
   const [activeNav, setActiveNav] = useState('')
+  const [containerHeight, setContainerHeight] = useState(0)
+
   const [navList, setNavList] = useState<NavList[]>([])
   const {
-    historyRecord,
     docData: { id, content, title },
     editStatus: { outline },
     editWatchMode,
+    isRestore,
   } = useSelector((state: RootState) => state.editor)
   const dispatch = useDispatch()
   const handlePaste = async (e: any) => {
@@ -61,24 +62,41 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
   const onTextChange = useCallback((e) => {
     const text = e.target.value
     dispatch(updateDocData({ content: text }))
-    historyRecord.add(text)
-  }, [historyRecord])
+  }, [])
 
 
-  /* 生成导航 */
-  useEffect(() => {
-    /* 自定义marked render 修改输出内容 */
+  const list: NavList[] = []
+  renderer.heading = (txt: string, level: number) => {
+    list.push({ text: txt, level })
+    setTimeout(() => {
+      setNavList(list)
+    })
+    const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
+    return markerContents
+  }
+
+  const transFn = () => {
+    /* md转化，生成导航 */
     let text = marked.parse(content)
     text = changeText(text)
     setTransContent(text)
-    const list:NavList[] = []
-    renderer.heading = (txt: string, level: number) => {
-      list.push({ text: txt, level })
-      setNavList(list)
-      const markerContents = renderToString(<div id={txt} className={cns('_artilce-title', 'md-title', `md-title-${level}`)}><a href={`#${txt}`}>{txt}</a></div>)
-      return markerContents
+    if (!text) {
+      setNavList([])
     }
-  }, [content, id])
+  }
+  useEffect(() => {
+    transFn()
+  }, [id, isRestore])
+
+  useEffect(() => {
+    if (editWatchMode === EditWatchMode.preview) {
+      return
+    }
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      transFn()
+    }, 2000)
+  }, [content])
 
   useEffect(() => {
     if (transEl.current) {
@@ -87,17 +105,15 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
       }))
     }
   }, [transContent])
+
   useEffect(() => {
-    if (textAreaEl.current) {
-      textAreaEl.current.value = content
-    }
-  }, [content, textAreaEl])
-  useEffect(() => {
-    const el = leftContentEl.current
+    const el = textAreaEl.current
     if (el) {
       setDivideLineLeft(el.offsetWidth)
+      setContainerHeight(Math.max(textAreaEl.current?.scrollHeight || 0,
+        transEl.current?.scrollHeight || 0))
     }
-  }, [leftContentEl])
+  }, [textAreaEl])
 
   /* 初次监听 */
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true)
@@ -137,9 +153,17 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
           curIndex = index
         }
       })
-      setActiveNav(titles[curIndex].innerText)
+      if (titles[curIndex]) {
+        setActiveNav(titles[curIndex].innerText)
+      }
     }
-    scrollEl.current.addEventListener('wheel', handleScroll)
+    scrollEl.current.addEventListener('wheel', handleScroll, { passive: true })
+    // eslint-disable-next-line consistent-return
+    return () => {
+      if (scrollEl.current) {
+        scrollEl.current.removeEventListener('wheel', handleScroll)
+      }
+    }
   }, [scrollEl])
 
 
@@ -152,14 +176,11 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
     >
       <MarkdownNav
         data={navList}
-        id={id}
         activeNav={activeNav}
         setActiveNav={setActiveNav}
-        history={history}
-        editWatchMode={editWatchMode}
       />
     </div>
-  ), [editWatchMode, activeNav, setActiveNav, navList])
+  ), [editWatchMode, activeNav, navList])
 
   return (
     <>
@@ -167,17 +188,18 @@ const Content: FunctionComponent<IProps> = ({ history }) => {
         editWatchMode === EditWatchMode.edit
           ? (
             <div className={cns([styles.container, 'flex'])} ref={scrollEl}>
-              <div className={cns([styles.editContent, 'flex', outline ? styles.hasOutline : ''])}>
-                <div className={styles.leftContent} ref={leftContentEl}>
-                  <pre className={styles.preContent}>{content}</pre>
-                  <textarea
-                    ref={textAreaEl}
-                    className={styles.textAreaContent}
-                    onChange={onTextChange}
-                    onPaste={handlePaste}
-                    onSelect={handleSelect}
-                  />
-                </div>
+              <div
+                className={cns([styles.editContent, 'flex', outline ? styles.hasOutline : ''])}
+                style={{height: `${containerHeight}px`}}
+              >
+                <textarea
+                  ref={textAreaEl}
+                  value={content}
+                  className={cns([styles.textAreaContent, styles.leftContent])}
+                  onChange={onTextChange}
+                  onPaste={handlePaste}
+                  onSelect={handleSelect}
+                />
                 <div className={styles.divideLine} style={{ left: `${divideLineLeft}px` }} />
                 <div
                   ref={transEl}

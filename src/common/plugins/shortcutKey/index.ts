@@ -21,7 +21,6 @@ const utils = {
 */
 export interface IShortcutKey {
   readonly init: () => void
-  readonly bindEvents: () => void
   readonly enable: boolean
   destory: () => void
   setEnable: (enable: boolean) => void
@@ -42,13 +41,12 @@ class ShortcutKey {
   }
 
   init() {
+    const fn = this.onKeyDown.bind(this)
     this.listeners = {}
-    this.bindEvents()
+    window.removeEventListener('keydown', fn)
+    window.addEventListener('keydown', fn)
   }
 
-  bindEvents() {
-    window.addEventListener('keydown', this.onKeyDown.bind(this))
-  }
 
   subscribe({ keys, cb }: { keys: string[], cb: () => void}) {
     const keyStr = keys.join(sign)

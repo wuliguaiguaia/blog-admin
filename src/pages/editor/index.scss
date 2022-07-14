@@ -5,6 +5,28 @@
 }
 
 .loading {
-  position: absolute !important;
+  background-color: #fff;
   z-index: $loadingZIndex;
+  width: 100%;
+  height: calc(100% - $headerHeight);
+  top: $headerHeight;
+  position: fixed;
+
+  .spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+  }
+}
+
+.offline {
+  text-align: center;
+  border: 1px solid red;
+  background-color: #ffd0d0;
+  color: #383838;
+
+  .icon {
+    margin-right: 10px;
+  }
 }

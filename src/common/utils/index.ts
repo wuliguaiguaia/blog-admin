@@ -29,6 +29,19 @@ export const throttle = (cb: Function, time: number) => {
 }
 
 /*
+  防抖函数
+*/
+export const debounce = (cb: Function, time: number) => {
+  let timer: NodeJS.Timeout | null = null
+  return (...arg: any[]) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      cb(...arg)
+    }, time)
+  }
+}
+
+/*
   某年某月有多少天
 */
 export const getDateCount = (year: number, month: number) => {

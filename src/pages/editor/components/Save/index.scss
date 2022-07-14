@@ -14,6 +14,12 @@
   padding: 0;
   margin-left: 8px;
 
+  &.disabled {
+    pointer-events: none;
+    background-color: #8cc8ff;
+    border-color: #8cc8ff;
+  }
+
   &:last-of-type {
     margin-right: 20px;
   }

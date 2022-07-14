@@ -65,12 +65,10 @@ const Header: FunctionComponent<IProps> = ({ history }) => {
     setEditTitle(false)
     const { value } = e.target
     if (value === title) return
-    dispatch(saveDocData({
+    dispatch(updateDocData({
       title: value,
     }))
-    dispatch(updateDocData({
-      title: e.target.value,
-    }))
+    dispatch(saveDocData(['title']))
   }
 
   const handleDelete = () => {
