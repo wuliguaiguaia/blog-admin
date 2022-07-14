@@ -18,8 +18,8 @@
     "stylelint_fix": "stylelint **/*.{css,scss} --fix"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": "npm run lint_fix",
-    "src/**/*.{css,scss}": "npm run stylelint_fix"
+    "src/**/*.{js,jsx,ts,tsx}": "eslint --fix",
+    "src/**/*.{css,scss}": "stylelint --fix"
   },
   "keywords": [],
   "author": "",
