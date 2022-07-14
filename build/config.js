@@ -1,7 +1,7 @@
 const config = {
   dev: {
     assetsPath: 'static',
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'eval-cheap-module-source-map',
     publicPath: '/',
   },
   prod: {
