@@ -1,12 +1,13 @@
 {
   "name": "admin.orangesolo.cn 快捷入口",
   "short_name": "orange's admin",
-  "display": "standalone",
-  "background_color": "#fff",
   "description": "admin 寒冬里一的私密空间",
+  "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
+  "background_color": "#fff",
+  "theme_color": "#fff",
   "icons": [
     {
       "src": "./favicon.png",
