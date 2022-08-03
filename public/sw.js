@@ -1,7 +1,7 @@
 const cacheName = 'admin-v1';
 const staticAssets = [
-  './favicon.png',
-  './manifest.json'
+  './static/favicon.png',
+  './static/manifest.json'
 ];
 
 const self = this

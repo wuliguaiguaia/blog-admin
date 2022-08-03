@@ -56,7 +56,12 @@ let webpackConfig = merge(baseWebpackConfig, {
         {
           from: path.resolve(process.cwd(), "public", "static"),
           to: path.resolve('dist', "static"),
-        }]
+        },
+        {
+          from: path.resolve(process.cwd(), "public/sw.js"),
+          to: path.resolve('dist', "sw.js"),
+        },
+      ]
     }),
     
   ].filter(Boolean)
