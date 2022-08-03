@@ -1,5 +1,5 @@
 {
-  "name": "admin.orangesolo.cn 快捷入口",
+  "name": "admin.orangesolo快捷入口",
   "short_name": "orange's admin",
   "description": "admin 寒冬里一的私密空间",
   "display": "standalone",
@@ -11,7 +11,8 @@
   "icons": [
     {
       "src": "./favicon.png",
-      "sizes": "72x72 96x96 128x128 256x256"
+      "type": "image/png",
+      "sizes": "72x72 96x96 128x128 256x256 512x512"
     }
   ]
 }
