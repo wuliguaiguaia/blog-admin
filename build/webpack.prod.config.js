@@ -54,8 +54,8 @@ let webpackConfig = merge(baseWebpackConfig, {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(process.cwd(), "public", dllPath),
-          to: path.resolve('dist', dllPath),
+          from: path.resolve(process.cwd(), "public", "static"),
+          to: path.resolve('dist', "static"),
         }]
     }),
     
