@@ -15,7 +15,6 @@ const Header = () => {
   const { userInfo } = useSelector((state: RootState) => state.common)
   const handleLogout = async () => {
     await $http.logout()
-    console.log(1232131)
     localStorage.set('islogin', false)
     window.location.reload()
   }

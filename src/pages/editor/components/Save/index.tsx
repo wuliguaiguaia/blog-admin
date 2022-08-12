@@ -32,8 +32,6 @@ const Save: FunctionComponent<IProps> = ({ history}) => {
 
 
   const handleSave = useCallback((_e?: any, callback?: any) => {
-    console.log(1111)
-
     dispatch(saveDocData(['content'], callback))
   }, [content])
 

@@ -171,8 +171,6 @@ const Content: FunctionComponent<IProps> = () => {
   const [imgVisible, setImgVisible] = useState(false)
   const [imgBigSrc, seImgBigSrc] = useState('')
   useEffect(() => {
-    console.log(111)
-
     // if (editWatchMode === EditWatchMode.edit) return () => {}
     const clickFn = (e) => {
       if (e.target.tagName !== 'IMG') return
