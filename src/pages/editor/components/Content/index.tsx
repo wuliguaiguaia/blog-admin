@@ -17,6 +17,7 @@ import '@/assets/styles/md.scss'
 import 'highlight.js/styles/github.css'
 import { EditWatchMode, NavList } from '@/common/interface'
 import MarkdownNav from '../MarkdownNav'
+import Mask from '@/common/components/Mask'
 
 const marked = Marked()
 
@@ -167,6 +168,26 @@ const Content: FunctionComponent<IProps> = () => {
   }, [scrollEl])
 
 
+  const [imgVisible, setImgVisible] = useState(false)
+  const [imgBigSrc, seImgBigSrc] = useState('')
+  useEffect(() => {
+    console.log(111)
+
+    // if (editWatchMode === EditWatchMode.edit) return () => {}
+    const clickFn = (e) => {
+      if (e.target.tagName !== 'IMG') return
+      console.log(e.target.src)
+
+      setImgVisible(true)
+      seImgBigSrc(e.target.src)
+    }
+    const el = document.getElementsByClassName('md-wrapper')[0]
+    el.addEventListener('click', clickFn)
+    return () => {
+      el.removeEventListener('click', clickFn)
+    }
+  }, [])
+
   /* useMemo 后隐藏的标题点击后不会再跳回去
     不用的话每次都重新渲染一个新的组件，所以会跳回去
   */
@@ -232,6 +253,17 @@ const Content: FunctionComponent<IProps> = () => {
             </div>
           )
       }
+      <Mask
+        visible={imgVisible}
+        setVisible={setImgVisible}
+        content={(
+          <img
+            src={imgBigSrc}
+            alt="放大图片"
+            style={{ maxWidth: '90%', maxHeight: '80%' }}
+          />
+        )}
+      />
     </>
   )
 }
