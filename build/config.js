@@ -8,7 +8,7 @@ const config = {
     assetsPath: 'static',
     gzip: true,
     devtool: 'cheap-module-source-map',
-    publicPath: 'https://admin.orangesolo.cn/',
+    publicPath: 'https://admin.mini-orange.cn/',
   },
   dllPath: 'static/dll/',
   bundleReport: false,

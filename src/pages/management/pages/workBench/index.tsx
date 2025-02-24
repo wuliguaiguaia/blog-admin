@@ -52,7 +52,7 @@ const Workbench: FunctionComponent = () => {
     <div className={styles.wrapper}>
       <div>
         跳转至
-        <a href="https://orangesolo.cn" target="_blank" rel="noreferrer">前台</a>
+        <a href="https://mini-orange.cn" target="_blank" rel="noreferrer">前台</a>
       </div>
       <div>
         <div className={styles.card}>

@@ -28,11 +28,11 @@ module.exports = merge(baseWebpackConfig, {
     },
     proxy: {
       "/api": {
-        target: 'https://orangesolo.cn',
+        target: 'https://mini-orange.cn',
         changeOrigin: true, // changeOrigin默认是false：请求头中host仍然是浏览器发送过来的host
       },
       "/webhook": {
-        target: 'https://orangesolo.cn',
+        target: 'https://mini-orange.cn',
         changeOrigin: true,
       },
       // '/api': 'http://localhost:3009',
